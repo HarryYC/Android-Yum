@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "app.team3.feedme"
+        applicationId "app.team3.t3"
         minSdkVersion 19
         targetSdkVersion 22
         versionCode 1

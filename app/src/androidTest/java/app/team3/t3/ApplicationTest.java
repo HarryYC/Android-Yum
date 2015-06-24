@@ -1,4 +1,4 @@
-package app.team3.feedme;
+package app.team3.t3;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
