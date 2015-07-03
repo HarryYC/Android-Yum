@@ -5,4 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_res_list">ResListActivity</string>
     <string name="title_activity_result">Result</string>
+    <string name="yelp_consumer_key">raHEHJVRVWEqbLaIy-D9MQ</string>
+    <string name="yelp_consumer_secret">bDMwy1nagp7-clMvqsQhDxNKsZw</string>
+    <string name="yelp_token">-bs-8DfWNXAarFnR8J9I9LEydyiYwmfx</string>
+    <string name="yelp_token_secret">wShbU3s2Loygdqm90CPr9hHY2Vw</string>
 </resources>
