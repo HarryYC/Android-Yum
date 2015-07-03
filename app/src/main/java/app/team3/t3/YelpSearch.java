@@ -2,6 +2,7 @@ package app.team3.t3;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 
 import org.json.JSONArray;
@@ -140,8 +141,10 @@ public class YelpSearch {
             protected Void doInBackground(Void... params) {
                 try {
                     queryAPI(yelpApi, yelpApiDII);
+                    Log.e("#######1", responseBusinessJSON);
                     processJSON(responseBusinessJSON);
                 } catch (Exception e) {
+                    Log.e("#######2", responseBusinessJSON);
                     e.printStackTrace();
                 }
                 return null;

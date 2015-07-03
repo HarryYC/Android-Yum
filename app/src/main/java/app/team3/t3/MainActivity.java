@@ -1,6 +1,9 @@
 package app.team3.t3;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.hardware.SensorListener;
+import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,8 +15,8 @@ import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity {
-
     ResDatabaseHelper resDB;
+    private ShakeListener mShaker;
     private Button b1;
     private Button b2;
     private TextView t1;
@@ -22,7 +25,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Context context = getApplicationContext();
+        final Context context = getApplicationContext();
 
         final YelpSearch mySearch = new YelpSearch(context);
         mySearch.defaultSearch();
@@ -50,11 +53,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Random rn = new Random();
                 int Random_Number = rn.nextInt(allRestaurant.length) + 1;
-                // mCursor = resDB.queryRes(Random_Number);
-                // t1.setText(DatabaseUtils.dumpCursorToString(mCursor));
-
                 Restaurant randromRestaurant = resDB.getRestaurant(Random_Number);
-
                 String restaurantOutput = "Name: " + randromRestaurant.getName()
                         + "\nRating: " + randromRestaurant.getRating()
                         + "\nPhone: " + randromRestaurant.getPhone()
@@ -70,7 +69,27 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        final Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+        mShaker = new ShakeListener(this);
+        mShaker.setOnShakeListener(new ShakeListener.OnShakeListener() {
+            public void onShake() {
+                vibe.vibrate(300);
+                Random rn = new Random();
+                int Random_Number = rn.nextInt(allRestaurant.length) + 1;
+                Restaurant randromRestaurant = resDB.getRestaurant(Random_Number);
+                String restaurantOutput = "Name: " + randromRestaurant.getName()
+                        + "\nRating: " + randromRestaurant.getRating()
+                        + "\nPhone: " + randromRestaurant.getPhone()
+                        + "\nCategories: " + randromRestaurant.getCategories()
+                        + "\n Address: " + randromRestaurant.getAddress()
+                        + "\nCity: " + randromRestaurant.getCity()
+                        + "\nZipcode: " + randromRestaurant.getZipcode()
+                        + "\nLatitude: " + randromRestaurant.getLatitude()
+                        + "\nLongitude: " + randromRestaurant.getLongitude();
+                t1.setText(restaurantOutput);
+            }
+        });
     }
 
     @Override
@@ -94,5 +113,6 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }
