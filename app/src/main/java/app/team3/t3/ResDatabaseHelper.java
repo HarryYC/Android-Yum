@@ -1,3 +1,4 @@
+
 package app.team3.t3;
 
 import android.content.ContentValues;
@@ -38,7 +39,22 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //Create the "RESTAURANTS" table
+        createDB(db);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    /**
+     * Create Database for the Yum application.
+     * Store the results from Yelp.
+     *
+     * @param db
+     */
+    public void createDB(SQLiteDatabase db) {
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RESTAURANTS);
         db.execSQL("CREATE TABLE " + TABLE_RESTAURANTS + "(" +
                         COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMN_NAME + " TEXT, " +
@@ -51,24 +67,28 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                         COLUMN_LATITUDE + " REAL, " +
                         COLUMN_LONGITUDE + " REAL)"
         );
-
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop the table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RESTAURANTS);
-
-        // Create table again
-        onCreate(db);
-    }
-
-    public void insertRestaurant(Restaurant res) {
-
+    /**
+     * If the Restaurants table exists, drop the table. If not exsits, create a new one.
+     * The program needs to refresh the database every time when it requests a search from Yelp.
+     * Otherwise, user will get old datas from database.
+     */
+    public void updateDB() {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RESTAURANTS);
+        createDB(db);
+    }
 
+
+    /**
+     * Insert a single Restaurant object into the database
+     *
+     * @param res
+     */
+    public void insertRestaurant(Restaurant res) {
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
         contentValues.put(COLUMN_NAME, res.getName());
         contentValues.put(COLUMN_RATING, res.getRating());
         contentValues.put(COLUMN_PHONE, res.getPhone());
@@ -78,27 +98,39 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_ZIPCODE, res.getZipcode());
         contentValues.put(COLUMN_LATITUDE, res.getLatitude());
         contentValues.put(COLUMN_LONGITUDE, res.getLongitude());
-
         db.insert(TABLE_RESTAURANTS, null, contentValues);
-
         db.close();
     }
 
+    /**
+     * Insert an array of object restaurants into database
+     *
+     * @param restaurants
+     */
+    public void insertRestaurants(Restaurant[] restaurants) {
+        updateDB();
+        for (int i = 0; i < restaurants.length; i++) {
+            insertRestaurant(restaurants[i]);
+        }
+    }
+
+    /**
+     * use the param id to pull out the data from database
+     * return an object restaurant
+     *
+     * @param id
+     * @return Restaurant
+     */
     public Restaurant getRestaurant(int id) {
-
         SQLiteDatabase db = this.getReadableDatabase();
-
         Cursor cursor = db.query(TABLE_RESTAURANTS, new String[]{"*"}, COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
-
         if (cursor != null) {
             cursor.moveToFirst();
         }
-
         Restaurant restaurant = new Restaurant(cursor.getString(1), Float.parseFloat(cursor.getString(2)), cursor.getString(3),
                 cursor.getString(4), cursor.getString(5), cursor.getString(6), Integer.parseInt(cursor.getString(7)),
                 Float.parseFloat(cursor.getString(8)), Float.parseFloat(cursor.getString(9)));
-
         return restaurant;
     }
     /*

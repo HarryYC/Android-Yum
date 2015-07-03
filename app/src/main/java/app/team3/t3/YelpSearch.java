@@ -1,10 +1,8 @@
 package app.team3.t3;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,11 +16,14 @@ import org.json.JSONObject;
 public class YelpSearch {
     private static final int MAX_RESTAURANT = 20;
     private static final String DEFAULT_TERM = "dinner";
-    private static final String DEFAULT_LOCATION = "San Francisco, CA";
+    //    private static final String DEFAULT_LOCATION = "San Francisco, CA";
+    private static final String DEFAULT_LOCATION = "Santa Barbara, CA";
+    //    private static final String DEFAULT_LOCATION = "";
     private static final int DEFAULT_RANGE = 10000;
     private static final int DEFAULT_SORT = 1;
     private static final String DEFAULT_CATEGORY = "Food";
-    private static final String DEFAULT_COORDINATE = "37.7833,122.4167";
+    //    private static final String DEFAULT_COORDINATE = "37.7833,122.4167";
+    private static final String DEFAULT_COORDINATE = "34.4258,119.7142";
     private static final boolean IS_DEFAULT = true;
     static YelpAPI yelpApi = null;
     static Restaurant[] restaurant = new Restaurant[MAX_RESTAURANT];

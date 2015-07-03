@@ -1,18 +1,13 @@
 package app.team3.t3;
 
 import android.content.Context;
-import android.database.DatabaseUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
 import java.util.Random;
 
 
@@ -22,8 +17,7 @@ public class MainActivity extends ActionBarActivity {
     private Button b1;
     private Button b2;
     private TextView t1;
-    // private ResDatabaseHelper.ResCursor mCursor;
-    private DatabaseUtils a;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +38,8 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 t1.setText("inserting data ...");
-                for (int i = 0; i < allRestaurant.length; i++) {
-                    resDB.insertRestaurant(allRestaurant[i]);
-                }
+
+                resDB.insertRestaurants(allRestaurant);
                 t1.setText("insert success");
 
             }
