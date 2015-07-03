@@ -77,7 +77,7 @@ public class YelpAPI {
         }
         request.addQuerystringParameter("category_filter", category);
         request.addQuerystringParameter("sort", String.valueOf(sort));
-        if (coordinate != "") {
+        if (coordinate != null) {
             request.addQuerystringParameter("ll", coordinate);
         }
         request.addQuerystringParameter("limit", String.valueOf(SEARCH_LIMIT));

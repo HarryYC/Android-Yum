@@ -19,11 +19,12 @@ public class YelpSearch {
     private static final int DEFAULT_RANGE = 1609;
     private static final int DEFAULT_SORT = 1;
     private static final String DEFAULT_CATEGORY = "food";
-    private static final String DEFAULT_COORDINATE = "";
+    private static final String DEFAULT_COORDINATE = null;
     private static final boolean IS_DEFAULT = true;
     static YelpAPI yelpApi = null;
     static Restaurant[] restaurant = new Restaurant[MAX_RESTAURANT];
     static YelpAPIDII yelpApiDII = null;
+    static String allResponseJSON = "";
 
     public YelpSearch(Context context) {
         yelpApi = new YelpAPI(context.getString(R.string.yelp_consumer_key),
@@ -138,7 +139,6 @@ public class YelpSearch {
     public Restaurant[] getRestaurant() {
         return restaurant;
     }
-
 
     public boolean filteredSearch(String term, String location, String category, int range, int sort, float latitude, float longitude) {
         resetSearchItems();
