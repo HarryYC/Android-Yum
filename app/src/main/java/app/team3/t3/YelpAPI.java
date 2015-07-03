@@ -65,17 +65,21 @@ public class YelpAPI {
      * @param location   <tt>String</tt> of the location
      * @param category   <tt>String</tt> of the search category to be queried
      * @param sort       <tt>int</tt> of the sort mode
-     * @param coordinade <tt>String</tt> of the latitude an longitude
+     * @param coordinate <tt>String</tt> of the latitude an longitude
      * @param range      <tt>int</tt> of the range for searching
      * @return <tt>String</tt> JSON Response
      */
-    public String searchForBusinessWithFilter(String term, String location, String category, int sort, String coordinade, int range) {
+    public String searchForBusiness(String term, String location, String category, int sort, String coordinate, int range) {
         OAuthRequest request = createOAuthRequest(SEARCH_PATH);
         request.addQuerystringParameter("term", term);
-        request.addQuerystringParameter("location", location);
+        if (location != "") {
+            request.addQuerystringParameter("location", location);
+        }
         request.addQuerystringParameter("category_filter", category);
         request.addQuerystringParameter("sort", String.valueOf(sort));
-        request.addQuerystringParameter("ll", coordinade);
+        if (coordinate != "") {
+            request.addQuerystringParameter("ll", coordinate);
+        }
         request.addQuerystringParameter("limit", String.valueOf(SEARCH_LIMIT));
         request.addQuerystringParameter("radius_filter", String.valueOf(range));
         return sendRequestAndGetResponse(request);

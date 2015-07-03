@@ -1,10 +1,7 @@
 package app.team3.t3;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
-
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,19 +14,16 @@ import org.json.JSONObject;
 
 public class YelpSearch {
     private static final int MAX_RESTAURANT = 20;
-    private static final String DEFAULT_TERM = "dinner";
-    private static final String DEFAULT_LOCATION = "San Francisco, CA";
-    private static final int DEFAULT_RANGE = 10000;
+    private static final String DEFAULT_TERM = "restaurant";
+    private static final String DEFAULT_LOCATION = "";
+    private static final int DEFAULT_RANGE = 1609;
     private static final int DEFAULT_SORT = 1;
-    private static final String DEFAULT_CATEGORY = "Food";
-    private static final String DEFAULT_COORDINATE = "37.7833,122.4167";
+    private static final String DEFAULT_CATEGORY = "food";
+    private static final String DEFAULT_COORDINATE = "";
     private static final boolean IS_DEFAULT = true;
     static YelpAPI yelpApi = null;
     static Restaurant[] restaurant = new Restaurant[MAX_RESTAURANT];
     static YelpAPIDII yelpApiDII = null;
-
-    private static String responseBusinessJSON = "";
-    private static String responseJSON = "";
 
     public YelpSearch(Context context) {
         yelpApi = new YelpAPI(context.getString(R.string.yelp_consumer_key),
@@ -47,23 +41,16 @@ public class YelpSearch {
      * @param yelpApi    <tt>YelpAPI</tt> service instance
      * @param yelpApiDII <tt>YelpAPICLI</tt> arguments for search
      */
-    public static void queryAPI(YelpAPI yelpApi, YelpAPIDII yelpApiDII) {
-
-        if (yelpApiDII.isDefault == true) {
-            responseBusinessJSON =
-                    yelpApi.searchForBusinessesByLocation(yelpApiDII.term, yelpApiDII.location);
-            responseJSON = responseBusinessJSON;
-        } else {
-            responseBusinessJSON =
-                    yelpApi.searchForBusinessesByLocation(yelpApiDII.term, yelpApiDII.coordinate);
-            responseJSON = responseBusinessJSON;
-        }
+    public void queryAPI(YelpAPI yelpApi, YelpAPIDII yelpApiDII) {
+        String responseBusinessJSON =
+                yelpApi.searchForBusiness(yelpApiDII.term, yelpApiDII.location, yelpApiDII.category, yelpApiDII.sort, yelpApiDII.coordinate, yelpApiDII.range);
+        this.processJSON(responseBusinessJSON);
     }
 
     /**
      * Process the search result and store as object
      *
-     * @param stringJSON <tt>String</tt> for the result from the search
+     * @param stringJSON <tt>String</tt> for Yelp response JSON
      */
     private void processJSON(String stringJSON) {
         try {
@@ -72,10 +59,11 @@ public class YelpSearch {
             for (int index = 0; index < MAX_RESTAURANT; index++) {
                 JSONObject businessData = businesses.getJSONObject(index);
 
-                restaurant[index].setId(index);
-                restaurant[index].setBusinessId(businessData.getString("id"));
+
+                restaurant[index].setBusinessID(businessData.getString("id"));
                 restaurant[index].setName(businessData.getString("name"));
                 restaurant[index].setRating(Float.parseFloat(businessData.getString("rating")));
+                restaurant[index].setReviewCount(Integer.parseInt(businessData.getString("review_count")));
                 restaurant[index].setPhone(businessData.getString("display_phone"));
 
                 JSONArray category = businessData.getJSONArray("categories");
@@ -106,7 +94,7 @@ public class YelpSearch {
 
                 restaurant[index].setAddress(businessAddress);
                 restaurant[index].setCity(location.getString("city"));
-                restaurant[index].setZipcode(Integer.parseInt(location.getString("postal_code")));
+                restaurant[index].setZipCode(Integer.parseInt(location.getString("postal_code")));
 
                 JSONObject coordinate = location.getJSONObject("coordinate");
 
@@ -139,7 +127,6 @@ public class YelpSearch {
             protected Void doInBackground(Void... params) {
                 try {
                     queryAPI(yelpApi, yelpApiDII);
-                    processJSON(responseBusinessJSON);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -148,29 +135,37 @@ public class YelpSearch {
         }.execute();
     }
 
-    public void defaultSearch() {
-        resetSearchItems();
-        doSearch();
-    }
-
     public Restaurant[] getRestaurant() {
         return restaurant;
     }
 
-    public String getResponseJSONString() {
-        return responseJSON;
-    }
 
-    public void filteredSearch(String term, String location, String category, int range, int sort, String coordinate) {
+    public boolean filteredSearch(String term, String location, String category, int range, int sort, float latitude, float longitude) {
         resetSearchItems();
-        yelpApiDII.term = term;
-        yelpApiDII.location = location;
-        yelpApiDII.category = category;
-        yelpApiDII.range = range;
-        yelpApiDII.sort = sort;
-        yelpApiDII.coordinate = coordinate;
-        yelpApiDII.isDefault = false;
-        doSearch();
+        if (term != null) {
+            yelpApiDII.term = term;
+        }
+        if (location != null) {
+            yelpApiDII.location = location;
+        }
+        if (category != null) {
+            yelpApiDII.category = category;
+        }
+        if (range > 1609 && range <= 40000) {
+            yelpApiDII.range = range;
+        }
+        if (sort >= 0 && sort < 3) {
+            yelpApiDII.sort = sort;
+        }
+        if (latitude != 0 && longitude != 0) {
+            yelpApiDII.coordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
+        }
+        if (location == null && latitude == 0 && longitude == 0) {
+            return false;
+        } else {
+            doSearch();
+            return true;
+        }
     }
 
     /**
@@ -183,6 +178,5 @@ public class YelpSearch {
         public int sort = DEFAULT_SORT;
         public String category = DEFAULT_CATEGORY;
         public String coordinate = DEFAULT_COORDINATE;
-        public boolean isDefault = IS_DEFAULT;
     }
 }
