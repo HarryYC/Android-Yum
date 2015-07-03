@@ -1,6 +1,7 @@
 package app.team3.t3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,9 +27,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+
+    private boolean avoid_doubleShake = true; //use to avoid to get multiple results
     final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
+
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
@@ -36,22 +40,28 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
-            if (mAccel > 24) {
+            if (mAccel > 20 && avoid_doubleShake == true) {
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(500);
+//                Random rn = new Random();
+//                int Random_Number = rn.nextInt(20) + 1;
+//                Restaurant randromRestaurant = resDB.getRestaurant(Random_Number);
+//                String restaurantOutput = "Name: " + randromRestaurant.getName()
+//                        + "\nRating: " + randromRestaurant.getRating()
+//                        + "\nPhone: " + randromRestaurant.getPhone()
+//                        + "\nCategories: " + randromRestaurant.getCategories()
+//                        + "\n Address: " + randromRestaurant.getAddress()
+//                        + "\nCity: " + randromRestaurant.getCity()
+//                        + "\nZipcode: " + randromRestaurant.getZipcode()
+//                        + "\nLatitude: " + randromRestaurant.getLatitude()
+//                        + "\nLongitude: " + randromRestaurant.getLongitude();
+//                t1.setText(restaurantOutput);
+                Intent getResultIntent = new Intent(MainActivity.this, result.class);
                 Random rn = new Random();
                 int Random_Number = rn.nextInt(20) + 1;
-                Restaurant randromRestaurant = resDB.getRestaurant(Random_Number);
-                String restaurantOutput = "Name: " + randromRestaurant.getName()
-                        + "\nRating: " + randromRestaurant.getRating()
-                        + "\nPhone: " + randromRestaurant.getPhone()
-                        + "\nCategories: " + randromRestaurant.getCategories()
-                        + "\n Address: " + randromRestaurant.getAddress()
-                        + "\nCity: " + randromRestaurant.getCity()
-                        + "\nZipcode: " + randromRestaurant.getZipcode()
-                        + "\nLatitude: " + randromRestaurant.getLatitude()
-                        + "\nLongitude: " + randromRestaurant.getLongitude();
-                t1.setText(restaurantOutput);
+                getResultIntent.putExtra("Random_Number", Random_Number);
+                avoid_doubleShake = false;
+                startActivity(getResultIntent);
             }
         }
 
@@ -109,24 +119,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             }
         });
 
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Random rn = new Random();
-                int Random_Number = rn.nextInt(allRestaurant.length) + 1;
-                Restaurant randromRestaurant = resDB.getRestaurant(Random_Number);
-                String restaurantOutput = "Name: " + randromRestaurant.getName()
-                        + "\nRating: " + randromRestaurant.getRating()
-                        + "\nPhone: " + randromRestaurant.getPhone()
-                        + "\nCategories: " + randromRestaurant.getCategories()
-                        + "\n Address: " + randromRestaurant.getAddress()
-                        + "\nCity: " + randromRestaurant.getCity()
-                        + "\nZipcode: " + randromRestaurant.getZipcode()
-                        + "\nLatitude: " + randromRestaurant.getLatitude()
-                        + "\nLongitude: " + randromRestaurant.getLongitude();
-                t1.setText(restaurantOutput);
-            }
-        });
+//        b2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
     } //end onCreat
 
     /**
@@ -150,6 +148,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
+        avoid_doubleShake = true;
         mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
@@ -185,6 +184,17 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    public void onGetResultClick(View view) {
+        Intent getResultIntent = new Intent(this, result.class);
+        Random rn = new Random();
+        int Random_Number = rn.nextInt(20) + 1;
+        getResultIntent.putExtra("Random_Number", Random_Number);
+
+        startActivity(getResultIntent);
+
 
     }
 }
