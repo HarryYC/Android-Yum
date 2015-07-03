@@ -1,17 +1,83 @@
 package app.team3.t3;
 
+import android.content.Context;
+import android.database.DatabaseUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    ResDatabaseHelper resDB;
+    private Button b1;
+    private Button b2;
+    private TextView t1;
+    // private ResDatabaseHelper.ResCursor mCursor;
+    private DatabaseUtils a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Context context = getApplicationContext();
+
+        final YelpSearch mySearch = new YelpSearch(context);
+        mySearch.defaultSearch();
+        final Restaurant[] allRestaurant = mySearch.getRestaurant();
+
+        resDB = new ResDatabaseHelper(context);
+
+        b1 = (Button) findViewById(R.id.button);
+        b2 = (Button) findViewById(R.id.button2);
+        t1 = (TextView) findViewById(R.id.textView2);
+
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                t1.setText("inserting data ...");
+                for (int i = 0; i < allRestaurant.length; i++) {
+                    resDB.insertRestaurant(allRestaurant[i]);
+                }
+                t1.setText("insert success");
+
+            }
+        });
+
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Random rn = new Random();
+                int Random_Number = rn.nextInt(allRestaurant.length) + 1;
+                // mCursor = resDB.queryRes(Random_Number);
+                // t1.setText(DatabaseUtils.dumpCursorToString(mCursor));
+
+                Restaurant randromRestaurant = resDB.getRestaurant(Random_Number);
+
+                String restaurantOutput = "Name: " + randromRestaurant.getName()
+                        + "\nRating: " + randromRestaurant.getRating()
+                        + "\nPhone: " + randromRestaurant.getPhone()
+                        + "\nCategories: " + randromRestaurant.getCategories()
+                        + "\n Address: " + randromRestaurant.getAddress()
+                        + "\nCity: " + randromRestaurant.getCity()
+                        + "\nZipcode: " + randromRestaurant.getZipcode()
+                        + "\nLatitude: " + randromRestaurant.getLatitude()
+                        + "\nLongitude: " + randromRestaurant.getLongitude();
+
+
+                t1.setText(restaurantOutput);
+            }
+        });
+
+
     }
 
     @Override
@@ -35,4 +101,5 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
