@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -22,7 +23,6 @@ public class result extends Activity {
         int rdNumber = getRandomNumber.getIntExtra("Random_Number", 0);
 
         TextView viewResult = (TextView) findViewById(R.id.result_text_view);
-//        viewResult.setText(String.valueOf(rdNumber));
         final Context context = getApplicationContext();
         resDB = new ResDatabaseHelper(context);
         Restaurant randromRestaurant = resDB.getRestaurant(rdNumber);
@@ -37,5 +37,10 @@ public class result extends Activity {
                 + "\nLongitude: " + randromRestaurant.getLongitude();
         viewResult.setText(restaurantOutput);
 
+    }
+
+
+    public void onBackToMainClick(View view) {
+        onBackPressed();
     }
 }

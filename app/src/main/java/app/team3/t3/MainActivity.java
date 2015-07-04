@@ -28,7 +28,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private float mAccelCurrent;
     private float mAccelLast;
 
-    private boolean avoid_doubleShake = true; //use to avoid to get multiple results
+    private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -43,19 +43,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             if (mAccel > 20 && avoid_doubleShake == true) {
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(500);
-//                Random rn = new Random();
-//                int Random_Number = rn.nextInt(20) + 1;
-//                Restaurant randromRestaurant = resDB.getRestaurant(Random_Number);
-//                String restaurantOutput = "Name: " + randromRestaurant.getName()
-//                        + "\nRating: " + randromRestaurant.getRating()
-//                        + "\nPhone: " + randromRestaurant.getPhone()
-//                        + "\nCategories: " + randromRestaurant.getCategories()
-//                        + "\n Address: " + randromRestaurant.getAddress()
-//                        + "\nCity: " + randromRestaurant.getCity()
-//                        + "\nZipcode: " + randromRestaurant.getZipcode()
-//                        + "\nLatitude: " + randromRestaurant.getLatitude()
-//                        + "\nLongitude: " + randromRestaurant.getLongitude();
-//                t1.setText(restaurantOutput);
+
                 Intent getResultIntent = new Intent(MainActivity.this, result.class);
                 Random rn = new Random();
                 int Random_Number = rn.nextInt(20) + 1;
@@ -195,6 +183,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         startActivity(getResultIntent);
 
-
     }
+
 }
