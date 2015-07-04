@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import android.widget.TextView;
  */
 public class Result extends Activity {
     ResDatabaseHelper resDB;
+    Restaurant resultRestaurant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,19 +26,20 @@ public class Result extends Activity {
         TextView viewResult = (TextView) findViewById(R.id.result_text_view);
         final Context context = getApplicationContext();
         resDB = new ResDatabaseHelper(context);
-        Restaurant randromRestaurant = resDB.getRestaurant(rdNumber);
-        String restaurantOutput = "BID: " + randromRestaurant.getBusinessID() +
-                "\n\nRestaurant Name: " + randromRestaurant.getName()
-                + "\n\nRating: " + randromRestaurant.getRating()
-                + "\n\nPhone: " + randromRestaurant.getPhone()
-                + "\n\nCategories: " + randromRestaurant.getCategories()
-                + "\n\nAddress: " + randromRestaurant.getAddress()
-                + "\n\nCity: " + randromRestaurant.getCity()
-                + "\n\nZipcode: " + randromRestaurant.getZipCode()
-                + "\n\nLatitude: " + randromRestaurant.getLatitude()
-                + "\n\nLongitude: " + randromRestaurant.getLongitude()
-                + "\n\nRatingImgURL: " + randromRestaurant.getRatingImgURL()
-                + "\n\nBusinessImgURL: " + randromRestaurant.getRatingImgURL();
+        Restaurant randomRestaurant = resDB.getRestaurant(rdNumber);
+        resultRestaurant = randomRestaurant;
+        String restaurantOutput = "BID: " + randomRestaurant.getBusinessID() +
+                "\n\nRestaurant Name: " + randomRestaurant.getName() +
+                "\n\nRating: " + randomRestaurant.getRating() +
+                "\n\nPhone: " + randomRestaurant.getPhone() +
+                "\n\nCategories: " + randomRestaurant.getCategories() +
+                "\n\nAddress: " + randomRestaurant.getAddress() +
+                "\n\nCity: " + randomRestaurant.getCity() +
+                "\n\nZipCode: " + randomRestaurant.getZipCode() +
+                "\n\nLatitude: " + randomRestaurant.getLatitude() +
+                "\n\nLongitude: " + randomRestaurant.getLongitude() +
+                "\n\nRatingImgURL: " + randomRestaurant.getRatingImgURL() +
+                "\n\nBusinessImgURL: " + randomRestaurant.getRatingImgURL();
 
         viewResult.setText(restaurantOutput);
 
@@ -45,5 +48,10 @@ public class Result extends Activity {
 
     public void onBackToMainClick(View view) {
         onBackPressed();
+    }
+
+    public void onSaveToHistory(View view) {
+        resDB.saveRestaurant(resultRestaurant);
+        Log.e("#save#", "saved");
     }
 }

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import java.util.Random;
 
 
@@ -99,19 +100,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 t1.setText("inserting data ...");
-
                 resDB.insertRestaurants(allRestaurant);
                 t1.setText("insert success");
 
             }
         });
 
-//        b2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
     } //end onCreat
 
     /**

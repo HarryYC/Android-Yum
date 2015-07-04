@@ -4,8 +4,13 @@ package app.team3.t3;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.view.ViewDebug;
+
+import java.sql.SQLException;
 
 /**
  * Created by sssbug on 6/30/15.
@@ -19,6 +24,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
     // Restaurant table Name
     private static final String TABLE_RESTAURANTS = "restaurants";
+    private static final String TABLE_HISTORY = "history";
 
     // Restaurant info Columns names
     private static final String COLUMN_ID = "id";
@@ -35,6 +41,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_LONGITUDE = "longitude";
     private static final String COLUMN_BUSINESS_IMG = "business_img";
     private static final String COLUMN_RATING_IMG = "rating_img";
+    private static final String COLUMN_COUNT = "count";
 
     public ResDatabaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
@@ -95,6 +102,24 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                         COLUMN_BUSINESS_IMG + " BLOB, " +
                         COLUMN_RATING_IMG + " BLOB)"
         );
+        //Create the "history" table
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_HISTORY + "(" +
+                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_BUSINESS_ID + " TEXT UNIQUE," +
+                        COLUMN_NAME + " TEXT, " +
+                        COLUMN_RATING + " REAL, " +
+                        COLUMN_REVIEW_COUNT + " INTEGER, " +
+                        COLUMN_PHONE + " TEXT, " +
+                        COLUMN_CATEGORIES + " BLOB, " +
+                        COLUMN_ADDRESS + " BLOB, " +
+                        COLUMN_CITY + " TEXT, " +
+                        COLUMN_ZIPCODE + " INTEGER, " +
+                        COLUMN_LATITUDE + " REAL, " +
+                        COLUMN_LONGITUDE + " REAL," +
+                        COLUMN_BUSINESS_IMG + " BLOB, " +
+                        COLUMN_RATING_IMG + " BLOB, " +
+                        COLUMN_COUNT + " int)"
+        );
     }
 
     /**
@@ -140,6 +165,61 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Save the restaurant object into history table
+     * If exists, count + 1
+     * If not exists, add a new record, count = 1
+     *
+     * @param res
+     */
+    public void saveRestaurant(Restaurant res) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_BUSINESS_ID, res.getBusinessID());
+        contentValues.put(COLUMN_NAME, res.getName());
+        contentValues.put(COLUMN_RATING, res.getRating());
+        contentValues.put(COLUMN_PHONE, res.getPhone());
+        contentValues.put(COLUMN_REVIEW_COUNT, res.getReviewCount());
+        contentValues.put(COLUMN_CATEGORIES, res.getCategories());
+        contentValues.put(COLUMN_ADDRESS, res.getAddress());
+        contentValues.put(COLUMN_CITY, res.getCity());
+        contentValues.put(COLUMN_ZIPCODE, res.getZipCode());
+        contentValues.put(COLUMN_LATITUDE, res.getLatitude());
+        contentValues.put(COLUMN_LONGITUDE, res.getLongitude());
+        contentValues.put(COLUMN_BUSINESS_IMG, res.getBusinessImgURL());
+        contentValues.put(COLUMN_RATING_IMG, res.getRatingImgURL());
+        contentValues.put(COLUMN_COUNT, 1);
+
+        try {
+
+            db.insertOrThrow(TABLE_HISTORY, null, contentValues); //insert new record
+
+        } catch (Exception e) { //if insert fail, count increases one
+            contentValues.clear();
+
+            Cursor cursor = db.query(TABLE_HISTORY,
+                    new String[]{"*"},
+                    COLUMN_BUSINESS_ID + "=?",
+                    new String[]{res.getBusinessID()},
+                    null, null, null, null);
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+            }
+
+            contentValues.put(COLUMN_COUNT, cursor.getInt(14) + 1); //get the current count from database and increase one
+
+            db.update(TABLE_HISTORY,
+                    contentValues,
+                    COLUMN_BUSINESS_ID + " = " + "\"" + res.getBusinessID() + "\"",
+                    null);
+        }
+
+        db.close();
+    }
+
+    /**
      * Insert an array of object restaurants into database
      *
      * @param restaurants
@@ -162,8 +242,11 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_RESTAURANTS, new String[]{"*"}, COLUMN_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
+        Cursor cursor = db.query(TABLE_RESTAURANTS,
+                new String[]{"*"},
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)},
+                null, null, null, null);
 
         if (cursor != null) {
             cursor.moveToFirst();
