@@ -4,7 +4,6 @@ package app.team3.t3;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -25,6 +24,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_RATING = "rating";
+    private static final String COLUMN_REVIEW_COUNT = "review_count";
     private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_CATEGORIES = "categories";
     private static final String COLUMN_ADDRESS = "address";
@@ -32,6 +32,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ZIPCODE = "zipcode";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
+    private static final String COLUMN_BUSINESS_IMG = "business_img";
+    private static final String COLUMN_RATING_IMG = "rating_img";
 
     public ResDatabaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
@@ -42,10 +44,31 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         createDB(db);
     }
 
+    /**
+     * Called when the database needs to be upgraded. The implementation
+     * should use this method to drop tables, add tables, or do anything else it
+     * needs to upgrade to the new schema version.
+     * <p/>
+     * <p>
+     * The SQLite ALTER TABLE documentation can be found
+     * <a href="http://sqlite.org/lang_altertable.html">here</a>. If you add new columns
+     * you can use ALTER TABLE to insert them into a live table. If you rename or remove columns
+     * you can use ALTER TABLE to rename the old table, then create the new table and then
+     * populate the new table with the contents of the old table.
+     * </p><p>
+     * This method executes within a transaction.  If an exception is thrown, all changes
+     * will automatically be rolled back.
+     * </p>
+     *
+     * @param db         The database.
+     * @param oldVersion The old database version.
+     * @param newVersion The new database version.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
 
     /**
      * Create Database for the Yum application.
@@ -54,18 +77,21 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
      * @param db
      */
     public void createDB(SQLiteDatabase db) {
-//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RESTAURANTS);
+        //Create the "restaurants" table
         db.execSQL("CREATE TABLE " + TABLE_RESTAURANTS + "(" +
                         COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMN_NAME + " TEXT, " +
                         COLUMN_RATING + " REAL, " +
+                        COLUMN_REVIEW_COUNT + " INTEGER, " +
                         COLUMN_PHONE + " TEXT, " +
                         COLUMN_CATEGORIES + " BLOB, " +
                         COLUMN_ADDRESS + " BLOB, " +
                         COLUMN_CITY + " TEXT, " +
                         COLUMN_ZIPCODE + " INTEGER, " +
                         COLUMN_LATITUDE + " REAL, " +
-                        COLUMN_LONGITUDE + " REAL)"
+                        COLUMN_LONGITUDE + " REAL," +
+                        COLUMN_BUSINESS_IMG + " BLOB, " +
+                        COLUMN_RATING_IMG + " BLOB)"
         );
     }
 
@@ -88,17 +114,24 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
      */
     public void insertRestaurant(Restaurant res) {
         SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
+
         contentValues.put(COLUMN_NAME, res.getName());
         contentValues.put(COLUMN_RATING, res.getRating());
         contentValues.put(COLUMN_PHONE, res.getPhone());
+        contentValues.put(COLUMN_REVIEW_COUNT, res.getReviewCount());
         contentValues.put(COLUMN_CATEGORIES, res.getCategories());
         contentValues.put(COLUMN_ADDRESS, res.getAddress());
         contentValues.put(COLUMN_CITY, res.getCity());
-        contentValues.put(COLUMN_ZIPCODE, res.getZipcode());
+        contentValues.put(COLUMN_ZIPCODE, res.getZipCode());
         contentValues.put(COLUMN_LATITUDE, res.getLatitude());
         contentValues.put(COLUMN_LONGITUDE, res.getLongitude());
+        contentValues.put(COLUMN_BUSINESS_IMG, res.getBusinessImgURL());
+        contentValues.put(COLUMN_RATING_IMG, res.getRatingImgURL());
+
         db.insert(TABLE_RESTAURANTS, null, contentValues);
+
         db.close();
     }
 
@@ -122,59 +155,23 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
      * @return Restaurant
      */
     public Restaurant getRestaurant(int id) {
+
         SQLiteDatabase db = this.getReadableDatabase();
+
         Cursor cursor = db.query(TABLE_RESTAURANTS, new String[]{"*"}, COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
+
         if (cursor != null) {
             cursor.moveToFirst();
         }
-        Restaurant restaurant = new Restaurant(cursor.getString(1), Float.parseFloat(cursor.getString(2)), cursor.getString(3),
-                cursor.getString(4), cursor.getString(5), cursor.getString(6), Integer.parseInt(cursor.getString(7)),
-                Float.parseFloat(cursor.getString(8)), Float.parseFloat(cursor.getString(9)));
+
+        Restaurant restaurant = new Restaurant(cursor.getString(1), Float.parseFloat(cursor.getString(2)), Integer.parseInt(cursor.getString(3)), cursor.getString(4),
+                cursor.getString(5), cursor.getString(6), cursor.getString(7), Integer.parseInt(cursor.getString(8)),
+                Float.parseFloat(cursor.getString(9)), Float.parseFloat(cursor.getString(10)), cursor.getString(11), cursor.getString(12));
+
         return restaurant;
     }
-    /*
-    public ResCursor queryRes() {
-        Cursor wrapped = getReadableDatabase().query(TABLE_RESTAURANTS, null, null, null, null, null, null);
-        return new ResCursor(wrapped);
-    }
-
-    public ResCursor queryRes(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_RESTAURANTS, new String[]{"*"}, COLUMN_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
-
-        Restaurant restaurant = new Restaurant(cursor.getString(0), Float.parseFloat(cursor.getString(1)), cursor.getString(2),
-                cursor.getString(3), cursor.getString(4), cursor.getString(5), Integer.parseInt(cursor.getString(6)), Float.parseFloat(cursor.getString(7)), Float.parseFloat(cursor.getString(8)));
-
-        return new ResCursor(cursor);
-    }
-
-
-    public class ResCursor extends CursorWrapper {
-
-        public ResCursor(Cursor cursor) {
-            super(cursor);
-        }
-
-        public Restaurant getRes() {
-            if (isBeforeFirst() || isAfterLast())
-                return null;
-            Restaurant res = new Restaurant();
-            res.setId(getInt(getColumnIndex(COLUMN_ID)));
-            res.setName(getString(getColumnIndex(COLUMN_NAME)));
-            res.setRating(getFloat(getColumnIndex(COLUMN_RATING)));
-            res.setPhone(getString(getColumnIndex(COLUMN_PHONE)));
-            res.setCategories(getString(getColumnIndex(COLUMN_CATEGORIES)));
-            res.setAddress(getString(getColumnIndex(COLUMN_ADDRESS)));
-            res.setCity(getString(getColumnIndex(COLUMN_CITY)));
-            res.setZipcode(getInt(getColumnIndex(COLUMN_ZIPCODE)));
-            res.setLatitude(getFloat(getColumnIndex(COLUMN_LATITUDE)));
-            res.setLongitude(getFloat(getColumnIndex(COLUMN_LONGITUDE)));
-            return res;
-        }
-    }
-    */
-
 }
+
+
+
