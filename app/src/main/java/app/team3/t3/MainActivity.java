@@ -23,8 +23,7 @@ public class MainActivity extends ActionBarActivity {
         final Context context = getApplicationContext();
 
         final YelpSearch mySearch = new YelpSearch(context);
-        mySearch.filteredSearch(null, "san francisco", null, 2000, 1, 0, 0);
-        final Restaurant[] allRestaurant = mySearch.getRestaurant();
+        final Restaurant[] allRestaurant = mySearch.filteredSearch(null, "San Francisco, CA", null, 0, 1, 0, 0);
         Button pickRestaurant = (Button) findViewById(R.id.randomBtn);
         final ImageView businessIV = (ImageView) findViewById(R.id.businessIV);
         final ImageView ratingIV = (ImageView) findViewById(R.id.ratingIV);

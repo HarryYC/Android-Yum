@@ -1,11 +1,15 @@
 package app.team3.t3;
 
+import android.os.AsyncTask;
+
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Code sample for accessing the Yelp API V2.
@@ -69,10 +73,10 @@ public class YelpAPI {
      * @param range      <tt>int</tt> of the range for searching
      * @return <tt>String</tt> JSON Response
      */
-    public String searchForBusiness(String term, String location, String category, int sort, String coordinate, int range) {
+    public String searchForBusiness(String term, String location, String category, int sort, int range, String coordinate) {
         OAuthRequest request = createOAuthRequest(SEARCH_PATH);
         request.addQuerystringParameter("term", term);
-        if (location != "") {
+        if (location != null) {
             request.addQuerystringParameter("location", location);
         }
         request.addQuerystringParameter("category_filter", category);
@@ -117,10 +121,30 @@ public class YelpAPI {
      * @return <tt>String</tt> body of API response
      */
     private String sendRequestAndGetResponse(OAuthRequest request) {
-        //result += "\nQuerying " + request.getCompleteUrl() + " ...\n\n";
-        this.service.signRequest(this.accessToken, request);
-        Response response = request.send();
-        return response.getBody();
+        String threadResponse = "";
+
+        try {
+            threadResponse = new YelpAPIThread().execute(request, this.service, this.accessToken).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return threadResponse;
     }
 
+    private class YelpAPIThread extends AsyncTask<Object, Void, String> {
+
+        @Override
+        protected String doInBackground(Object... params) {
+
+            OAuthRequest request = (OAuthRequest) params[0];
+            OAuthService service = (OAuthService) params[1];
+            Token accessToken = (Token) params[2];
+
+            service.signRequest(accessToken, request);
+            Response response = request.send();
+            return response.getBody();
+        }
+    }
 }
