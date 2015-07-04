@@ -22,6 +22,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
     // Restaurant info Columns names
     private static final String COLUMN_ID = "id";
+    private static final String COLUMN_BUSINESS_ID = "BusinessID";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_RATING = "rating";
     private static final String COLUMN_REVIEW_COUNT = "review_count";
@@ -80,6 +81,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         //Create the "restaurants" table
         db.execSQL("CREATE TABLE " + TABLE_RESTAURANTS + "(" +
                         COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_BUSINESS_ID + " TEXT," +
                         COLUMN_NAME + " TEXT, " +
                         COLUMN_RATING + " REAL, " +
                         COLUMN_REVIEW_COUNT + " INTEGER, " +
@@ -117,6 +119,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
 
+
+        contentValues.put(COLUMN_BUSINESS_ID, res.getBusinessID());
         contentValues.put(COLUMN_NAME, res.getName());
         contentValues.put(COLUMN_RATING, res.getRating());
         contentValues.put(COLUMN_PHONE, res.getPhone());
@@ -165,9 +169,20 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
         }
 
-        Restaurant restaurant = new Restaurant(cursor.getString(1), Float.parseFloat(cursor.getString(2)), Integer.parseInt(cursor.getString(3)), cursor.getString(4),
-                cursor.getString(5), cursor.getString(6), cursor.getString(7), Integer.parseInt(cursor.getString(8)),
-                Float.parseFloat(cursor.getString(9)), Float.parseFloat(cursor.getString(10)), cursor.getString(11), cursor.getString(12));
+        Restaurant restaurant = new Restaurant(
+                cursor.getString(1),
+                cursor.getString(2),
+                Float.parseFloat(cursor.getString(3)),
+                Integer.parseInt(cursor.getString(4)),
+                cursor.getString(5),
+                cursor.getString(6),
+                cursor.getString(7),
+                cursor.getString(8),
+                Integer.parseInt(cursor.getString(9)),
+                Float.parseFloat(cursor.getString(10)),
+                Float.parseFloat(cursor.getString(11)),
+                cursor.getString(12),
+                cursor.getString(13));
 
         return restaurant;
     }

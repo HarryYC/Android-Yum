@@ -20,6 +20,7 @@ public class Restaurant {
 
     // Default constructor
     public Restaurant() {
+        this.businessID = "";
         this.name = "";
         this.rating = 0;
         this.reviewCount = 0;
@@ -35,7 +36,8 @@ public class Restaurant {
     }
 
     // Parameterized Constructor
-    public Restaurant(String name, float rating, int reviewCount, String phone, String categories, String Address, String City, int zipCode, float latitude, float longitude, String ratingImgURL, String businessImgURL) {
+    public Restaurant(String businessID, String name, float rating, int reviewCount, String phone, String categories, String Address, String City, int zipCode, float latitude, float longitude, String ratingImgURL, String businessImgURL) {
+        this.businessID = businessID;
         this.name = name;
         this.rating = rating;
         this.reviewCount = reviewCount;
