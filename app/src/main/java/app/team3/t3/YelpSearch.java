@@ -120,23 +120,6 @@ public class YelpSearch {
         }
     }
 
-    /**
-     * Run the search query in the background with AsyncTask class
-     */
-    private void doSearch() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }.execute();
-    }
-
     public Restaurant[] filteredSearch(String term, String location, String category, int range, int sort, float latitude, float longitude) {
         resetSearchItems();
         if (term != null) {
