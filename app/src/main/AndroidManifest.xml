@@ -21,6 +21,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".Result"
+            android:label="Your Lucky Restaurant"
+            android:theme="@style/AppTheme"
+            />
+
     </application>
 
 </manifest>

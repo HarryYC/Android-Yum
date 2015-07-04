@@ -20,7 +20,6 @@ import java.util.Random;
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
     ResDatabaseHelper resDB;
     private Button b1;
-    private Button b2;
     private TextView t1;
 
     private SensorManager mSensorManager;
@@ -40,11 +39,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
-            if (mAccel > 20 && avoid_doubleShake == true) {
+            if (mAccel > 22 && avoid_doubleShake == true) {
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(500);
 
-                Intent getResultIntent = new Intent(MainActivity.this, result.class);
+                Intent getResultIntent = new Intent(MainActivity.this, Result.class);
                 Random rn = new Random();
                 int Random_Number = rn.nextInt(20) + 1;
                 getResultIntent.putExtra("Random_Number", Random_Number);
@@ -75,6 +74,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         final YelpSearch mySearch = new YelpSearch(context);
         final Restaurant[] allRestaurant = mySearch.getRestaurant();
         mySearch.defaultSearch();
+//        mySearch.filteredSearch(null, "San Francisco", "Food", 2000, 1, 0, 0);
 
         //--------------------------Shake Sensor-----------------------//
 
@@ -91,7 +91,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         //--------------------------Components---------------------------//
 
         b1 = (Button) findViewById(R.id.button);
-        b2 = (Button) findViewById(R.id.button2);
         t1 = (TextView) findViewById(R.id.textView2);
 
         //--------------------------Listeners----------------------------//
@@ -176,7 +175,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
     public void onGetResultClick(View view) {
-        Intent getResultIntent = new Intent(this, result.class);
+        Intent getResultIntent = new Intent(this, Result.class);
         Random rn = new Random();
         int Random_Number = rn.nextInt(20) + 1;
         getResultIntent.putExtra("Random_Number", Random_Number);
