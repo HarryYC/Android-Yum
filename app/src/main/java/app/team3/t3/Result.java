@@ -54,4 +54,9 @@ public class Result extends Activity {
         resDB.saveRestaurant(resultRestaurant);
         Log.e("#save#", "saved");
     }
+
+    public void onHistoryClick(View view) {
+        Intent goHistoryIntent = new Intent(this, History.class);
+        startActivity(goHistoryIntent);
+    }
 }

@@ -4,13 +4,9 @@ package app.team3.t3;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.view.ViewDebug;
 
-import java.sql.SQLException;
 
 /**
  * Created by sssbug on 6/30/15.
