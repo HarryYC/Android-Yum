@@ -1,11 +1,8 @@
 package app.team3.t3;
 
 import android.app.Activity;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,7 +19,6 @@ import java.util.Map;
  */
 public class History extends Activity {
     private List<Map<String, Object>> data;
-    private ListView restaurantListView = null;
 
     /**
      * Called when the activity is starting.  This is where most initialization
@@ -52,36 +48,18 @@ public class History extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         ListView restaurantListView = new ListView(this);
-
         final ResDatabaseHelper db = new ResDatabaseHelper(this);
-        final SQLiteDatabase dbr = db.getReadableDatabase();
-        ArrayList<HashMap<String, String>> Items = new ArrayList<HashMap<String, String>>();
-        Cursor cursor = dbr.query("history",
-                new String[]{"*"},
-                null,
-                null,
-                null, null, "Count" + " DESC", null);
 
-        if (cursor != null) {
-            cursor.moveToFirst();
-        }
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            HashMap<String, String> restaurant = new HashMap<String, String>();
-            Log.e("#Cursor#: ", cursor.getString(1));
-            restaurant.put("Name", cursor.getString(2));
-            restaurant.put("Count", cursor.getString(14));
-            restaurant.put("BusinessID", cursor.getString(1));
-            Items.add(restaurant);
-        }
+        ArrayList<HashMap<String, String>> restaurantsList = db.getHistory();
 
-        Log.e("#Arr#", Items.toString());
-
-
-        SimpleAdapter adapter = new SimpleAdapter(this, Items, R.layout.history,
-                new String[]{"Name", "Count"}, new int[]{R.id.text1, R.id.text2});
+        /* use simpleAdapter to display data */
+        SimpleAdapter adapter = new SimpleAdapter(this, restaurantsList, R.layout.history,
+                new String[]{"Name", "Count"}, new int[]{R.id.history_name_view, R.id.history_count_view});
         restaurantListView.setAdapter(adapter);
         setContentView(restaurantListView);
+
 
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
@@ -90,6 +68,7 @@ public class History extends Activity {
                 Toast.makeText(History.this, tvShowPiced, Toast.LENGTH_SHORT).show();
             }
         };
+
         restaurantListView.setOnItemClickListener(listener);
 
 

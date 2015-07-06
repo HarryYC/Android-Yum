@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
     };
 
-    //--------------------------Sensor Listener--------------------------//
+     /* Sensor Listener  */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
 
-        //--------------------------Yelp-------------------------------//
+         /* Yelp  */
 
         final Context context = getApplicationContext();
         final YelpSearch mySearch = new YelpSearch(context);
@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         mySearch.defaultSearch();
 //        mySearch.filteredSearch(null, "San Francisco", "Food", 2000, 1, 0, 0);
 
-        //--------------------------Shake Sensor-----------------------//
+         /* Shake Sensor  */
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
@@ -85,16 +85,16 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
 
-        //--------------------------Database----------------------------//
+         /* Database  */
 
         resDB = new ResDatabaseHelper(context);
 
-        //--------------------------Components---------------------------//
+         /* Components  */
 
         b1 = (Button) findViewById(R.id.button);
         t1 = (TextView) findViewById(R.id.textView2);
 
-        //--------------------------Listeners----------------------------//
+         /* Listeners  */
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override

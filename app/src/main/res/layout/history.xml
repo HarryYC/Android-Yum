@@ -9,7 +9,7 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/history_name_view"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="1"
@@ -18,7 +18,7 @@
         android:textSize="20dp" />
 
     <TextView
-        android:id="@+id/text2"
+        android:id="@+id/history_count_view"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginRight="10dp"

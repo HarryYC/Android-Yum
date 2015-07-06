@@ -6,6 +6,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -82,39 +86,39 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
      */
     public void createDB(SQLiteDatabase db) {
         //Create the "restaurants" table
-        db.execSQL("CREATE TABLE " + TABLE_RESTAURANTS + "(" +
-                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMN_BUSINESS_ID + " TEXT," +
-                        COLUMN_NAME + " TEXT, " +
-                        COLUMN_RATING + " REAL, " +
-                        COLUMN_REVIEW_COUNT + " INTEGER, " +
-                        COLUMN_PHONE + " TEXT, " +
-                        COLUMN_CATEGORIES + " BLOB, " +
-                        COLUMN_ADDRESS + " BLOB, " +
-                        COLUMN_CITY + " TEXT, " +
-                        COLUMN_ZIPCODE + " INTEGER, " +
-                        COLUMN_LATITUDE + " REAL, " +
-                        COLUMN_LONGITUDE + " REAL," +
-                        COLUMN_BUSINESS_IMG + " BLOB, " +
-                        COLUMN_RATING_IMG + " BLOB)"
+        db.execSQL("CREATE TABLE " + TABLE_RESTAURANTS + "("
+                        + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + COLUMN_BUSINESS_ID + " TEXT,"
+                        + COLUMN_NAME + " TEXT, "
+                        + COLUMN_RATING + " REAL, "
+                        + COLUMN_REVIEW_COUNT + " INTEGER, "
+                        + COLUMN_PHONE + " TEXT, "
+                        + COLUMN_CATEGORIES + " BLOB, "
+                        + COLUMN_ADDRESS + " BLOB, "
+                        + COLUMN_CITY + " TEXT, "
+                        + COLUMN_ZIPCODE + " INTEGER, "
+                        + COLUMN_LATITUDE + " REAL, "
+                        + COLUMN_LONGITUDE + " REAL,"
+                        + COLUMN_BUSINESS_IMG + " BLOB, "
+                        + COLUMN_RATING_IMG + " BLOB)"
         );
         //Create the "history" table
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_HISTORY + "(" +
-                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMN_BUSINESS_ID + " TEXT UNIQUE," +
-                        COLUMN_NAME + " TEXT, " +
-                        COLUMN_RATING + " REAL, " +
-                        COLUMN_REVIEW_COUNT + " INTEGER, " +
-                        COLUMN_PHONE + " TEXT, " +
-                        COLUMN_CATEGORIES + " BLOB, " +
-                        COLUMN_ADDRESS + " BLOB, " +
-                        COLUMN_CITY + " TEXT, " +
-                        COLUMN_ZIPCODE + " INTEGER, " +
-                        COLUMN_LATITUDE + " REAL, " +
-                        COLUMN_LONGITUDE + " REAL," +
-                        COLUMN_BUSINESS_IMG + " BLOB, " +
-                        COLUMN_RATING_IMG + " BLOB, " +
-                        COLUMN_COUNT + " int)"
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_HISTORY + "("
+                        + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + COLUMN_BUSINESS_ID + " TEXT UNIQUE,"
+                        + COLUMN_NAME + " TEXT, "
+                        + COLUMN_RATING + " REAL, "
+                        + COLUMN_REVIEW_COUNT + " INTEGER, "
+                        + COLUMN_PHONE + " TEXT, "
+                        + COLUMN_CATEGORIES + " BLOB, "
+                        + COLUMN_ADDRESS + " BLOB, "
+                        + COLUMN_CITY + " TEXT, "
+                        + COLUMN_ZIPCODE + " INTEGER, "
+                        + COLUMN_LATITUDE + " REAL, "
+                        + COLUMN_LONGITUDE + " REAL,"
+                        + COLUMN_BUSINESS_IMG + " BLOB, "
+                        + COLUMN_RATING_IMG + " BLOB, "
+                        + COLUMN_COUNT + " int)"
         );
     }
 
@@ -264,6 +268,32 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(13));
 
         return restaurant;
+    }
+
+    public ArrayList<HashMap<String, String>> getHistory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ArrayList<HashMap<String, String>> restaurantsList = new ArrayList<HashMap<String, String>>();
+
+        Cursor cursor = db.query("history",
+                new String[]{"*"},
+                null,
+                null,
+                null, null, "Count" + " DESC", null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        /* insert data into ArrayList */
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            HashMap<String, String> restaurant = new HashMap<String, String>();
+            Log.e("#Cursor#: ", cursor.getString(1));
+            restaurant.put("Name", cursor.getString(2));
+            restaurant.put("Count", cursor.getString(14));
+            restaurant.put("BusinessID", cursor.getString(1));
+            restaurantsList.add(restaurant);
+        }
+        return restaurantsList;
     }
 }
 
