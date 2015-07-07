@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">t3</string>
+    <string name="app_name">Yum</string>
 
     <string name="hello_world">Hello Harry!</string>
     <string name="action_settings">Settings</string>
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
 </resources>
