@@ -270,6 +270,37 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         return restaurant;
     }
 
+    public Restaurant getRestaurant(String BussinessID) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_HISTORY,
+                new String[]{"*"},
+                COLUMN_BUSINESS_ID + "=?",
+                new String[]{BussinessID},
+                null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        Restaurant restaurant = new Restaurant(
+                cursor.getString(1),
+                cursor.getString(2),
+                Float.parseFloat(cursor.getString(3)),
+                Integer.parseInt(cursor.getString(4)),
+                cursor.getString(5),
+                cursor.getString(6),
+                cursor.getString(7),
+                cursor.getString(8),
+                Integer.parseInt(cursor.getString(9)),
+                Float.parseFloat(cursor.getString(10)),
+                Float.parseFloat(cursor.getString(11)),
+                cursor.getString(12),
+                cursor.getString(13));
+
+        return restaurant;
+    }
     public ArrayList<HashMap<String, String>> getHistory() {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -288,9 +319,9 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             HashMap<String, String> restaurant = new HashMap<String, String>();
 //            Log.e("#Cursor#: ", cursor.getString(1));
+            restaurant.put("BusinessID", cursor.getString(1));
             restaurant.put("Name", cursor.getString(2));
             restaurant.put("Count", cursor.getString(14));
-            restaurant.put("BusinessID", cursor.getString(1));
             restaurantsList.add(restaurant);
         }
         return restaurantsList;

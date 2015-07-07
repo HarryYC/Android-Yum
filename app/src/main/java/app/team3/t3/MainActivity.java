@@ -89,6 +89,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         resDB = new ResDatabaseHelper(context);
 
+//        Restaurant r = resDB.getRestaurant('')
+
          /* Components  */
 
         b1 = (Button) findViewById(R.id.button);

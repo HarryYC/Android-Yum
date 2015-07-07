@@ -19,39 +19,56 @@ public class Result extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.result);
-
-        /* get Intent from Main activity or history activity */
-        Intent getIntents = getIntent();
-        int rdNumber = getIntents.getIntExtra("Random_Number", 0);
-        String bussinessID = getIntents.getStringExtra("Bussiness_ID");
-
-
         TextView viewResult = (TextView) findViewById(R.id.result_text_view);
         final Context context = getApplicationContext();
         resDB = new ResDatabaseHelper(context);
 
+        /* get Intent from Main activity or history activity */
+        Intent getIntents = getIntent();
+        int rdNumber = getIntents.getIntExtra("Random_Number", 0);
+        String bussinessID = getIntents.getStringExtra("Business_ID");
+
+
+        /* If the caller is from main activity, the random number won't be zero */
         if (rdNumber != 0) {
             Restaurant randomRestaurant = resDB.getRestaurant(rdNumber);
             resultRestaurant = randomRestaurant;
             String restaurantOutput = "BID: " + randomRestaurant.getBusinessID() +
-                    "\n\nRestaurant Name: " + randomRestaurant.getName() +
+                    "\n\nName: " + randomRestaurant.getName() +
                     "\n\nRating: " + randomRestaurant.getRating() +
                     "\n\nPhone: " + randomRestaurant.getPhone() +
-                    "\n\nCategories: " + randomRestaurant.getCategories() +
+//                    "\n\nCategories: " + randomRestaurant.getCategories() +
                     "\n\nAddress: " + randomRestaurant.getAddress() +
                     "\n\nCity: " + randomRestaurant.getCity() +
-                    "\n\nZipCode: " + randomRestaurant.getZipCode() +
-                    "\n\nLatitude: " + randomRestaurant.getLatitude() +
-                    "\n\nLongitude: " + randomRestaurant.getLongitude() +
-                    "\n\nRatingImgURL: " + randomRestaurant.getRatingImgURL() +
-                    "\n\nBusinessImgURL: " + randomRestaurant.getRatingImgURL();
+                    "\n\nZipCode: " + randomRestaurant.getZipCode();
+//                    "\n\nLatitude: " + randomRestaurant.getLatitude() +
+//                    "\n\nLongitude: " + randomRestaurant.getLongitude() +
+//                    "\n\nRatingImgURL: " + randomRestaurant.getRatingImgURL() +
+//                    "\n\nBusinessImgURL: " + randomRestaurant.getRatingImgURL()
 
             viewResult.setText(restaurantOutput);
         }
 
+        /* deal with the call from history activity */
         if (bussinessID != null && !bussinessID.isEmpty()) {
-            Log.e("#Bussiness_ID####: ", bussinessID);
-            viewResult.setText(bussinessID);
+            Log.e("##BID## ", bussinessID);
+
+            Restaurant randomRestaurant = resDB.getRestaurant(bussinessID);
+            resultRestaurant = randomRestaurant;
+            String restaurantOutput = "BID: " + randomRestaurant.getBusinessID() +
+                    "\n\nName: " + randomRestaurant.getName() +
+                    "\n\nRating: " + randomRestaurant.getRating() +
+                    "\n\nPhone: " + randomRestaurant.getPhone() +
+//                    "\n\nCategories: " + randomRestaurant.getCategories() +
+                    "\n\nAddress: " + randomRestaurant.getAddress() +
+                    "\n\nCity: " + randomRestaurant.getCity() +
+                    "\n\nZipCode: " + randomRestaurant.getZipCode();
+//                    "\n\nLatitude: " + randomRestaurant.getLatitude() +
+//                    "\n\nLongitude: " + randomRestaurant.getLongitude() +
+//                    "\n\nRatingImgURL: " + randomRestaurant.getRatingImgURL() +
+//                    "\n\nBusinessImgURL: " + randomRestaurant.getRatingImgURL();
+
+            viewResult.setText(restaurantOutput);
 
         }
 
@@ -81,24 +98,7 @@ public class Result extends Activity {
      * @see #onPostResume
      * @see #onPause
      */
-//    protected void onResume() {
-//        super.onResume();
-////        Intent getRandomNumber = getIntent();
-////        int rdNumber = getRandomNumber.getIntExtra("Random_Number", 0);
-//
-//        Intent getBussinessID = getIntent();
-//        String bussinessID = getBussinessID.getStringExtra("Bussiness_ID");
-////        try {
-////            Log.e("#Random Number####: ", String.valueOf(rdNumber));
-////        } catch (Exception e) {
-////        }
-//        try {
-//            Log.e("#Bussiness_ID####: ", bussinessID);
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
-//
-//    }
+
 
 
     public void onBackToMainClick(View view) {
@@ -111,7 +111,7 @@ public class Result extends Activity {
 
     public void onHistoryClick(View view) {
         Intent goHistoryIntent = new Intent(this, History.class);
-        finish();
+        finish(); //avoid multiple activity
         startActivity(goHistoryIntent);
     }
 }

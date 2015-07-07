@@ -7,7 +7,8 @@
         android:id="@+id/result_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text" />
+        android:text="New Text"
+        android:textSize="20dp" />
 
     <Button
         android:id="@+id/save_result_button"

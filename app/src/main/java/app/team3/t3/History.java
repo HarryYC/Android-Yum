@@ -2,13 +2,17 @@ package app.team3.t3;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,19 +69,22 @@ public class History extends Activity {
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String tvShowPiced = "You selected " + String.valueOf(parent.getItemAtPosition(position));
-                Toast.makeText(History.this, tvShowPiced, Toast.LENGTH_SHORT).show();
+                /* split strings twice, to get the BusinessID */
+                String temp = String.valueOf(parent.getItemAtPosition(position));
+//                System.out.println(temp);
+                String[] separatedOne = temp.split("BusinessID");
+//                System.out.println(separatedOne[1]);
+                String[] separatedTwo = separatedOne[1].split(",");
+//                System.out.println(separatedTwo[0].replace("=",""));
+
 
                 Intent getRestaurantDetail = new Intent(History.this, Result.class);
-
                 finish();
-
-                getRestaurantDetail.putExtra("Bussiness_ID", "BID");
+                getRestaurantDetail.putExtra("Business_ID", separatedTwo[0].replace("=", "").trim());
                 getRestaurantDetail.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(getRestaurantDetail);
             }
         };
-
         restaurantListView.setOnItemClickListener(listener);
 
 
