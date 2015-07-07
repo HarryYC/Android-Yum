@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         Random rn = new Random();
         int Random_Number = rn.nextInt(20) + 1;
         getResultIntent.putExtra("Random_Number", Random_Number);
-
+        getResultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(getResultIntent);
 
     }

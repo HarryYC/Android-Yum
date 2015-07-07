@@ -287,7 +287,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         /* insert data into ArrayList */
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             HashMap<String, String> restaurant = new HashMap<String, String>();
-            Log.e("#Cursor#: ", cursor.getString(1));
+//            Log.e("#Cursor#: ", cursor.getString(1));
             restaurant.put("Name", cursor.getString(2));
             restaurant.put("Count", cursor.getString(14));
             restaurant.put("BusinessID", cursor.getString(1));

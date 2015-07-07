@@ -1,6 +1,7 @@
 package app.team3.t3;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -66,6 +67,14 @@ public class History extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String tvShowPiced = "You selected " + String.valueOf(parent.getItemAtPosition(position));
                 Toast.makeText(History.this, tvShowPiced, Toast.LENGTH_SHORT).show();
+
+                Intent getRestaurantDetail = new Intent(History.this, Result.class);
+
+                finish();
+
+                getRestaurantDetail.putExtra("Bussiness_ID", "BID");
+                getRestaurantDetail.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(getRestaurantDetail);
             }
         };
 

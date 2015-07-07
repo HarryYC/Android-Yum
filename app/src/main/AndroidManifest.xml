@@ -25,6 +25,7 @@
             android:name=".Result"
             android:label="Your Lucky Restaurant"
             android:theme="@style/AppTheme"
+
             />
         <activity
             android:name=".History"

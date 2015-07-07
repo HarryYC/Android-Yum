@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,30 +19,86 @@ public class Result extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.result);
-        Intent getRandomNumber = getIntent();
-        int rdNumber = getRandomNumber.getIntExtra("Random_Number", 0);
+
+        /* get Intent from Main activity or history activity */
+        Intent getIntents = getIntent();
+        int rdNumber = getIntents.getIntExtra("Random_Number", 0);
+        String bussinessID = getIntents.getStringExtra("Bussiness_ID");
+
 
         TextView viewResult = (TextView) findViewById(R.id.result_text_view);
         final Context context = getApplicationContext();
         resDB = new ResDatabaseHelper(context);
-        Restaurant randomRestaurant = resDB.getRestaurant(rdNumber);
-        resultRestaurant = randomRestaurant;
-        String restaurantOutput = "BID: " + randomRestaurant.getBusinessID() +
-                "\n\nRestaurant Name: " + randomRestaurant.getName() +
-                "\n\nRating: " + randomRestaurant.getRating() +
-                "\n\nPhone: " + randomRestaurant.getPhone() +
-                "\n\nCategories: " + randomRestaurant.getCategories() +
-                "\n\nAddress: " + randomRestaurant.getAddress() +
-                "\n\nCity: " + randomRestaurant.getCity() +
-                "\n\nZipCode: " + randomRestaurant.getZipCode() +
-                "\n\nLatitude: " + randomRestaurant.getLatitude() +
-                "\n\nLongitude: " + randomRestaurant.getLongitude() +
-                "\n\nRatingImgURL: " + randomRestaurant.getRatingImgURL() +
-                "\n\nBusinessImgURL: " + randomRestaurant.getRatingImgURL();
 
-        viewResult.setText(restaurantOutput);
+        if (rdNumber != 0) {
+            Restaurant randomRestaurant = resDB.getRestaurant(rdNumber);
+            resultRestaurant = randomRestaurant;
+            String restaurantOutput = "BID: " + randomRestaurant.getBusinessID() +
+                    "\n\nRestaurant Name: " + randomRestaurant.getName() +
+                    "\n\nRating: " + randomRestaurant.getRating() +
+                    "\n\nPhone: " + randomRestaurant.getPhone() +
+                    "\n\nCategories: " + randomRestaurant.getCategories() +
+                    "\n\nAddress: " + randomRestaurant.getAddress() +
+                    "\n\nCity: " + randomRestaurant.getCity() +
+                    "\n\nZipCode: " + randomRestaurant.getZipCode() +
+                    "\n\nLatitude: " + randomRestaurant.getLatitude() +
+                    "\n\nLongitude: " + randomRestaurant.getLongitude() +
+                    "\n\nRatingImgURL: " + randomRestaurant.getRatingImgURL() +
+                    "\n\nBusinessImgURL: " + randomRestaurant.getRatingImgURL();
+
+            viewResult.setText(restaurantOutput);
+        }
+
+        if (bussinessID != null && !bussinessID.isEmpty()) {
+            Log.e("#Bussiness_ID####: ", bussinessID);
+            viewResult.setText(bussinessID);
+
+        }
+
+
+
+
 
     }
+
+    /**
+     * Called after {@link #onRestoreInstanceState}, {@link #onRestart}, or
+     * {@link #onPause}, for your activity to start interacting with the user.
+     * This is a good place to begin animations, open exclusive-access devices
+     * (such as the camera), etc.
+     * <p/>
+     * <p>Keep in mind that onResume is not the best indicator that your activity
+     * is visible to the user; a system window such as the keyguard may be in
+     * front.  Use {@link #onWindowFocusChanged} to know for certain that your
+     * activity is visible to the user (for example, to resume a game).
+     * <p/>
+     * <p><em>Derived classes must call through to the super class's
+     * implementation of this method.  If they do not, an exception will be
+     * thrown.</em></p>
+     *
+     * @see #onRestoreInstanceState
+     * @see #onRestart
+     * @see #onPostResume
+     * @see #onPause
+     */
+//    protected void onResume() {
+//        super.onResume();
+////        Intent getRandomNumber = getIntent();
+////        int rdNumber = getRandomNumber.getIntExtra("Random_Number", 0);
+//
+//        Intent getBussinessID = getIntent();
+//        String bussinessID = getBussinessID.getStringExtra("Bussiness_ID");
+////        try {
+////            Log.e("#Random Number####: ", String.valueOf(rdNumber));
+////        } catch (Exception e) {
+////        }
+//        try {
+//            Log.e("#Bussiness_ID####: ", bussinessID);
+//        } catch (Exception e) {
+//            System.out.println(e.toString());
+//        }
+//
+//    }
 
 
     public void onBackToMainClick(View view) {
@@ -54,6 +111,7 @@ public class Result extends Activity {
 
     public void onHistoryClick(View view) {
         Intent goHistoryIntent = new Intent(this, History.class);
+        finish();
         startActivity(goHistoryIntent);
     }
 }
