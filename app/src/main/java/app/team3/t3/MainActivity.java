@@ -5,11 +5,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 
 import java.util.Random;
 
@@ -20,27 +15,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final Context context = getApplicationContext();
-
-        final YelpSearch mySearch = new YelpSearch(context);
-        final Restaurant[] allRestaurant = mySearch.filteredSearch(null, "San Francisco, CA", null, 0, 1, 0, 0);
-        Button pickRestaurant = (Button) findViewById(R.id.randomBtn);
-        final ImageView businessIV = (ImageView) findViewById(R.id.businessIV);
-        final ImageView ratingIV = (ImageView) findViewById(R.id.ratingIV);
-        final TextView nameTV = (TextView) findViewById(R.id.nameTV);
-        final TextView countTV = (TextView) findViewById(R.id.countTV);
-
-        pickRestaurant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Random random = new Random();
-                int key = Math.abs(random.nextInt() % 20);
-                new ImageDownloader(context, businessIV, true).execute(allRestaurant[key].getBusinessImgURL());
-                new ImageDownloader(context, ratingIV, false).execute(allRestaurant[key].getRatingImgURL());
-                nameTV.setText(allRestaurant[key].getName());
-                countTV.setText("(" + allRestaurant[key].getReviewCount() + ")");
-            }
-        });
     }
 
     @Override

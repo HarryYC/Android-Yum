@@ -10,8 +10,8 @@ public class Restaurant {
     private int reviewCount;
     private String phone;
     private String categories;
-    private String Address;
-    private String City;
+    private String address;
+    private String city;
     private int zipCode;
     private float latitude;
     private float longitude;
@@ -25,8 +25,8 @@ public class Restaurant {
         this.reviewCount = 0;
         this.phone = "";
         this.categories = "";
-        this.Address = "";
-        this.City = "";
+        this.address = "";
+        this.city = "";
         this.zipCode = 0;
         this.latitude = 0;
         this.longitude = 0;
@@ -35,14 +35,14 @@ public class Restaurant {
     }
 
     // Parameterized Constructor
-    public Restaurant(String name, float rating, int reviewCount, String phone, String categories, String Address, String City, int zipCode, float latitude, float longitude, String ratingImgURL, String businessImgURL) {
+    public Restaurant(String name, float rating, int reviewCount, String phone, String categories, String address, String city, int zipCode, float latitude, float longitude, String ratingImgURL, String businessImgURL) {
         this.name = name;
         this.rating = rating;
         this.reviewCount = reviewCount;
         this.phone = phone;
         this.categories = categories;
-        this.Address = Address;
-        this.City = City;
+        this.address = address;
+        this.city = city;
         this.zipCode = zipCode;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -102,19 +102,19 @@ public class Restaurant {
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
-    public void setAddress(String Address) {
-        this.Address = Address;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getCity() {
-        return City;
+        return city;
     }
 
-    public void setCity(String City) {
-        this.City = City;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public int getZipCode() {
