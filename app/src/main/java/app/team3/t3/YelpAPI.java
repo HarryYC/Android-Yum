@@ -12,12 +12,7 @@ import org.scribe.oauth.OAuthService;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Code sample for accessing the Yelp API V2.
- * <p/>
- * This program demonstrates the capability of the Yelp API version 2.0 by using the Search API to
- * query for businesses by a search term and location, and the Business API to query additional
- * information about the top result from the search query.
- * <p/>
+ * Modified version of code sample for accessing the Yelp API V2.
  * <p/>
  * See <a href="http://www.yelp.com/developers/documentation">Yelp Documentation</a> for more info.
  */
@@ -31,14 +26,6 @@ public class YelpAPI {
     OAuthService service;
     Token accessToken;
 
-    /**
-     * Setup the Yelp API OAuth credentials.
-     *
-     * @param consumerKey    Consumer key
-     * @param consumerSecret Consumer secret
-     * @param token          Token
-     * @param tokenSecret    Token secret
-     */
     public YelpAPI(String consumerKey, String consumerSecret, String token, String tokenSecret) {
         this.service =
                 new ServiceBuilder().provider(TwoStepOAuth.class).apiKey(consumerKey)
@@ -47,24 +34,11 @@ public class YelpAPI {
     }
 
     /**
-     * Creates and sends a request to the Search API by term and location.
+     * Creates and sends a request to the Search API by term, location, category, sort, range, and coordinate.
      * <p/>
      * See <a href="http://www.yelp.com/developers/documentation/v2/search_api">Yelp Search API V2</a>
      * for more info.
      *
-     * @param term     <tt>String</tt> of the search term to be queried
-     * @param location <tt>String</tt> of the latitude an longitude
-     * @return <tt>String</tt> JSON Response
-     */
-    public String searchForBusinessesByLocation(String term, String location) {
-        OAuthRequest request = createOAuthRequest(SEARCH_PATH);
-        request.addQuerystringParameter("term", term);
-        request.addQuerystringParameter("location", location);
-        request.addQuerystringParameter("limit", String.valueOf(SEARCH_LIMIT));
-        return sendRequestAndGetResponse(request);
-    }
-
-    /**
      * @param term       <tt>String</tt> of the search term to be queried
      * @param location   <tt>String</tt> of the location
      * @param category   <tt>String</tt> of the search category to be queried
@@ -133,6 +107,9 @@ public class YelpAPI {
         return threadResponse;
     }
 
+    /**
+     * Class for process request and response in the background threads
+     */
     private class YelpAPIThread extends AsyncTask<Object, Void, String> {
 
         @Override

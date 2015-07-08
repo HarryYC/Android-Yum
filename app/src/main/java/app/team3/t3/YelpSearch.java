@@ -10,6 +10,11 @@ import org.json.JSONObject;
  * Created by ivan on 6/30/15.
  */
 
+/**
+ * Modified version of code sample for accessing the Yelp API V2.
+ * <p/>
+ * See <a href="http://www.yelp.com/developers/documentation">Yelp Documentation</a> for more info.
+ */
 public class YelpSearch {
     private static final int MAX_RESTAURANT = 20;
     private static final String DEFAULT_TERM = "restaurants";
@@ -32,8 +37,9 @@ public class YelpSearch {
 
     /**
      * Queries the Search API based on the search terms and store the result to be process
-     *  @param yelpApi    <tt>YelpAPI</tt> service instance
+     * @param yelpApi    <tt>YelpAPI</tt> service instance
      * @param yelpApiDII <tt>YelpAPICLI</tt> arguments for search
+     * @return restaurant <tt>Restaurant[]</tt> restautrant data from Yelp search result JSON String
      */
     public Restaurant[] queryAPI(YelpAPI yelpApi, YelpAPIDII yelpApiDII) {
         String responseBusinessJSON =
@@ -113,7 +119,7 @@ public class YelpSearch {
     }
 
     /**
-     * reset the argument for search
+     * reset the argument for search to default values
      */
     private void resetSearchItems() {
         if (yelpApiDII == null) {
@@ -124,6 +130,17 @@ public class YelpSearch {
         }
     }
 
+    /**
+     *
+     * @param term <tt>String</tt> for search term input
+     * @param location <tt>String</tt> for addresss of center of search input
+     * @param category <tt>String</tt> for restaurant categories input
+     * @param range <tt>int</tt> for radius of search input
+     * @param sort <tt>int</tt> for sort mode input
+     * @param latitude <tt>float</tt> for latitude input
+     * @param longitude <tt>float</tt> for lontitude input
+     * @return <tt>Restaurant</tt> array of restaurant data
+     */
     public Restaurant[] filteredSearch(String term, String location, String category, int range, int sort, float latitude, float longitude) {
         resetSearchItems();
         if(term != null) {
@@ -152,7 +169,7 @@ public class YelpSearch {
     }
 
     /**
-     * interface for the input.
+     * interface for the input values.
      */
     private static class YelpAPIDII {
         public String term = DEFAULT_TERM;
