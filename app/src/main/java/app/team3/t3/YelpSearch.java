@@ -1,7 +1,6 @@
 package app.team3.t3;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,19 +10,18 @@ import org.json.JSONObject;
  * Created by ivan on 6/30/15.
  */
 
-
 public class YelpSearch {
     private static final int MAX_RESTAURANT = 20;
-    private static final String DEFAULT_TERM = "food";
-    private static final String DEFAULT_LOCATION = "San Francisco, CA";
-    private static final int DEFAULT_RANGE = 1609;
+    private static final String DEFAULT_TERM = "restaurants";
+    private static final String DEFAULT_LOCATION = null;
+    private static final int DEFAULT_RANGE = 2000;
     private static final int DEFAULT_SORT = 0;
     private static final String DEFAULT_CATEGORY = "restaurants";
     private static final String DEFAULT_COORDINATE = null;
-    private static final boolean IS_DEFAULT = true;
     private YelpAPI yelpApi = null;
     private Restaurant[] restaurant;
     private YelpAPIDII yelpApiDII = null;
+    private String trackingMsg = "";
 
     public YelpSearch(Context context) {
         yelpApi = new YelpAPI(context.getString(R.string.yelp_consumer_key),
@@ -40,7 +38,7 @@ public class YelpSearch {
     public Restaurant[] queryAPI(YelpAPI yelpApi, YelpAPIDII yelpApiDII) {
         String responseBusinessJSON =
                 yelpApi.searchForBusiness(yelpApiDII.term, yelpApiDII.location, yelpApiDII.category, yelpApiDII.sort, yelpApiDII.range, yelpApiDII.coordinate);
-
+        trackingMsg = responseBusinessJSON;
         try {
             JSONObject response = new JSONObject(responseBusinessJSON);
             int totalResults = Integer.parseInt(response.getString("total"));
@@ -50,16 +48,22 @@ public class YelpSearch {
                 restaurant = new Restaurant[MAX_RESTAURANT];
             }
 
+
             JSONArray businesses = response.getJSONArray("businesses");
-            for (int index = 0; index < MAX_RESTAURANT; index++) {
+            for (int index = 0; index < restaurant.length; index++) {
                 restaurant[index] = new Restaurant();
 
                 JSONObject businessData = businesses.getJSONObject(index);
-                restaurant[index].setBusinessID(businessData.getString("id"));
+                restaurant[index].setBusinessID(businessData.getString("id"));;
                 restaurant[index].setName(businessData.getString("name"));
                 restaurant[index].setRating(Float.parseFloat(businessData.getString("rating")));
                 restaurant[index].setReviewCount(Integer.parseInt(businessData.getString("review_count")));
-                restaurant[index].setPhone(businessData.getString("display_phone"));
+
+                if(businessData.has("display_phone")) {
+                    restaurant[index].setPhone(businessData.getString("display_phone"));
+                } else {
+                    restaurant[index].setPhone("none");
+                }
 
                 JSONArray category = businessData.getJSONArray("categories");
                 String categoryString = "";
@@ -122,14 +126,14 @@ public class YelpSearch {
 
     public Restaurant[] filteredSearch(String term, String location, String category, int range, int sort, float latitude, float longitude) {
         resetSearchItems();
-        if (term != null) {
+        if(term != null) {
             yelpApiDII.term = term;
         }
-        if (location != null) {
+        if(location != null) {
             yelpApiDII.location = location;
         }
-        if (category != null) {
-            yelpApiDII.category = category;
+        if(category != null) {
+            yelpApiDII.category = "restaurants," + category;
         }
         if (range > 1609 && range <= 40000) {
             yelpApiDII.range = range;
@@ -137,10 +141,10 @@ public class YelpSearch {
         if (sort >= 0 && sort < 3) {
             yelpApiDII.sort = sort;
         }
-        if (latitude != 0 && longitude != 0) {
+        if (latitude != -1 && longitude != -1) {
             yelpApiDII.coordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
         }
-        if (location == null && latitude == 0 && longitude == 0) {
+        if (location == null && latitude == -1 && longitude == -1) {
             return null;
         } else {
             return queryAPI(yelpApi, yelpApiDII);
@@ -157,5 +161,9 @@ public class YelpSearch {
         public int sort = DEFAULT_SORT;
         public String category = DEFAULT_CATEGORY;
         public String coordinate = DEFAULT_COORDINATE;
+    }
+
+    public String getTrackingMsg() {
+        return trackingMsg;
     }
 }

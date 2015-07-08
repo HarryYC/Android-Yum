@@ -76,12 +76,12 @@ public class YelpAPI {
     public String searchForBusiness(String term, String location, String category, int sort, int range, String coordinate) {
         OAuthRequest request = createOAuthRequest(SEARCH_PATH);
         request.addQuerystringParameter("term", term);
-        if (location != null) {
+        if(location != null) {
             request.addQuerystringParameter("location", location);
         }
         request.addQuerystringParameter("category_filter", category);
         request.addQuerystringParameter("sort", String.valueOf(sort));
-        if (coordinate != null) {
+        if(coordinate != null) {
             request.addQuerystringParameter("ll", coordinate);
         }
         request.addQuerystringParameter("limit", String.valueOf(SEARCH_LIMIT));
