@@ -163,7 +163,7 @@ public class YelpSearch {
         if (latitude != 0 && longitude != 0) {
             yelpApiDII.coordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
         }
-        if (location == null && latitude == -1 && longitude == -1) {
+        if (location == null && latitude == 0 && longitude == 0) {
             return null;
         } else {
             return queryAPI(yelpApi, yelpApiDII);
