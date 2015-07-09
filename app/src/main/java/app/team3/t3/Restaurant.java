@@ -10,8 +10,8 @@ public class Restaurant {
     private int reviewCount;
     private String phone;
     private String categories;
-    private String address;
-    private String city;
+    private String Address;
+    private String City;
     private int zipCode;
     private float latitude;
     private float longitude;
@@ -20,13 +20,14 @@ public class Restaurant {
 
     // Default constructor
     public Restaurant() {
+        this.businessID = "";
         this.name = "";
         this.rating = 0;
         this.reviewCount = 0;
         this.phone = "";
         this.categories = "";
-        this.address = "";
-        this.city = "";
+        this.Address = "";
+        this.City = "";
         this.zipCode = 0;
         this.latitude = 0;
         this.longitude = 0;
@@ -34,111 +35,107 @@ public class Restaurant {
         this.businessImgURL = "";
     }
 
-    // Parameterized Constructor
-    public Restaurant(String name, float rating, int reviewCount, String phone, String categories, String address, String city, int zipCode, float latitude, float longitude, String ratingImgURL, String businessImgURL) {
-        this.name = name;
-        this.rating = rating;
-        this.reviewCount = reviewCount;
-        this.phone = phone;
-        this.categories = categories;
-        this.address = address;
-        this.city = city;
-        this.zipCode = zipCode;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.ratingImgURL = ratingImgURL;
-        this.businessImgURL = businessImgURL;
+    public Restaurant(String Name, float Rating, String Phone, String Categories, String Address, String City, int Zipcode, float Latitude, float Longitude) {
+        this.Name = Name;
+        this.Rating = Rating;
+        this.Phone = Phone;
+        this.Categories = Categories;
+        this.Address = Address;
+        this.City = City;
+        this.Zipcode = Zipcode;
+        this.Latitude = Latitude;
+        this.Longitude = Longitude;
     }
 
 
-    // Method to retrieve business informatino
-    public String getBusinessID() {
-        return businessID;
+    // Methods for data retrival
+    public int getId() {
+        return Id;
     }
 
-    // Methods to assign business informations
-    public void setBusinessID(String businessID) {
-        this.businessID = businessID;
+    // Methods for data assignment
+    public void setId(int Id) {
+        this.Id = Id;
+    }
+
+    public String getBusinessId() {
+        return BusinessId;
+    }
+
+    public void setBusinessId(String BusinessId) {
+        this.BusinessId = BusinessId;
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String Name) {
+        this.Name = Name;
     }
 
     public float getRating() {
-        return rating;
+        return Rating;
     }
 
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public int getReviewCount() {
-        return reviewCount;
-    }
-
-    public void setReviewCount(int reviewCount) {
-        this.reviewCount = reviewCount;
+    public void setRating(float Rating) {
+        this.Rating = Rating;
     }
 
     public String getPhone() {
-        return phone;
+        return Phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhone(String Phone) {
+        this.Phone = Phone;
     }
 
     public String getCategories() {
-        return categories;
+        return Categories;
     }
 
-    public void setCategories(String categories) {
-        this.categories = categories;
+    public void setCategories(String Categories) {
+        this.Categories = Categories;
     }
 
     public String getAddress() {
-        return address;
+        return Address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddress(String Address) {
+        this.Address = Address;
     }
 
     public String getCity() {
-        return city;
+        return City;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCity(String City) {
+        this.City = City;
     }
 
-    public int getZipCode() {
-        return zipCode;
+    public int getZipcode() {
+        return Zipcode;
     }
 
-    public void setZipCode(int zipCode) {
-        this.zipCode = zipCode;
+    public void setZipcode(int Zipcode) {
+        this.Zipcode = Zipcode;
     }
 
     public float getLatitude() {
-        return latitude;
+        return Latitude;
     }
 
-    public void setLatitude(float latitude) {
-        this.latitude = latitude;
+    public void setLatitude(float Latitude) {
+        this.Latitude = Latitude;
     }
 
     public float getLongitude() {
-        return longitude;
+        return Longitude;
     }
 
-    public void setLongitude(float longitude) {
-        this.longitude = longitude;
+    public void setLongitude(float Longitude) {
+        this.Longitude = Longitude;
     }
 
     public String getBusinessImgURL() {
@@ -150,10 +147,10 @@ public class Restaurant {
     }
 
     public String getRatingImgURL() {
-        return ratingImgURL;
+        return RatingImgURL;
     }
 
-    public void setRatingImgURL(String ratingImgURL) {
-        this.ratingImgURL = ratingImgURL;
+    public void setRatingImgURL(String RatingImgURL) {
+        this.RatingImgURL = RatingImgURL;
     }
 }
