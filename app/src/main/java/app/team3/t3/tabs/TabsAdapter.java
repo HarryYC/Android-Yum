@@ -28,9 +28,9 @@ public class TabsAdapter extends FragmentPagerAdapter {
                 return testFragmentOne;
             }
             case 1: {
-                TestFragmentTwo testFragmentTwo = new TestFragmentTwo();
+                MapsFragment mapsFragment = new MapsFragment();
                 Log.d(TAG, "TestFragmentTwo called");
-                return testFragmentTwo;
+                return mapsFragment;
             }
             case 2: {
                 TestFragmentThree testFragmentThree = new TestFragmentThree();
