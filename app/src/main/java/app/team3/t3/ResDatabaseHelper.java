@@ -301,6 +301,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
         return restaurant;
     }
+
     public ArrayList<HashMap<String, String>> getHistory() {
         SQLiteDatabase db = this.getWritableDatabase();
 

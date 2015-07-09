@@ -73,9 +73,6 @@ public class Result extends Activity {
         }
 
 
-
-
-
     }
 
     /**
@@ -98,7 +95,6 @@ public class Result extends Activity {
      * @see #onPostResume
      * @see #onPause
      */
-
 
 
     public void onBackToMainClick(View view) {

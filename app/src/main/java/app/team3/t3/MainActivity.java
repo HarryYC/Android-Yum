@@ -44,7 +44,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(500);
 
-                Intent getResultIntent = new Intent(MainActivity.this, Result.class);
+//                Intent getResultIntent = new Intent(MainActivity.this, Result.class);
+                Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
                 Random rn = new Random();
                 int Random_Number = rn.nextInt(20) + 1;
                 getResultIntent.putExtra("Random_Number", Random_Number);
@@ -73,8 +74,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         final Context context = getApplicationContext();
         final YelpSearch mySearch = new YelpSearch(context);
-        final Restaurant[] allRestaurant = mySearch.getRestaurant();
-        mySearch.defaultSearch();
+        final Restaurant[] allRestaurant = mySearch.filteredSearch(null, "San Francisco, CA", null, 0, 1, 0, 0);
+//        mySearch.defaultSearch();
 //        mySearch.filteredSearch(null, "San Francisco", "Food", 2000, 1, 0, 0);
 
          /* Shake Sensor  */
@@ -117,6 +118,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     protected void onPause() {
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
+        getActionBar();
     }
 
     /**
@@ -136,6 +138,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
