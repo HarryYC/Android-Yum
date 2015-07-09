@@ -74,9 +74,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         final Context context = getApplicationContext();
         final YelpSearch mySearch = new YelpSearch(context);
-        final Restaurant[] allRestaurant = mySearch.filteredSearch(null, "San Francisco, CA", null, 0, 1, 0, 0);
-//        mySearch.defaultSearch();
-//        mySearch.filteredSearch(null, "San Francisco", "Food", 2000, 1, 0, 0);
+        final Restaurant[] allRestaurant = mySearch.filteredSearch(null, "San Francisco,CA", null, 0, 1, 0, 0);
 
          /* Shake Sensor  */
 

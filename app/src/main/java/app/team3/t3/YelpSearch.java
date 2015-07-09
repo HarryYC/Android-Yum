@@ -1,6 +1,7 @@
 package app.team3.t3;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +46,7 @@ public class YelpSearch {
         String responseBusinessJSON =
                 yelpApi.searchForBusiness(yelpApiDII.term, yelpApiDII.location, yelpApiDII.category, yelpApiDII.sort, yelpApiDII.range, yelpApiDII.coordinate);
         trackingMsg = responseBusinessJSON;
+        Log.e("###Yelp###", responseBusinessJSON);
         try {
             JSONObject response = new JSONObject(responseBusinessJSON);
             int totalResults = Integer.parseInt(response.getString("total"));
@@ -158,7 +160,7 @@ public class YelpSearch {
         if (sort >= 0 && sort < 3) {
             yelpApiDII.sort = sort;
         }
-        if (latitude != -1 && longitude != -1) {
+        if (latitude != 0 && longitude != 0) {
             yelpApiDII.coordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
         }
         if (location == null && latitude == -1 && longitude == -1) {
