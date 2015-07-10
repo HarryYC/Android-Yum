@@ -5,8 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import app.team3.t3.map.MapsFragment;
-
 /**
  * Created by nanden on 6/30/15.
  */
@@ -31,12 +29,12 @@ public class TabsAdapter extends FragmentPagerAdapter {
             }
             case 1: {
                 TestFragmentTwo testFragmentTwo = new TestFragmentTwo();
-                Log.d(TAG, "TestFragmentThree called");
+                Log.d(TAG, "TestFragmentTwo called");
                 return testFragmentTwo;
             }
             case 2: {
                 MapsFragment mapsFragment = new MapsFragment();
-                Log.d(TAG, "TestFragmentTwo called");
+                Log.d(TAG, "mapsFragment called");
                 return mapsFragment;
             }
         }

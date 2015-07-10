@@ -12,7 +12,7 @@ import app.team3.t3.R;
 /**
  * Created by nanden on 7/5/15.
  */
-public class TestFragmentThree extends Fragment {
+public class TestFragmentTwo extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
