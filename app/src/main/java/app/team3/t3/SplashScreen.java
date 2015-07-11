@@ -17,13 +17,15 @@ import android.provider.Settings;
  */
 public class SplashScreen extends Activity {
 
+    public static Activity splash;
     Context context = this;
+    boolean isStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-
+        splash = this;
 
         // Get Location Manager and check for GPS & Network location services
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -85,9 +87,18 @@ public class SplashScreen extends Activity {
     }
 
     @Override
+    protected void onResume() {
+        super onResume();
+        if(isStarted) {
+            Intent intent = new Intent(SplashScreen.this, MainActivity.class)
+            startActivity(intent);
+        }
+    }
+
+    @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
-        finish();
+        isStarted = true;
     }
 }
