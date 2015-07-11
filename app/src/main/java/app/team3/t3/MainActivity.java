@@ -64,7 +64,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        
+        if(!SplashScreen.splash.isDestroyed()) {
+            SplashScreen.splash.finish();
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
