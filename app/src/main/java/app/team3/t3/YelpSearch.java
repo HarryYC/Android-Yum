@@ -111,8 +111,8 @@ public class YelpSearch {
 
                 JSONObject coordinate = location.getJSONObject("coordinate");
 
-                restaurant[index].setLatitude(Float.parseFloat(coordinate.getString("latitude")));
-                restaurant[index].setLongitude(Float.parseFloat(coordinate.getString("longitude")));
+                restaurant[index].setLatitude(Double.parseDouble(coordinate.getString("latitude")));
+                restaurant[index].setLongitude(Double.parseDouble(coordinate.getString("longitude")));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -132,6 +132,72 @@ public class YelpSearch {
         }
     }
 
+    public Restaurant searchById(String restaurantId) {
+        Restaurant idRestaurant = new Restaurant();
+        String responseBusinessJSON = yelpApi.searchByBusinessId(restaurantId);
+        try {
+            JSONObject businessData = new JSONObject(responseBusinessJSON);
+
+            idRestaurant = new Restaurant();
+
+            idRestaurant.setBusinessID(businessData.getString("id"));
+            ;
+            idRestaurant.setName(businessData.getString("name"));
+            idRestaurant.setRating(Float.parseFloat(businessData.getString("rating")));
+            idRestaurant.setReviewCount(Integer.parseInt(businessData.getString("review_count")));
+
+            if (businessData.has("display_phone")) {
+                idRestaurant.setPhone(businessData.getString("display_phone"));
+            } else {
+                idRestaurant.setPhone("none");
+            }
+
+            JSONArray category = businessData.getJSONArray("categories");
+            String categoryString = "";
+            for (int i = 0; i < category.length(); i++) {
+                JSONArray categoryItems = category.getJSONArray(i);
+                for (int j = 0; j < categoryItems.length(); j++) {
+                    categoryString += categoryItems.getString(j);
+                    if (i < categoryItems.length() - 1) {
+                        categoryString += ", ";
+                    }
+                }
+                if (i < category.length() - 1) {
+                    categoryString += ", ";
+                }
+            }
+
+            idRestaurant.setCategories(categoryString);
+
+            String businessImg = businessData.getString("image_url").replace("ms.jpg", "o.jpg");
+
+            idRestaurant.setBusinessImgURL(businessImg);
+            idRestaurant.setRatingImgURL(businessData.getString("rating_img_url_large"));
+
+            JSONObject location = businessData.getJSONObject("location");
+            JSONArray address = location.getJSONArray("display_address");
+            String businessAddress = "";
+            for (int i = 0; i < address.length(); i++) {
+                businessAddress += address.get(i).toString();
+                if (i < address.length() - 1) {
+                    businessAddress += ", ";
+                }
+            }
+
+            idRestaurant.setAddress(businessAddress);
+            idRestaurant.setCity(location.getString("city"));
+            idRestaurant.setZipCode(Integer.parseInt(location.getString("postal_code")));
+
+            JSONObject coordinate = location.getJSONObject("coordinate");
+
+            idRestaurant.setLatitude(Double.parseDouble(coordinate.getString("latitude")));
+            idRestaurant.setLongitude(Double.parseDouble(coordinate.getString("longitude")));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return idRestaurant;
+    }
+
     /**
      *
      * @param term <tt>String</tt> for search term input
@@ -143,7 +209,7 @@ public class YelpSearch {
      * @param longitude <tt>float</tt> for lontitude input
      * @return <tt>Restaurant</tt> array of restaurant data
      */
-    public Restaurant[] filteredSearch(String term, String location, String category, int range, int sort, float latitude, float longitude) {
+    public Restaurant[] filteredSearch(String term, String location, String category, int range, int sort, Double latitude, Double longitude) {
         resetSearchItems();
         if(term != null) {
             yelpApiDII.term = term;
@@ -154,8 +220,8 @@ public class YelpSearch {
         if(category != null) {
             yelpApiDII.category = "restaurants," + category;
         }
-        if (range > 1609 && range <= 40000) {
-            yelpApiDII.range = range;
+        if (range > 1 && range <= 25) {
+            yelpApiDII.range = range * 1609;
         }
         if (sort >= 0 && sort < 3) {
             yelpApiDII.sort = sort;

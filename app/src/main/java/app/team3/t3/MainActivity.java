@@ -2,31 +2,49 @@ package app.team3.t3;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
+
 
 import java.util.Random;
 
 
-public class MainActivity extends ActionBarActivity implements SensorEventListener {
-    ResDatabaseHelper resDB;
-    private Button b1;
-    private TextView t1;
+public class MainActivity extends ActionBarActivity implements SensorEventListener, LocationListener {
+    protected ResDatabaseHelper resDB;
+    private ImageButton shakeIB;
+    private TextView rangeTV;
+    private SeekBar rangeSB;
+    private int currentRange = 1;
+    private boolean isChanged = false;
+    private YelpSearch mySearch;
+    private Restaurant[] allRestaurant;
 
     private SensorManager mSensorManager;
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+
+    protected LocationManager locationManager;
+    protected Location location;
+    protected double latitude;
+    protected double longitude;
+    protected String serviceAvailable = "";
 
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     final SensorEventListener mSensorListener = new SensorEventListener() {
@@ -41,14 +59,19 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 22 && avoid_doubleShake == true) {
+                if (isChanged) {
+                    allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
+                    isChanged = false;
+                }
+                resDB.insertRestaurants(allRestaurant);
+
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(500);
-
-//                Intent getResultIntent = new Intent(MainActivity.this, Result.class);
                 Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
                 Random rn = new Random();
                 int Random_Number = rn.nextInt(20) + 1;
                 getResultIntent.putExtra("Random_Number", Random_Number);
+                getResultIntent.putExtra("is_new", true);
                 avoid_doubleShake = false;
                 startActivity(getResultIntent);
             }
@@ -64,23 +87,34 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
-        if(!SplashScreen.splash.isDestroyed()) {
+        restoreChanges();
+        if (!SplashScreen.splash.isDestroyed()) {
             SplashScreen.splash.finish();
         }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            serviceAvailable = LocationManager.NETWORK_PROVIDER;
+        } else {
+            serviceAvailable = LocationManager.GPS_PROVIDER;
+        }
+        locationManager.requestLocationUpdates(serviceAvailable, 10000, 5000, this);
+        location = locationManager.getLastKnownLocation(serviceAvailable);
+        if (location != null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
 
          /* Yelp  */
-
         final Context context = getApplicationContext();
-        final YelpSearch mySearch = new YelpSearch(context);
-        final Restaurant[] allRestaurant = mySearch.filteredSearch(null, "San Francisco,CA", null, 0, 1, 0, 0);
+        mySearch = new YelpSearch(context);
+        // filteredSearch(term, address, category, range, sort, latitude, longitude)
+        allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
 
          /* Shake Sensor  */
-
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mAccel = 0.00f;
@@ -88,24 +122,54 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         mAccelLast = SensorManager.GRAVITY_EARTH;
 
          /* Database  */
-
         resDB = new ResDatabaseHelper(context);
 
-//        Restaurant r = resDB.getRestaurant('')
-
          /* Components  */
-
-        b1 = (Button) findViewById(R.id.button);
-        t1 = (TextView) findViewById(R.id.textView2);
+        shakeIB = (ImageButton) findViewById(R.id.shakeIB);
+        rangeTV = (TextView) findViewById(R.id.rangeTV);
+        rangeSB = (SeekBar) findViewById(R.id.rangeSB);
 
          /* Listeners  */
-
-        b1.setOnClickListener(new View.OnClickListener() {
+        shakeIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                t1.setText("inserting data ...");
+                if (isChanged) {
+                    final Restaurant[] allNewRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
+                    isChanged = false;
+                }
+
                 resDB.insertRestaurants(allRestaurant);
-                t1.setText("insert success");
+                Intent resultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
+                Random rn = new Random();
+                int Random_Number = rn.nextInt(20) + 1;
+                resultIntent.putExtra("Random_Number", Random_Number);
+                resultIntent.putExtra("is_new", true);
+                startActivity(resultIntent);
+            }
+        });
+
+        rangeSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                currentRange = progress + 1;
+                String unit = "";
+                if (currentRange > 1) {
+                    unit = " Miles";
+                } else {
+                    unit = " Mile";
+                }
+                rangeTV.setText("Range: " + currentRange + unit);
+                isChanged = true;
+                saveChanges();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
         });
@@ -120,6 +184,20 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
         getActionBar();
+        locationManager.removeUpdates(this);
+        saveChanges();
+    }
+
+    protected void restoreChanges() {
+        SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
+        currentRange = sharedPref.getInt("range", 3);
+    }
+
+    protected void saveChanges() {
+        SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("range", currentRange);
+        editor.commit();
     }
 
     /**
@@ -134,12 +212,32 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
+        restoreChanges();
         avoid_doubleShake = true;
         mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
-    }
 
+
+        String gpsProvider = LocationManager.GPS_PROVIDER;
+        String networkProvider = LocationManager.NETWORK_PROVIDER;
+        if (locationManager.isProviderEnabled(gpsProvider)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            if (!locationManager.isProviderEnabled(gpsProvider)) {
+                serviceAvailable = networkProvider;
+            } else {
+                serviceAvailable = gpsProvider;
+            }
+            locationManager.requestLocationUpdates(serviceAvailable, 10000, 5000, this);
+            location = locationManager.getLastKnownLocation(serviceAvailable);
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        } else {
+            Log.e("Location Err", "No location provider is not available. Does the device have location services enabled?");
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -173,14 +271,24 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     }
 
-    public void onGetResultClick(View view) {
-        Intent getResultIntent = new Intent(this, Result.class);
-        Random rn = new Random();
-        int Random_Number = rn.nextInt(20) + 1;
-        getResultIntent.putExtra("Random_Number", Random_Number);
-        getResultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(getResultIntent);
-
+    @Override
+    public void onLocationChanged(Location location) {
+        this.location = location;
+        isChanged = true;
     }
 
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Latitude", "status");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Latitude", "enable");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude", "disable");
+    }
 }

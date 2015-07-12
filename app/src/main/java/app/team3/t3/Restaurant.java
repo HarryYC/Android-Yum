@@ -13,8 +13,8 @@ public class Restaurant {
     private String address;
     private String city;
     private int zipCode;
-    private float latitude;
-    private float longitude;
+    private double latitude;
+    private double longitude;
     private String ratingImgURL;
     private String businessImgURL;
 
@@ -35,7 +35,7 @@ public class Restaurant {
     }
 
     // Parameterized Constructor
-    public Restaurant(String name, float rating, int reviewCount, String phone, String categories, String address, String city, int zipCode, float latitude, float longitude, String ratingImgURL, String businessImgURL) {
+    public Restaurant(String name, float rating, int reviewCount, String phone, String categories, String address, String city, int zipCode, double latitude, double longitude, String businessImgURL, String ratingImgURL) {
         this.name = name;
         this.rating = rating;
         this.reviewCount = reviewCount;
@@ -51,7 +51,7 @@ public class Restaurant {
     }
 
     // Parameterized Constructor
-    public Restaurant(String businessID, String name, float rating, int reviewCount, String phone, String categories, String Address, String City, int zipCode, float latitude, float longitude, String ratingImgURL, String businessImgURL) {
+    public Restaurant(String businessID, String name, float rating, int reviewCount, String phone, String categories, String Address, String City, int zipCode, double latitude, double longitude, String businessImgURL, String ratingImgURL) {
         this.businessID = businessID;
         this.name = name;
         this.rating = rating;
@@ -142,19 +142,19 @@ public class Restaurant {
         this.zipCode = zipCode;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 

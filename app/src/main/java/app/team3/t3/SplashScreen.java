@@ -29,7 +29,7 @@ public class SplashScreen extends Activity {
 
         // Get Location Manager and check for GPS & Network location services
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
                 !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             setContentView(R.layout.activity_splash);
             showLocationPrompt();
@@ -88,9 +88,9 @@ public class SplashScreen extends Activity {
 
     @Override
     protected void onResume() {
-        super onResume();
-        if(isStarted) {
-            Intent intent = new Intent(SplashScreen.this, MainActivity.class)
+        super.onResume();
+        if (isStarted) {
+            Intent intent = new Intent(SplashScreen.this, MainActivity.class);
             startActivity(intent);
         }
     }

@@ -262,8 +262,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(7),
                 cursor.getString(8),
                 Integer.parseInt(cursor.getString(9)),
-                Float.parseFloat(cursor.getString(10)),
-                Float.parseFloat(cursor.getString(11)),
+                Double.parseDouble(cursor.getString(10)),
+                Double.parseDouble(cursor.getString(11)),
                 cursor.getString(12),
                 cursor.getString(13));
 
@@ -294,8 +294,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(7),
                 cursor.getString(8),
                 Integer.parseInt(cursor.getString(9)),
-                Float.parseFloat(cursor.getString(10)),
-                Float.parseFloat(cursor.getString(11)),
+                Double.parseDouble(cursor.getString(10)),
+                Double.parseDouble(cursor.getString(11)),
                 cursor.getString(12),
                 cursor.getString(13));
 
