@@ -27,40 +27,7 @@
     <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="00e47608-9ffb-49de-b897-4d6c07508556" name="Default" comment="Added: GPS Location and Network Location&#10;            (Not working on emulator)&#10;            Yelp search by Restaurant by ID method&#10;Change Icon label&#10;Integrate methods to ResultFragment&#10;Removed Result Activity (display result in viewpager)&#10;">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/tabs/ResultFragment.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/Result.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/tabs/TestFragmentOne.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/result.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/t3.iml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/gradle_project_sync_data.bin" afterPath="$PROJECT_DIR$/build/intermediates/gradle_project_sync_data.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/outputFileStates.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/outputFileStates.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/.gitignore" afterPath="$PROJECT_DIR$/app/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/ActionBarTabsPager.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/ActionBarTabsPager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/History.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/History.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/ImageDownloader.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/ImageDownloader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/ResDatabaseHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/ResDatabaseHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/Restaurant.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/Restaurant.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/SplashScreen.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/SplashScreen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/tabs/TabsAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/tabs/TabsAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/YelpSearch.java" afterPath="$PROJECT_DIR$/app/src/main/java/app/team3/t3/YelpSearch.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_2_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_one.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_one.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gradlew.bat" afterPath="$PROJECT_DIR$/gradlew.bat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_22_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_22_2_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_22_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_22_2_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/tabs_pager_tool_bar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tabs_pager_tool_bar.xml" />
+    <list default="true" id="00e47608-9ffb-49de-b897-4d6c07508556" name="Default" comment="Added: GPS Location and Network Location&#10;            (Not working on emulator)&#10;            Yelp search by Restaurant by ID method&#10;Change Icon label&#10;Integrate methods to ResultFragment&#10;Removed Result Activity (display result in viewpager)&#10;Swapped Restaurant argument for restaurant and rating image&#10;Modified MainActivity">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="t3.iws" />
@@ -105,6 +72,8 @@
               <caret line="191" column="88" selection-start-line="191" selection-start-column="88" selection-end-line="191" selection-end-column="88" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#4974#5740#0" expanded="false" />
+                <element signature="e#5739#5740#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -2439,6 +2408,13 @@
       <option name="number" value="Default" />
       <updated>1435118346974</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added: GPS Location and Network Location&#10;            (Not working on emulator)&#10;            Yelp search by Restaurant by ID method&#10;Change Icon label&#10;Integrate methods to ResultFragment&#10;Removed Result Activity (display result in viewpager)&#10;Swapped Restaurant argument for restaurant and rating image&#10;Modified MainActivity">
+      <created>1436741340895</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1436741340895</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -2452,7 +2428,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="1023" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -2465,7 +2441,7 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32745314" sideWeight="0.45787546" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30871004" sideWeight="0.50305253" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30871004" sideWeight="0.50305253" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32855567" sideWeight="0.49697885" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930514" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2523,6 +2499,11 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added: GPS Location and Network Location&#10;            (Not working on emulator)&#10;            Yelp search by Restaurant by ID method&#10;Change Icon label&#10;Integrate methods to ResultFragment&#10;Removed Result Activity (display result in viewpager)&#10;Swapped Restaurant argument for restaurant and rating image&#10;Modified MainActivity" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added: GPS Location and Network Location&#10;            (Not working on emulator)&#10;            Yelp search by Restaurant by ID method&#10;Change Icon label&#10;Integrate methods to ResultFragment&#10;Removed Result Activity (display result in viewpager)&#10;Swapped Restaurant argument for restaurant and rating image&#10;Modified MainActivity" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <option name="time" value="3" />
@@ -2544,6 +2525,8 @@
           <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4974#5740#0" expanded="false" />
+            <element signature="e#5739#5740#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2573,6 +2556,8 @@
           <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4974#5740#0" expanded="false" />
+            <element signature="e#5739#5740#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2602,6 +2587,8 @@
           <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4974#5740#0" expanded="false" />
+            <element signature="e#5739#5740#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2645,6 +2632,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4974#5740#0" expanded="false" />
+            <element signature="e#5739#5740#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2674,6 +2663,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4974#5740#0" expanded="false" />
+            <element signature="e#5739#5740#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2703,6 +2694,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4974#5740#0" expanded="false" />
+            <element signature="e#5739#5740#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2810,6 +2803,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.19866444">
           <caret line="41" column="37" selection-start-line="41" selection-start-column="37" selection-end-line="41" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2050#2051#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2838,6 +2835,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6260434">
           <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2897,6 +2895,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="25" column="36" selection-start-line="25" selection-start-column="36" selection-end-line="25" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2904,6 +2905,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="42" column="106" selection-start-line="42" selection-start-column="106" selection-end-line="42" selection-end-column="106" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2970,6 +2972,8 @@
           <caret line="191" column="88" selection-start-line="191" selection-start-column="88" selection-end-line="191" selection-end-column="88" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4974#5740#0" expanded="false" />
+            <element signature="e#5739#5740#0" expanded="false" />
           </folding>
         </state>
       </provider>
