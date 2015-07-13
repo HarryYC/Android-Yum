@@ -2,12 +2,9 @@ package app.team3.t3.tabs;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
-
 import app.team3.t3.History;
 import app.team3.t3.ImageDownloader;
-import app.team3.t3.MainActivity;
 import app.team3.t3.R;
 import app.team3.t3.ResDatabaseHelper;
 import app.team3.t3.Restaurant;
@@ -41,8 +32,8 @@ public class ResultFragment extends Fragment {
     private Context context;
     private int width;
     private int height;
-    protected Restaurant restaurant;
     protected ResDatabaseHelper resDatabaseHelper;
+    protected Restaurant restaurant;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,11 +41,8 @@ public class ResultFragment extends Fragment {
         bundle = this.getArguments();
         context = this.getActivity().getApplicationContext();
         resDatabaseHelper = new ResDatabaseHelper(context);
-        if (bundle.getString("Business_ID") != null) {
-            restaurant = resDatabaseHelper.getRestaurant(bundle.getString("Business_ID"));
-        } else {
-            restaurant = resDatabaseHelper.getRestaurant(bundle.getInt("number"));
-        }
+
+        restaurant = getArguments().getParcelable("result");
 
         name = restaurant.getName();
         reviewCount = "(" + restaurant.getReviewCount() + ")";
@@ -84,11 +72,6 @@ public class ResultFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().finish();
-                /*
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                */
             }
         });
 

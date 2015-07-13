@@ -1,15 +1,11 @@
 package app.team3.t3.tabs;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
-import app.team3.t3.ResDatabaseHelper;
 import app.team3.t3.Restaurant;
 
 
@@ -20,27 +16,17 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = TabsAdapter.class.getSimpleName();
     final int TAB_COUNT = 3;
-    private int number;
-    private int width;
-    private int height;
-    private String businessId = null;
+    private Bundle resultBundle;
 
-    public TabsAdapter(FragmentManager supportFragmentManager, Activity activity, int randomNumber) {
+    public TabsAdapter(FragmentManager supportFragmentManager) {
         super(supportFragmentManager);
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        number = randomNumber;
-        height = displaymetrics.heightPixels;
-        width = displaymetrics.widthPixels;
+        resultBundle = new Bundle();
     }
 
-    public TabsAdapter(FragmentManager supportFragmentManager, Activity activity, String businessId) {
-        super(supportFragmentManager);
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        this.businessId = businessId;
-        height = displaymetrics.heightPixels;
-        width = displaymetrics.widthPixels;
+    public void setPassData(Restaurant restaurant, int width, int height) {
+        resultBundle.putParcelable("result", restaurant);
+        resultBundle.putInt("screen_width", width);
+        resultBundle.putInt("screen_height", height);
     }
 
     @Override
@@ -49,14 +35,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0: {
                 ResultFragment resultFragment = new ResultFragment();
-                Bundle resultBundle = new Bundle();
-                resultBundle.putInt("number", number);
-                resultBundle.putString("Business_ID", businessId);
-                resultBundle.putInt("screen_width", width);
-                resultBundle.putInt("screen_height", height);
-
                 resultFragment.setArguments(resultBundle);
-
                 Log.d(TAG, "ResultFragment called");
                 return resultFragment;
             }

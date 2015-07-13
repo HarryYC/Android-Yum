@@ -2,11 +2,13 @@ package app.team3.t3;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 
 import app.team3.t3.tabs.NavigationDrawerFragment;
 import app.team3.t3.tabs.SlidingTabLayout;
@@ -20,14 +22,26 @@ public class ActionBarTabsPager extends ActionBarActivity {
     private Toolbar mToolbar;
     private ViewPager mViewPager;
     private SlidingTabLayout mSlidingTabLayout;
-    private Activity activity;
+    private Restaurant restaurant;
+    private ResDatabaseHelper resDatabaseHelper;
+    private int height;
+    private int width;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        activity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.action_bar_tabs_pager);
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        height = displaymetrics.heightPixels;
+        width = displaymetrics.widthPixels;
         Bundle bundle = getIntent().getExtras();
+        resDatabaseHelper = new ResDatabaseHelper(getApplicationContext());
+        if (bundle.getBoolean("is_new")) {
+            restaurant = resDatabaseHelper.getRestaurant(bundle.getInt("Random_Number"));
+        } else {
+            restaurant = resDatabaseHelper.getRestaurant(bundle.getString("Business_ID"));
+        }
 
         mToolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
@@ -35,13 +49,10 @@ public class ActionBarTabsPager extends ActionBarActivity {
         NavigationDrawerFragment navigationDrawerFragment =
                 (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer_fragment);
         navigationDrawerFragment.setUp(R.id.fragment_navigation_drawer_fragment, (DrawerLayout)findViewById(R.id.drawer_layout),mToolbar);
-
         mViewPager = (ViewPager)findViewById(R.id.view_pager);
-        if (bundle.getBoolean("is_new")) {
-            mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), activity, bundle.getInt("Random_Number")));
-        } else {
-            mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), activity, bundle.getString("Business_ID")));
-        }
+        TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
+        tabsAdapter.setPassData(restaurant, width, height);
+        mViewPager.setAdapter(tabsAdapter);
         mSlidingTabLayout = (SlidingTabLayout)findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
     }

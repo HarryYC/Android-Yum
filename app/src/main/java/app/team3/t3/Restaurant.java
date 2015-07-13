@@ -1,9 +1,12 @@
 package app.team3.t3;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by sssbug on 6/30/15.
  */
-public class Restaurant {
+public class Restaurant implements Parcelable {
     private String businessID;
     private String name;
     private float rating;
@@ -32,6 +35,35 @@ public class Restaurant {
         this.longitude = 0;
         this.ratingImgURL = "";
         this.businessImgURL = "";
+    }
+
+    // Parcelling
+    public Restaurant(Parcel source) {
+        String[] dataString = new String[8];
+        int[] dataInt = new int[2];
+        double[] dataDouble = new double[2];
+
+        source.readStringArray(dataString);
+        source.readIntArray(dataInt);
+        source.readDoubleArray(dataDouble);
+
+        this.businessID = dataString[0];
+        this.name = dataString[1];
+        this.phone = dataString[2];
+        this.categories = dataString[3];
+        this.address = dataString[4];
+        this.city = dataString[5];
+        this.ratingImgURL = dataString[6];
+        this.businessImgURL = dataString[7];
+
+        this.reviewCount = dataInt[0];
+        this.zipCode = dataInt[1];
+
+        this.latitude = dataDouble[0];
+        this.longitude = dataDouble[1];
+
+        this.rating = source.readFloat();
+
     }
 
     // Parameterized Constructor
@@ -173,4 +205,45 @@ public class Restaurant {
     public void setRatingImgURL(String ratingImgURL) {
         this.ratingImgURL = ratingImgURL;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[]{
+                this.businessID,
+                this.name,
+                this.phone,
+                this.categories,
+                this.address,
+                this.city,
+                this.ratingImgURL,
+                this.businessImgURL
+        });
+        dest.writeFloat(this.rating);
+        dest.writeIntArray(new int[]{
+                this.reviewCount,
+                this.zipCode
+        });
+        dest.writeDoubleArray(new double[]{
+                this.latitude,
+                this.longitude
+        });
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+
+        @Override
+        public Restaurant createFromParcel(Parcel source) {
+            return new Restaurant(source);
+        }
+
+        @Override
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
 }
