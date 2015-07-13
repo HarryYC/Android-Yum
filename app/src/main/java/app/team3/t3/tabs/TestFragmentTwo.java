@@ -13,11 +13,10 @@ import app.team3.t3.R;
  * Created by nanden on 7/5/15.
  */
 public class TestFragmentTwo extends Fragment {
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_two,container,false);
+        View view = inflater.inflate(R.layout.fragment_three,container,false);
         return view;
 
     }

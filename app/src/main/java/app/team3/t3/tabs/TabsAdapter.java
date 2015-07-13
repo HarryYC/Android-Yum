@@ -45,9 +45,9 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
                 return testFragmentTwo;
             }
             case 2: {
-                TestFragmentThree testFragmentThree = new TestFragmentThree();
-                Log.d(TAG, "TestFragmentThree called");
-                return testFragmentThree;
+                MapsFragment mapsFragment = new MapsFragment();
+                Log.d(TAG, "mapsFragment called");
+                return mapsFragment;
             }
         }
         return null;
@@ -67,11 +67,11 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
                 break;
             }
             case 1: {
-                title = "Map";
+                title = "Tweet";
                 break;
             }
             case 2: {
-                title = "Tweet";
+                title = "Map";
                 break;
             }
         }
