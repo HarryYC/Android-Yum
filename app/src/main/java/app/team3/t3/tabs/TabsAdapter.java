@@ -16,17 +16,9 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = TabsAdapter.class.getSimpleName();
     final int TAB_COUNT = 3;
-    private Bundle resultBundle;
 
     public TabsAdapter(FragmentManager supportFragmentManager) {
         super(supportFragmentManager);
-        resultBundle = new Bundle();
-    }
-
-    public void setPassData(Restaurant restaurant, int width, int height) {
-        resultBundle.putParcelable("result", restaurant);
-        resultBundle.putInt("screen_width", width);
-        resultBundle.putInt("screen_height", height);
     }
 
     @Override
@@ -35,7 +27,6 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0: {
                 ResultFragment resultFragment = new ResultFragment();
-                resultFragment.setArguments(resultBundle);
                 Log.d(TAG, "ResultFragment called");
                 return resultFragment;
             }

@@ -76,8 +76,7 @@ public class History extends Activity {
 
                 Intent getRestaurantDetail = new Intent(History.this, ActionBarTabsPager.class);
                 finish();
-                getRestaurantDetail.putExtra("Business_ID", separatedTwo[0].replace("=", "").trim());
-                getRestaurantDetail.putExtra("is_new", false);
+                getRestaurantDetail.putExtra("restaurant_picked", db.getRestaurant(separatedTwo[0].replace("=", "").trim()));
                 getRestaurantDetail.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(getRestaurantDetail);
             }

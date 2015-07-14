@@ -99,8 +99,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                         + COLUMN_ZIPCODE + " INTEGER, "
                         + COLUMN_LATITUDE + " REAL, "
                         + COLUMN_LONGITUDE + " REAL,"
-                        + COLUMN_BUSINESS_IMG + " BLOB, "
-                        + COLUMN_RATING_IMG + " BLOB)"
+                        + COLUMN_RATING_IMG + " BLOB, "
+                        + COLUMN_BUSINESS_IMG + " BLOB)"
         );
         //Create the "history" table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_HISTORY + "("
@@ -116,8 +116,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                         + COLUMN_ZIPCODE + " INTEGER, "
                         + COLUMN_LATITUDE + " REAL, "
                         + COLUMN_LONGITUDE + " REAL,"
-                        + COLUMN_BUSINESS_IMG + " BLOB, "
                         + COLUMN_RATING_IMG + " BLOB, "
+                        + COLUMN_BUSINESS_IMG + " BLOB, "
                         + COLUMN_COUNT + " int)"
         );
     }
@@ -156,8 +156,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_ZIPCODE, res.getZipCode());
         contentValues.put(COLUMN_LATITUDE, res.getLatitude());
         contentValues.put(COLUMN_LONGITUDE, res.getLongitude());
-        contentValues.put(COLUMN_BUSINESS_IMG, res.getBusinessImgURL());
         contentValues.put(COLUMN_RATING_IMG, res.getRatingImgURL());
+        contentValues.put(COLUMN_BUSINESS_IMG, res.getBusinessImgURL());
 
         db.insert(TABLE_RESTAURANTS, null, contentValues);
 
@@ -187,8 +187,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_ZIPCODE, res.getZipCode());
         contentValues.put(COLUMN_LATITUDE, res.getLatitude());
         contentValues.put(COLUMN_LONGITUDE, res.getLongitude());
-        contentValues.put(COLUMN_BUSINESS_IMG, res.getBusinessImgURL());
         contentValues.put(COLUMN_RATING_IMG, res.getRatingImgURL());
+        contentValues.put(COLUMN_BUSINESS_IMG, res.getBusinessImgURL());
         contentValues.put(COLUMN_COUNT, 1);
 
         try {

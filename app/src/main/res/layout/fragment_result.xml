@@ -8,6 +8,14 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
+
+    <ProgressBar
+        android:id="@+id/loadingPB"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
     <ImageView
         android:id="@+id/businessIV"
         android:layout_width="wrap_content"
@@ -28,10 +36,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ratingIV"
+        android:layout_gravity="center_horizontal|bottom"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/ratingIV"
-        android:text="Rating Count"
-        android:layout_gravity="center_horizontal|bottom" />
+        android:text="Rating Count" />
 
     <TextView
         android:id="@+id/nameTV"
@@ -43,21 +51,20 @@
         android:text="Name" />
 
     <Button
+        android:id="@+id/goBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/goBtn"
-        android:text="GO"
-        android:layout_below="@+id/ratingIV"
         android:layout_alignParentRight="true"
-        android:layout_margin="32dp" />
+        android:layout_below="@+id/ratingIV"
+        android:layout_margin="32dp"
+        android:text="GO" />
 
     <Button
+        android:id="@+id/tryAgainIBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tryAgainIBtn"
-        android:text="Try Again"
-        android:layout_below="@+id/ratingIV"
         android:layout_alignParentLeft="true"
-        android:layout_margin="32dp" />
-
+        android:layout_below="@+id/ratingIV"
+        android:layout_margin="32dp"
+        android:text="Try Again" />
 </RelativeLayout>

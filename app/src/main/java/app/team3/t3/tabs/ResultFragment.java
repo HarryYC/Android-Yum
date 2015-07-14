@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import app.team3.t3.History;
@@ -24,40 +26,30 @@ import app.team3.t3.Restaurant;
  */
 public class ResultFragment extends Fragment {
 
-    private String name;
-    protected String restaurantImg;
-    protected String ratingImg;
-    private String reviewCount;
-    private Bundle bundle;
+    protected ResDatabaseHelper resDatabaseHelper;
+    protected Restaurant restaurant;
     private Context context;
     private int width;
     private int height;
-    protected ResDatabaseHelper resDatabaseHelper;
-    protected Restaurant restaurant;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bundle = this.getArguments();
         context = this.getActivity().getApplicationContext();
+        Intent intent = getActivity().getIntent();
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         resDatabaseHelper = new ResDatabaseHelper(context);
-
-        restaurant = getArguments().getParcelable("result");
-
-        name = restaurant.getName();
-        reviewCount = "(" + restaurant.getReviewCount() + ")";
-
-        restaurantImg = restaurant.getBusinessImgURL();
-        ratingImg = restaurant.getRatingImgURL();
-
-        width = bundle.getInt("screen_width");
-        height = bundle.getInt("screen_height");
+        restaurant = intent.getParcelableExtra("restaurant_picked");
+        height = displaymetrics.heightPixels;
+        width = displaymetrics.widthPixels;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_one, container, false);
+        View view = inflater.inflate(R.layout.fragment_result, container, false);
+        ProgressBar loadingPB = (ProgressBar) view.findViewById(R.id.loadingPB);
 
         final ImageView businessIV = (ImageView) view.findViewById(R.id.businessIV);
         final ImageView ratingIV = (ImageView) view.findViewById(R.id.ratingIV);
@@ -85,16 +77,13 @@ public class ResultFragment extends Fragment {
             }
         });
 
-        if (bundle.toString() != null) {
-            Log.e("restaurant", bundle.toString());
-
-            new ImageDownloader(context, businessIV, width, height).execute(restaurantImg);
-            new ImageDownloader(context, ratingIV).execute(ratingImg);
-
-            nameTV.setText(name);
-            countTV.setText(reviewCount);
+        if (restaurant != null) {
+            new ImageDownloader(context, businessIV, width, height).execute(restaurant.getBusinessImgURL());
+            new ImageDownloader(context, ratingIV).execute(restaurant.getRatingImgURL());
+            nameTV.setText(restaurant.getName());
+            countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
         } else {
-            Log.e("##result##", getArguments().toString());
+            Log.e("##result##", "get result failed");
         }
 
         return view;

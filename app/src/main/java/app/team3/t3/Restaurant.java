@@ -7,6 +7,18 @@ import android.os.Parcelable;
  * Created by sssbug on 6/30/15.
  */
 public class Restaurant implements Parcelable {
+    public static final Parcelable.Creator<Restaurant> CREATOR = new Parcelable.Creator<Restaurant>() {
+
+        @Override
+        public Restaurant createFromParcel(Parcel source) {
+            return new Restaurant(source);
+        }
+
+        @Override
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
     private String businessID;
     private String name;
     private float rating;
@@ -23,67 +35,41 @@ public class Restaurant implements Parcelable {
 
     // Default constructor
     public Restaurant() {
+        this.businessID = "";
         this.name = "";
-        this.rating = 0;
+        this.rating = 0f;
         this.reviewCount = 0;
         this.phone = "";
         this.categories = "";
         this.address = "";
         this.city = "";
         this.zipCode = 0;
-        this.latitude = 0;
-        this.longitude = 0;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
         this.ratingImgURL = "";
         this.businessImgURL = "";
     }
 
     // Parcelling
     public Restaurant(Parcel source) {
-        String[] dataString = new String[8];
-        int[] dataInt = new int[2];
-        double[] dataDouble = new double[2];
-
-        source.readStringArray(dataString);
-        source.readIntArray(dataInt);
-        source.readDoubleArray(dataDouble);
-
-        this.businessID = dataString[0];
-        this.name = dataString[1];
-        this.phone = dataString[2];
-        this.categories = dataString[3];
-        this.address = dataString[4];
-        this.city = dataString[5];
-        this.ratingImgURL = dataString[6];
-        this.businessImgURL = dataString[7];
-
-        this.reviewCount = dataInt[0];
-        this.zipCode = dataInt[1];
-
-        this.latitude = dataDouble[0];
-        this.longitude = dataDouble[1];
-
+        this.businessID = source.readString();
+        this.name = source.readString();
         this.rating = source.readFloat();
-
+        this.reviewCount = source.readInt();
+        this.phone = source.readString();
+        this.categories = source.readString();
+        this.address = source.readString();
+        this.city = source.readString();
+        this.zipCode = source.readInt();
+        this.latitude = source.readDouble();
+        this.longitude = source.readDouble();
+        this.ratingImgURL = source.readString();
+        this.businessImgURL = source.readString();
     }
 
-    // Parameterized Constructor
-    public Restaurant(String name, float rating, int reviewCount, String phone, String categories, String address, String city, int zipCode, double latitude, double longitude, String businessImgURL, String ratingImgURL) {
-        this.name = name;
-        this.rating = rating;
-        this.reviewCount = reviewCount;
-        this.phone = phone;
-        this.categories = categories;
-        this.address = address;
-        this.city = city;
-        this.zipCode = zipCode;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.ratingImgURL = ratingImgURL;
-        this.businessImgURL = businessImgURL;
-    }
 
     // Parameterized Constructor
-    public Restaurant(String businessID, String name, float rating, int reviewCount, String phone, String categories, String Address, String City, int zipCode, double latitude, double longitude, String businessImgURL, String ratingImgURL) {
+    public Restaurant(String businessID, String name, float rating, int reviewCount, String phone, String categories, String Address, String City, int zipCode, double latitude, double longitude, String ratingImgURL, String businessImgURL) {
         this.businessID = businessID;
         this.name = name;
         this.rating = rating;
@@ -99,13 +85,11 @@ public class Restaurant implements Parcelable {
         this.businessImgURL = businessImgURL;
     }
 
-
-    // Method to retrieve business informatino
+    // Getters and Setters
     public String getBusinessID() {
         return businessID;
     }
 
-    // Methods to assign business informations
     public void setBusinessID(String businessID) {
         this.businessID = businessID;
     }
@@ -213,37 +197,18 @@ public class Restaurant implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[]{
-                this.businessID,
-                this.name,
-                this.phone,
-                this.categories,
-                this.address,
-                this.city,
-                this.ratingImgURL,
-                this.businessImgURL
-        });
+        dest.writeString(this.businessID);
+        dest.writeString(this.name);
         dest.writeFloat(this.rating);
-        dest.writeIntArray(new int[]{
-                this.reviewCount,
-                this.zipCode
-        });
-        dest.writeDoubleArray(new double[]{
-                this.latitude,
-                this.longitude
-        });
+        dest.writeInt(this.reviewCount);
+        dest.writeString(this.phone);
+        dest.writeString(this.categories);
+        dest.writeString(this.address);
+        dest.writeString(this.city);
+        dest.writeInt(this.zipCode);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+        dest.writeString(this.ratingImgURL);
+        dest.writeString(this.businessImgURL);
     }
-
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-
-        @Override
-        public Restaurant createFromParcel(Parcel source) {
-            return new Restaurant(source);
-        }
-
-        @Override
-        public Restaurant[] newArray(int size) {
-            return new Restaurant[size];
-        }
-    };
 }

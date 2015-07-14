@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -27,26 +28,27 @@ import java.util.Random;
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener, LocationListener {
     protected ResDatabaseHelper resDB;
-    private ImageButton shakeIB;
-    private TextView rangeTV;
-    private SeekBar rangeSB;
-    private int currentRange = 1;
-    private boolean isChanged = false;
-    private YelpSearch mySearch;
-    private Restaurant[] allRestaurant;
-
-    private SensorManager mSensorManager;
-    private float mAccel;
-    private float mAccelCurrent;
-    private float mAccelLast;
-
     protected LocationManager locationManager;
     protected Location location;
     protected double latitude;
     protected double longitude;
     protected String serviceAvailable = "";
-
+    int Random_Number;
+    private ImageButton shakeIB;
+    private TextView rangeTV;
+    private SeekBar rangeSB;
+    private int currentRange = 1;
+    private boolean isChanged = true;
+    private YelpSearch mySearch;
+    private Restaurant[] allRestaurant;
+    private SensorManager mSensorManager;
+    private float mAccel;
+    private float mAccelCurrent;
+    private float mAccelLast;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
+    private Random rn = new Random();
+    private Intent getResultIntent;
+
     final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -59,19 +61,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 22 && avoid_doubleShake == true) {
-                if (isChanged) {
-                    allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
-                    isChanged = false;
-                }
-                resDB.insertRestaurants(allRestaurant);
-
+                runningSearch();
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(500);
-                Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
-                Random rn = new Random();
-                int Random_Number = rn.nextInt(20) + 1;
-                getResultIntent.putExtra("Random_Number", Random_Number);
-                getResultIntent.putExtra("is_new", true);
+                Random_Number = rn.nextInt(20) + 1;
+                getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
                 avoid_doubleShake = false;
                 startActivity(getResultIntent);
             }
@@ -95,6 +89,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             serviceAvailable = LocationManager.NETWORK_PROVIDER;
@@ -111,8 +107,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
          /* Yelp  */
         final Context context = getApplicationContext();
         mySearch = new YelpSearch(context);
-        // filteredSearch(term, address, category, range, sort, latitude, longitude)
-        allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
+
 
          /* Shake Sensor  */
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -133,18 +128,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         shakeIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isChanged) {
-                    final Restaurant[] allNewRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
-                    isChanged = false;
-                }
-
-                resDB.insertRestaurants(allRestaurant);
-                Intent resultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
-                Random rn = new Random();
-                int Random_Number = rn.nextInt(20) + 1;
-                resultIntent.putExtra("Random_Number", Random_Number);
-                resultIntent.putExtra("is_new", true);
-                startActivity(resultIntent);
+                runningSearch();
+                Random_Number = rn.nextInt(20) + 1;
+                getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
+                startActivity(getResultIntent);
             }
         });
 
@@ -175,6 +162,19 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         });
 
     } //end onCreat
+
+    /*
+     * run yelp search and add data to database for random pick
+     * if location and user preferences changed
+     */
+    protected void runningSearch() {
+        if (isChanged) {
+            // filteredSearch(term, address, category, range, sort, latitude, longitude)
+            allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
+            isChanged = false;
+            resDB.insertRestaurants(allRestaurant);
+        }
+    }
 
     /**
      * Dispatch onPause() to fragments.

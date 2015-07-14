@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -23,25 +24,11 @@ public class ActionBarTabsPager extends ActionBarActivity {
     private ViewPager mViewPager;
     private SlidingTabLayout mSlidingTabLayout;
     private Restaurant restaurant;
-    private ResDatabaseHelper resDatabaseHelper;
-    private int height;
-    private int width;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.action_bar_tabs_pager);
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        height = displaymetrics.heightPixels;
-        width = displaymetrics.widthPixels;
-        Bundle bundle = getIntent().getExtras();
-        resDatabaseHelper = new ResDatabaseHelper(getApplicationContext());
-        if (bundle.getBoolean("is_new")) {
-            restaurant = resDatabaseHelper.getRestaurant(bundle.getInt("Random_Number"));
-        } else {
-            restaurant = resDatabaseHelper.getRestaurant(bundle.getString("Business_ID"));
-        }
 
         mToolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
@@ -51,7 +38,6 @@ public class ActionBarTabsPager extends ActionBarActivity {
         navigationDrawerFragment.setUp(R.id.fragment_navigation_drawer_fragment, (DrawerLayout)findViewById(R.id.drawer_layout),mToolbar);
         mViewPager = (ViewPager)findViewById(R.id.view_pager);
         TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
-        tabsAdapter.setPassData(restaurant, width, height);
         mViewPager.setAdapter(tabsAdapter);
         mSlidingTabLayout = (SlidingTabLayout)findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
