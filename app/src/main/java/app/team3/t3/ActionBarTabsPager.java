@@ -21,13 +21,10 @@ import app.team3.t3.tabs.TabsAdapter;
  */
 public class ActionBarTabsPager extends AppCompatActivity {
 
-    private static ViewPager mViewPager;
+    private ViewPager mViewPager;
     private Toolbar mToolbar;
     private SlidingTabLayout mSlidingTabLayout;
 
-    public static void goToTab(int index) {
-        mViewPager.setCurrentItem(index);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

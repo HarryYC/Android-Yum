@@ -2,10 +2,13 @@ package app.team3.t3.tabs;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +18,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import app.team3.t3.ActionBarTabsPager;
 import app.team3.t3.ImageDownloader;
@@ -50,7 +57,7 @@ public class ResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
-        ProgressBar loadingPB = (ProgressBar) view.findViewById(R.id.loadingPB);
+        final ProgressBar loadingPB = (ProgressBar) view.findViewById(R.id.loadingPB);
 
         final ImageView businessIV = (ImageView) view.findViewById(R.id.businessIV);
         final ImageView ratingIV = (ImageView) view.findViewById(R.id.ratingIV);
@@ -60,6 +67,8 @@ public class ResultFragment extends Fragment {
 
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
+
+        final ViewPager mViewPager = (ViewPager) container.findViewById(R.id.view_pager);
 
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,13 +81,15 @@ public class ResultFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 resDatabaseHelper.saveRestaurant(restaurant);
-                ActionBarTabsPager.goToTab(1);
+                mViewPager.setCurrentItem(1);
             }
         });
 
         if (restaurant != null) {
-            new ImageDownloader(context, businessIV, width, height).execute(restaurant.getBusinessImgURL());
-            new ImageDownloader(context, ratingIV).execute(restaurant.getRatingImgURL());
+            final ImageDownloader restaurantID = new ImageDownloader(loadingPB, businessIV, width, height);
+            ImageDownloader ratingID = new ImageDownloader(loadingPB, ratingIV);
+            restaurantID.execute(restaurant.getBusinessImgURL());
+            ratingID.execute(restaurant.getRatingImgURL());
             nameTV.setText(restaurant.getName());
             countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
         } else {
