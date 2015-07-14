@@ -14,6 +14,7 @@ import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +27,7 @@ import android.widget.TextView;
 import java.util.Random;
 
 
-public class MainActivity extends ActionBarActivity implements SensorEventListener, LocationListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
     protected ResDatabaseHelper resDB;
     protected LocationManager locationManager;
     protected Location location;
@@ -171,8 +172,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         if (isChanged) {
             // filteredSearch(term, address, category, range, sort, latitude, longitude)
             allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
-            isChanged = false;
             resDB.insertRestaurants(allRestaurant);
+            isChanged = false;
         }
     }
 

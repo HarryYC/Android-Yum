@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout 
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/a1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
-        
+
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
@@ -22,33 +22,33 @@
             android:id="@+id/shakeIB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@mipmap/test"
-            android:scaleType="fitCenter"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/test" />
 
         <SeekBar
+            android:id="@+id/rangeSB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rangeSB"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp"
-            android:max="24"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/rangeTV"
-            android:layout_alignParentStart="true" />
+            android:max="24"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp" />
 
         <TextView
+            android:id="@+id/rangeTV"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:text="Range: 1 Mile"
-            android:labelFor="@+id/rangeSB"
-            android:id="@+id/rangeTV"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/shakeIB"
-            android:paddingTop="8dp"
+            android:labelFor="@+id/rangeSB"
             android:paddingLeft="32dp"
             android:paddingRight="32dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
+            android:paddingTop="8dp"
+            android:text="Range: 1 Mile" />
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>

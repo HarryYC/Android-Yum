@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 
@@ -18,18 +19,20 @@ import app.team3.t3.tabs.TabsAdapter;
 /**
  * Created by nanden on 6/30/15.
  */
-public class ActionBarTabsPager extends ActionBarActivity {
+public class ActionBarTabsPager extends AppCompatActivity {
 
+    private static ViewPager mViewPager;
     private Toolbar mToolbar;
-    private ViewPager mViewPager;
     private SlidingTabLayout mSlidingTabLayout;
-    private Restaurant restaurant;
+
+    public static void goToTab(int index) {
+        mViewPager.setCurrentItem(index);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.action_bar_tabs_pager);
-
         mToolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

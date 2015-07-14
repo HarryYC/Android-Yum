@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import app.team3.t3.History;
+import app.team3.t3.ActionBarTabsPager;
 import app.team3.t3.ImageDownloader;
 import app.team3.t3.R;
 import app.team3.t3.ResDatabaseHelper;
@@ -36,11 +37,11 @@ public class ResultFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity().getApplicationContext();
-        Intent intent = getActivity().getIntent();
+        Bundle intent = getActivity().getIntent().getExtras();
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         resDatabaseHelper = new ResDatabaseHelper(context);
-        restaurant = intent.getParcelableExtra("restaurant_picked");
+        restaurant = intent.getParcelable("restaurant_picked");
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
     }
@@ -71,9 +72,7 @@ public class ResultFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 resDatabaseHelper.saveRestaurant(restaurant);
-                Intent intent = new Intent(getActivity(), History.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                ActionBarTabsPager.goToTab(1);
             }
         });
 
