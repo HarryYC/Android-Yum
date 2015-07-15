@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
@@ -170,9 +171,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
      */
     protected void runningSearch() {
         if (isChanged) {
-            // filteredSearch(term, address, category, range, sort, latitude, longitude)
-            allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
-            resDB.insertRestaurants(allRestaurant);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    // filteredSearch(term, address, category, range, sort, latitude, longitude)
+                    allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
+                    resDB.insertRestaurants(allRestaurant);
+                    return null;
+                }
+            };
             isChanged = false;
         }
     }

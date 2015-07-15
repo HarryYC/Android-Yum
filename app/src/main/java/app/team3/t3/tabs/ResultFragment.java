@@ -3,6 +3,7 @@ package app.team3.t3.tabs;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -81,7 +82,8 @@ public class ResultFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 resDatabaseHelper.saveRestaurant(restaurant);
-                mViewPager.setCurrentItem(1);
+                Intent directionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + restaurant.getAddress()));
+                startActivity(directionIntent);
             }
         });
 
