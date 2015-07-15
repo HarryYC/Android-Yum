@@ -1,13 +1,9 @@
 package app.team3.t3.tabs;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,15 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
-import app.team3.t3.ActionBarTabsPager;
 import app.team3.t3.ImageDownloader;
 import app.team3.t3.R;
 import app.team3.t3.ResDatabaseHelper;
@@ -68,8 +62,12 @@ public class ResultFragment extends Fragment {
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
 
+        final ImageButton tweetBtn = (ImageButton) view.findViewById(R.id.tweetBtn);
+
         final ViewPager mViewPager = (ViewPager) container.findViewById(R.id.view_pager);
 
+
+        final TweetComposer.Builder builder = new TweetComposer.Builder(getActivity());
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,14 +85,26 @@ public class ResultFragment extends Fragment {
 
         if (restaurant != null) {
             final ImageDownloader restaurantID = new ImageDownloader(loadingPB, businessIV, width, height);
-            ImageDownloader ratingID = new ImageDownloader(loadingPB, ratingIV);
+            final ImageDownloader ratingID = new ImageDownloader(loadingPB, ratingIV);
+
+            builder.text(restaurant.getName());
+
             restaurantID.execute(restaurant.getBusinessImgURL());
             ratingID.execute(restaurant.getRatingImgURL());
             nameTV.setText(restaurant.getName());
             countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
+            tweetBtn.setVisibility(View.VISIBLE);
+
         } else {
             Log.e("##result##", "get result failed");
         }
+
+        tweetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.show();
+            }
+        });
 
         return view;
 

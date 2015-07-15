@@ -17,15 +17,15 @@ import android.provider.Settings;
  */
 public class SplashScreen extends Activity {
 
-    public static Activity splash;
-    Context context = this;
+    public static Activity activity;
     boolean isStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        splash = this;
+
+        activity = this;
 
         // Get Location Manager and check for GPS & Network location services
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -62,35 +62,12 @@ public class SplashScreen extends Activity {
                 alertDialog.show();
     }
 
-        private class LoadViewTask extends AsyncTask<Void, Integer, Void>{
-        @Override
-        protected void onPreExecute(){
-
-            setContentView(R.layout.activity_splash);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params){
-            try {
-                synchronized (this){
-                    wait(3000);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            } finally {
-                Intent i = new Intent("app.team3.t3.MAINACTIVITY");
-                startActivity(i);
-            }
-            return null;
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         if (isStarted) {
             Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+            intent.putExtra("firstTime", true);
             startActivity(intent);
         }
     }
@@ -100,5 +77,29 @@ public class SplashScreen extends Activity {
         // TODO Auto-generated method stub
         super.onPause();
         isStarted = true;
+    }
+
+    private class LoadViewTask extends AsyncTask<Void, Integer, Void> {
+        @Override
+        protected void onPreExecute() {
+
+            setContentView(R.layout.activity_splash);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                synchronized (this) {
+                    wait(3000);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                Intent i = new Intent("app.team3.t3.MAINACTIVITY");
+                startActivity(i);
+            }
+            return null;
+        }
     }
 }
