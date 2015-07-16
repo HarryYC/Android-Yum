@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        new Eula(this).show();
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
          /* Yelp  */
