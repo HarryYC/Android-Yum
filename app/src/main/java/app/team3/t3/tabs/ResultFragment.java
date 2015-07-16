@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,13 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import app.team3.t3.ActionBarTabsPager;
 import app.team3.t3.ImageDownloader;
@@ -71,7 +69,10 @@ public class ResultFragment extends Fragment {
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
 
+        final ImageButton tweetBtn = (ImageButton) view.findViewById(R.id.tweetBtn);
 
+
+        final TweetComposer.Builder builder = new TweetComposer.Builder(getActivity());
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,9 +102,18 @@ public class ResultFragment extends Fragment {
             nameTV.setText(restaurant.getName());
             countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
 
+            tweetBtn.setVisibility(View.VISIBLE);
+
         } else {
             Log.e("##result##", "get result failed");
         }
+
+        tweetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.show();
+            }
+        });
 
         return view;
 

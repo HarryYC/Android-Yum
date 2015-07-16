@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         restoreChanges();
-        if (!SplashScreen.splash.isDestroyed()) {
-            SplashScreen.splash.finish();
+        if (getIntent().getBooleanExtra("firstTime", false)) {
+            SplashScreen.activity.finish();
         }
 
         super.onCreate(savedInstanceState);

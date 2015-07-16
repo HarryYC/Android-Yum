@@ -60,6 +60,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="6a62d03fe6a35859deb90ff9210fc9e80d3f5102" />
     </application>
 
 </manifest>
