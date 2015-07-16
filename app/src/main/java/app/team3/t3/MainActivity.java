@@ -63,13 +63,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 22 && avoid_doubleShake == true) {
-                runningSearch();
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(500);
-                Random_Number = rn.nextInt(20) + 1;
-                getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
                 avoid_doubleShake = false;
-                startActivity(getResultIntent);
+                runningSearch();
             }
         }
 
@@ -91,20 +88,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
-
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            serviceAvailable = LocationManager.NETWORK_PROVIDER;
-        } else {
-            serviceAvailable = LocationManager.GPS_PROVIDER;
-        }
-        locationManager.requestLocationUpdates(serviceAvailable, 10000, 5000, this);
-        location = locationManager.getLastKnownLocation(serviceAvailable);
-        if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-        }
 
          /* Yelp  */
         final Context context = getApplicationContext();
@@ -131,9 +115,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 runningSearch();
-                Random_Number = rn.nextInt(20) + 1;
-                getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
-                startActivity(getResultIntent);
             }
         });
 
@@ -171,18 +152,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
      */
     protected void runningSearch() {
         if (isChanged) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    // filteredSearch(term, address, category, range, sort, latitude, longitude)
-                    allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
-                    resDB.insertRestaurants(allRestaurant);
-                    return null;
-                }
-            };
-            isChanged = false;
+            // filteredSearch(term, address, category, range, sort, latitude, longitude)
+            allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
+            resDB.insertRestaurants(allRestaurant);
         }
+        getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
+        Random_Number = rn.nextInt(20) + 1;
+        getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
+        isChanged = false;
+        startActivity(getResultIntent);
+
+
     }
+
 
     /**
      * Dispatch onPause() to fragments.
@@ -236,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             } else {
                 serviceAvailable = gpsProvider;
             }
-            locationManager.requestLocationUpdates(serviceAvailable, 10000, 5000, this);
+            locationManager.requestLocationUpdates(serviceAvailable, 50000, 8045, this);
             location = locationManager.getLastKnownLocation(serviceAvailable);
             if (location != null) {
                 latitude = location.getLatitude();
@@ -281,8 +263,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onLocationChanged(Location location) {
-        this.location = location;
-        isChanged = true;
+        if (location != null) {
+            this.location = location;
+        }
     }
 
     @Override
@@ -299,4 +282,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onProviderDisabled(String provider) {
         Log.d("Latitude", "disable");
     }
+
 }

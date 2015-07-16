@@ -40,8 +40,9 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
                 Log.d(TAG, "TestFragmentTwo called");
                 return testFragmentTwo;
             }
+            default:
+                return null;
         }
-        return null;
     }
 
     @Override

@@ -58,6 +58,8 @@ public class ResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
+        final ViewPager mViewPager = (ViewPager) container.findViewById(R.id.view_pager);
+
         final ProgressBar loadingPB = (ProgressBar) view.findViewById(R.id.loadingPB);
 
         final ImageView businessIV = (ImageView) view.findViewById(R.id.businessIV);
@@ -69,7 +71,6 @@ public class ResultFragment extends Fragment {
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
 
-        final ViewPager mViewPager = (ViewPager) container.findViewById(R.id.view_pager);
 
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,22 +84,49 @@ public class ResultFragment extends Fragment {
             public void onClick(View v) {
                 resDatabaseHelper.saveRestaurant(restaurant);
                 Intent directionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + restaurant.getAddress()));
+                directionIntent.setPackage("com.google.android.apps.maps");
                 startActivity(directionIntent);
             }
         });
 
         if (restaurant != null) {
-            final ImageDownloader restaurantID = new ImageDownloader(loadingPB, businessIV, width, height);
-            ImageDownloader ratingID = new ImageDownloader(loadingPB, ratingIV);
-            restaurantID.execute(restaurant.getBusinessImgURL());
-            ratingID.execute(restaurant.getRatingImgURL());
+            try {
+                businessIV.setImageBitmap(new ImageDownloader(width, height).execute(restaurant.getBusinessImgURL()).get());
+                ratingIV.setImageBitmap(new ImageDownloader().execute(restaurant.getRatingImgURL()).get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
             nameTV.setText(restaurant.getName());
             countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
+
         } else {
             Log.e("##result##", "get result failed");
         }
 
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
     }
 }

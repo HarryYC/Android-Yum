@@ -3,6 +3,8 @@ package app.team3.t3.tabs;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,12 +37,15 @@ public class MapsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        Bundle intent = getActivity().getIntent().getExtras();
-        restaurant = intent.getParcelable("restaurant_picked");
-        mMapView = (MapView)view.findViewById(R.id.mapView);
+        final ViewPager mViewPager = (ViewPager) container.findViewById(R.id.view_pager);
+
+        mMapView = (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume();
+
+        Bundle intent = getActivity().getIntent().getExtras();
+        restaurant = intent.getParcelable("restaurant_picked");
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -54,9 +59,10 @@ public class MapsFragment extends Fragment {
                 new LatLng(restaurant.getLatitude(), restaurant.getLongitude())).title(restaurant.getName());
 
         markerOptions.icon(BitmapDescriptorFactory
-            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         mGoogleMap.addMarker(markerOptions);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 16.0f));
+
         return view;
     }
 
@@ -64,7 +70,6 @@ public class MapsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-
     }
 
     @Override
