@@ -70,8 +70,11 @@ public class ResultFragment extends Fragment {
 
         final ImageButton tweetBtn = (ImageButton) view.findViewById(R.id.tweetBtn);
 
-
+        // twitter code
         final TweetComposer.Builder builder = new TweetComposer.Builder(getActivity());
+
+
+
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +113,8 @@ public class ResultFragment extends Fragment {
         tweetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //twitter code
+                builder.text("hello");
                 builder.show();
             }
         });

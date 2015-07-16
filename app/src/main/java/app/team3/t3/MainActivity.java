@@ -10,6 +10,8 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Vibrator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private Random rn = new Random();
     private Intent getResultIntent;
+    SoundPool mySound;
+    int touchId,boomId;
 
     final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
@@ -64,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 v.vibrate(500);
                 avoid_doubleShake = false;
                 runningSearch();
+                mySound.play(boomId, 1, 1, 1, 0, 1);
+
             }
         }
 
@@ -81,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (getIntent().getBooleanExtra("firstTime", false)) {
             SplashScreen.activity.finish();
         }
+
+        mySound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        touchId = mySound.load(this, R.raw.touch, 1);
+        boomId = mySound.load(this, R.raw.boom, 1);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -113,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         shakeIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mySound.play(boomId, 1, 1, 1, 0, 1);
+                // mySound.play(touchId, 1, 1, 1, 1, 1f);
                 runningSearch();
             }
         });
@@ -152,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void runningSearch() {
         if (isChanged) {
             // filteredSearch(term, address, category, range, sort, latitude, longitude)
-            allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
+            allRestaurant = mySearch.filteredSearch(null, "san francisco,ca", null, currentRange, 1, 0.0, 0.0);
             resDB.insertRestaurants(allRestaurant);
         }
         getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
@@ -160,6 +172,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
         isChanged = false;
         startActivity(getResultIntent);
+
+
 
 
     }

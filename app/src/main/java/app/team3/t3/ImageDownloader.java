@@ -41,7 +41,7 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
             if (isScale) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 2;
+                options.inSampleSize = 4;
                 applicationIcon = BitmapFactory.decodeStream(bufferedInputStream, null, options);
                 applicationIcon = Bitmap.createScaledBitmap(applicationIcon, width, (height * 2 / 5), false);
             } else {
