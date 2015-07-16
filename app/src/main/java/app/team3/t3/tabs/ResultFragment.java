@@ -2,12 +2,10 @@ package app.team3.t3.tabs;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,7 +20,8 @@ import android.widget.TextView;
 
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
-import app.team3.t3.ActionBarTabsPager;
+import java.util.concurrent.ExecutionException;
+
 import app.team3.t3.ImageDownloader;
 import app.team3.t3.R;
 import app.team3.t3.ResDatabaseHelper;
