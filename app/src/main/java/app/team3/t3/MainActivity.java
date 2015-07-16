@@ -10,10 +10,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.os.Vibrator;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -41,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SeekBar rangeSB;
     private int currentRange = 1;
     private boolean isChanged = true;
-    private YelpSearch mySearch;
+    private RestaurantFinder mySearch;
     private Restaurant[] allRestaurant;
     private SensorManager mSensorManager;
     private float mAccel;
@@ -92,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
          /* Yelp  */
         final Context context = getApplicationContext();
-        mySearch = new YelpSearch(context);
+        mySearch = new RestaurantFinder(context);
 
 
          /* Shake Sensor  */

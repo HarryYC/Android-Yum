@@ -16,7 +16,7 @@ import org.json.JSONObject;
  * <p/>
  * See <a href="http://www.yelp.com/developers/documentation">Yelp Documentation</a> for more info.
  */
-public class YelpSearch {
+public class RestaurantFinder {
     private static final int MAX_RESTAURANT = 20;
     private static final String DEFAULT_TERM = "restaurants";
     private static final String DEFAULT_LOCATION = null;
@@ -29,7 +29,7 @@ public class YelpSearch {
     private YelpAPIDII yelpApiDII = null;
     private String trackingMsg = "";
 
-    public YelpSearch(Context context) {
+    public RestaurantFinder(Context context) {
         yelpApi = new YelpAPI(context.getString(R.string.yelp_consumer_key),
                 context.getString(R.string.yelp_consumer_secret),
                 context.getString(R.string.yelp_token),
@@ -62,7 +62,7 @@ public class YelpSearch {
                 restaurant[index] = new Restaurant();
 
                 JSONObject businessData = businesses.getJSONObject(index);
-                restaurant[index].setBusinessID(businessData.getString("id"));;
+                restaurant[index].setBusinessID(businessData.getString("id"));
                 restaurant[index].setName(businessData.getString("name"));
                 restaurant[index].setRating(Float.parseFloat(businessData.getString("rating")));
                 restaurant[index].setReviewCount(Integer.parseInt(businessData.getString("review_count")));
@@ -141,7 +141,6 @@ public class YelpSearch {
             idRestaurant = new Restaurant();
 
             idRestaurant.setBusinessID(businessData.getString("id"));
-            ;
             idRestaurant.setName(businessData.getString("name"));
             idRestaurant.setRating(Float.parseFloat(businessData.getString("rating")));
             idRestaurant.setReviewCount(Integer.parseInt(businessData.getString("review_count")));
@@ -236,6 +235,10 @@ public class YelpSearch {
         }
     }
 
+    public String getTrackingMsg() {
+        return trackingMsg;
+    }
+
     /**
      * interface for the input values.
      */
@@ -246,9 +249,5 @@ public class YelpSearch {
         public int sort = DEFAULT_SORT;
         public String category = DEFAULT_CATEGORY;
         public String coordinate = DEFAULT_COORDINATE;
-    }
-
-    public String getTrackingMsg() {
-        return trackingMsg;
     }
 }
