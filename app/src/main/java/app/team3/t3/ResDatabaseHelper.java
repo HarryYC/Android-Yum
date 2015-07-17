@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,18 +27,17 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
     // Restaurant info Columns names
     private static final String COLUMN_ID = "id";
-    private static final String COLUMN_BUSINESS_ID = "BusinessID";
+    private static final String COLUMN_RESTAURANT_ID = "RestaurantID";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_RATING = "rating";
     private static final String COLUMN_REVIEW_COUNT = "review_count";
     private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_CATEGORIES = "categories";
     private static final String COLUMN_ADDRESS = "address";
-    private static final String COLUMN_CITY = "city";
-    private static final String COLUMN_ZIPCODE = "zipcode";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
-    private static final String COLUMN_BUSINESS_IMG = "business_img";
+    private static final String COLUMN_RESTAURANT_PAGE = "restaurant_page";
+    private static final String COLUMN_RESTAURANT_IMG = "restaurant_img";
     private static final String COLUMN_RATING_IMG = "rating_img";
     private static final String COLUMN_COUNT = "count";
 
@@ -88,36 +86,34 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         //Create the "restaurants" table
         db.execSQL("CREATE TABLE " + TABLE_RESTAURANTS + "("
                         + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + COLUMN_BUSINESS_ID + " TEXT,"
+                        + COLUMN_RESTAURANT_ID + " TEXT,"
                         + COLUMN_NAME + " TEXT, "
                         + COLUMN_RATING + " REAL, "
                         + COLUMN_REVIEW_COUNT + " INTEGER, "
                         + COLUMN_PHONE + " TEXT, "
                         + COLUMN_CATEGORIES + " BLOB, "
                         + COLUMN_ADDRESS + " BLOB, "
-                        + COLUMN_CITY + " TEXT, "
-                        + COLUMN_ZIPCODE + " INTEGER, "
                         + COLUMN_LATITUDE + " REAL, "
                         + COLUMN_LONGITUDE + " REAL,"
+                        + COLUMN_RESTAURANT_PAGE + " BLOB, "
                         + COLUMN_RATING_IMG + " BLOB, "
-                        + COLUMN_BUSINESS_IMG + " BLOB)"
+                        + COLUMN_RESTAURANT_IMG + " BLOB)"
         );
         //Create the "history" table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_HISTORY + "("
                         + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + COLUMN_BUSINESS_ID + " TEXT UNIQUE,"
+                        + COLUMN_RESTAURANT_ID + " TEXT UNIQUE,"
                         + COLUMN_NAME + " TEXT, "
                         + COLUMN_RATING + " REAL, "
                         + COLUMN_REVIEW_COUNT + " INTEGER, "
                         + COLUMN_PHONE + " TEXT, "
                         + COLUMN_CATEGORIES + " BLOB, "
                         + COLUMN_ADDRESS + " BLOB, "
-                        + COLUMN_CITY + " TEXT, "
-                        + COLUMN_ZIPCODE + " INTEGER, "
                         + COLUMN_LATITUDE + " REAL, "
                         + COLUMN_LONGITUDE + " REAL,"
+                        + COLUMN_RESTAURANT_PAGE + " BLOB, "
                         + COLUMN_RATING_IMG + " BLOB, "
-                        + COLUMN_BUSINESS_IMG + " BLOB, "
+                        + COLUMN_RESTAURANT_IMG + " BLOB, "
                         + COLUMN_COUNT + " int)"
         );
     }
@@ -145,19 +141,18 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
 
 
-        contentValues.put(COLUMN_BUSINESS_ID, res.getBusinessID());
+        contentValues.put(COLUMN_RESTAURANT_ID, res.getRestaurantID());
         contentValues.put(COLUMN_NAME, res.getName());
         contentValues.put(COLUMN_RATING, res.getRating());
         contentValues.put(COLUMN_PHONE, res.getPhone());
         contentValues.put(COLUMN_REVIEW_COUNT, res.getReviewCount());
         contentValues.put(COLUMN_CATEGORIES, res.getCategories());
         contentValues.put(COLUMN_ADDRESS, res.getAddress());
-        contentValues.put(COLUMN_CITY, res.getCity());
-        contentValues.put(COLUMN_ZIPCODE, res.getZipCode());
         contentValues.put(COLUMN_LATITUDE, res.getLatitude());
         contentValues.put(COLUMN_LONGITUDE, res.getLongitude());
+        contentValues.put(COLUMN_RESTAURANT_PAGE, res.getRestaurantPage());
         contentValues.put(COLUMN_RATING_IMG, res.getRatingImgURL());
-        contentValues.put(COLUMN_BUSINESS_IMG, res.getBusinessImgURL());
+        contentValues.put(COLUMN_RESTAURANT_IMG, res.getRestaurantImgURL());
 
         db.insert(TABLE_RESTAURANTS, null, contentValues);
 
@@ -176,19 +171,18 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(COLUMN_BUSINESS_ID, res.getBusinessID());
+        contentValues.put(COLUMN_RESTAURANT_ID, res.getRestaurantID());
         contentValues.put(COLUMN_NAME, res.getName());
         contentValues.put(COLUMN_RATING, res.getRating());
         contentValues.put(COLUMN_PHONE, res.getPhone());
         contentValues.put(COLUMN_REVIEW_COUNT, res.getReviewCount());
         contentValues.put(COLUMN_CATEGORIES, res.getCategories());
         contentValues.put(COLUMN_ADDRESS, res.getAddress());
-        contentValues.put(COLUMN_CITY, res.getCity());
-        contentValues.put(COLUMN_ZIPCODE, res.getZipCode());
         contentValues.put(COLUMN_LATITUDE, res.getLatitude());
         contentValues.put(COLUMN_LONGITUDE, res.getLongitude());
+        contentValues.put(COLUMN_RESTAURANT_PAGE, res.getRestaurantPage());
         contentValues.put(COLUMN_RATING_IMG, res.getRatingImgURL());
-        contentValues.put(COLUMN_BUSINESS_IMG, res.getBusinessImgURL());
+        contentValues.put(COLUMN_RESTAURANT_IMG, res.getRestaurantImgURL());
         contentValues.put(COLUMN_COUNT, 1);
 
         try {
@@ -200,19 +194,19 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
             Cursor cursor = db.query(TABLE_HISTORY,
                     new String[]{"*"},
-                    COLUMN_BUSINESS_ID + "=?",
-                    new String[]{res.getBusinessID()},
+                    COLUMN_RESTAURANT_ID + "=?",
+                    new String[]{res.getRestaurantID()},
                     null, null, null, null);
 
             if (cursor != null) {
                 cursor.moveToFirst();
             }
 
-            contentValues.put(COLUMN_COUNT, cursor.getInt(14) + 1); //get the current count from database and increase one
+            contentValues.put(COLUMN_COUNT, cursor.getInt(12) + 1); //get the current count from database and increase one
 
             db.update(TABLE_HISTORY,
                     contentValues,
-                    COLUMN_BUSINESS_ID + " = " + "\"" + res.getBusinessID() + "\"",
+                    COLUMN_RESTAURANT_ID + " = " + "\"" + res.getRestaurantID() + "\"",
                     null);
         }
 
@@ -260,12 +254,11 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(5),
                 cursor.getString(6),
                 cursor.getString(7),
-                cursor.getString(8),
-                Integer.parseInt(cursor.getString(9)),
-                Double.parseDouble(cursor.getString(10)),
-                Double.parseDouble(cursor.getString(11)),
-                cursor.getString(12),
-                cursor.getString(13));
+                Double.parseDouble(cursor.getString(8)),
+                Double.parseDouble(cursor.getString(9)),
+                cursor.getString(10),
+                cursor.getString(11),
+                cursor.getString(12));
 
         return restaurant;
     }
@@ -276,7 +269,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(TABLE_HISTORY,
                 new String[]{"*"},
-                COLUMN_BUSINESS_ID + "=?",
+                COLUMN_RESTAURANT_ID + "=?",
                 new String[]{BussinessID},
                 null, null, null, null);
 
@@ -292,12 +285,11 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(5),
                 cursor.getString(6),
                 cursor.getString(7),
-                cursor.getString(8),
-                Integer.parseInt(cursor.getString(9)),
-                Double.parseDouble(cursor.getString(10)),
-                Double.parseDouble(cursor.getString(11)),
-                cursor.getString(12),
-                cursor.getString(13));
+                Double.parseDouble(cursor.getString(8)),
+                Double.parseDouble(cursor.getString(9)),
+                cursor.getString(10),
+                cursor.getString(11),
+                cursor.getString(12));
 
         return restaurant;
     }
@@ -320,7 +312,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             HashMap<String, String> restaurant = new HashMap<String, String>();
 //            Log.e("#Cursor#: ", cursor.getString(1));
-            restaurant.put("BusinessID", cursor.getString(1));
+            restaurant.put("RestaurantID", cursor.getString(1));
             restaurant.put("Name", cursor.getString(2));
             restaurant.put("Count", cursor.getString(14));
             restaurantsList.add(restaurant);

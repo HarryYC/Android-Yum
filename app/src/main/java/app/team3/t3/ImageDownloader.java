@@ -11,10 +11,12 @@ import java.net.URL;
 
 /**
  * Created by ivan on 6/29/15.
+ * Image Downloader
  */
 public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+
     protected boolean isScale;
-    protected Bitmap applicationIcon = null;
+    protected Bitmap bitmap = null;
     protected BufferedInputStream bufferedInputStream;
     protected InputStream inputStream;
     protected int width;
@@ -30,6 +32,12 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
         isScale = false;
     }
 
+    /**
+     * Return an bitmap object for display.
+     *
+     * @param params <tt>String</tt> for image URL
+     * @return bitmap <tt>Bitmap</tt>
+     */
     @Override
     protected Bitmap doInBackground(String... params) {
         String urlString = params[0];
@@ -41,11 +49,12 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
             if (isScale) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 2;
-                applicationIcon = BitmapFactory.decodeStream(bufferedInputStream, null, options);
-                applicationIcon = Bitmap.createScaledBitmap(applicationIcon, width, (height * 2 / 5), false);
+                options.inSampleSize = 4;
+
+                bitmap = BitmapFactory.decodeStream(bufferedInputStream, null, options);
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
             } else {
-                applicationIcon = BitmapFactory.decodeStream(bufferedInputStream);
+                bitmap = BitmapFactory.decodeStream(bufferedInputStream);
             }
 
             if (inputStream != null) {
@@ -59,6 +68,6 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
             Log.e("Error", e.getMessage());
         }
 
-        return applicationIcon;
+        return bitmap;
     }
 }

@@ -17,15 +17,10 @@ import android.provider.Settings;
  */
 public class SplashScreen extends Activity {
 
-    public static Activity activity;
-    boolean isStarted = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-
-        activity = this;
 
         // Get Location Manager and check for GPS & Network location services
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -40,43 +35,39 @@ public class SplashScreen extends Activity {
 
     private void showLocationPrompt() {
         // Build the alert dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Location Services Not Active");
-            builder.setMessage("We notice your location services are not enabled, please go to settings and enable them.");
-            builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // Show location settings when the user acknowledges the alert dialog
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            builder.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Intent cont = new Intent("app.team3.t3.MAINACTIVITY");
-                    startActivity(cont);
-                }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Location Services Not Active");
+        builder.setMessage("We notice your location services are not enabled, please go to settings and enable them.");
+        builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Show location settings when the user acknowledges the alert dialog
+                Intent intent = new Intent("app.team3.t3.MAINACTIVITY");
+                intent.putExtra("is_started", true);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent cont = new Intent("app.team3.t3.MAINACTIVITY");
+                startActivity(cont);
+            }
 
-            });
-                Dialog alertDialog = builder.create();
-                alertDialog.setCanceledOnTouchOutside(false);
-                alertDialog.show();
+        });
+        Dialog alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (isStarted) {
-            Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-            intent.putExtra("firstTime", true);
-            startActivity(intent);
-        }
     }
 
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
-        isStarted = true;
+        finish();
     }
 
     private class LoadViewTask extends AsyncTask<Void, Integer, Void> {

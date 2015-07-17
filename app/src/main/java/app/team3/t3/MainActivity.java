@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Vibrator;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -26,18 +27,23 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
-    protected ResDatabaseHelper resDB;
-    protected LocationManager locationManager;
-    protected Location location;
-    protected double latitude;
-    protected double longitude;
-    protected String serviceAvailable = "";
-    int Random_Number;
+
+    private ResDatabaseHelper resDB;
+    private LocationManager locationManager;
+
+    private Location location;
+    private double latitude;
+    private double longitude;
+    private String serviceAvailable = "";
+    private int Random_Number;
+
     private ImageButton shakeIB;
     private TextView rangeTV;
     private SeekBar rangeSB;
+
     private int currentRange = 1;
-    private boolean isChanged = true;
+    private boolean preferencesChanged = true;
+
     private RestaurantFinder mySearch;
     private Restaurant[] allRestaurant;
     private SensorManager mSensorManager;
@@ -60,10 +66,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 22 && avoid_doubleShake == true) {
-                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(500);
-                avoid_doubleShake = false;
                 runningSearch();
+                avoid_doubleShake = false;
             }
         }
 
@@ -77,11 +81,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        restoreChanges();
-        if (getIntent().getBooleanExtra("firstTime", false)) {
-            SplashScreen.activity.finish();
+        if (getIntent().getBooleanExtra("is_started", false)) {
+            Intent locationSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(locationSetting);
         }
 
+        restoreChanges();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -126,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     unit = " Mile";
                 }
                 rangeTV.setText("Range: " + currentRange + unit);
-                isChanged = true;
+                preferencesChanged = true;
                 saveChanges();
             }
 
@@ -143,26 +148,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     } //end onCreat
 
-    /*
-     * run yelp search and add data to database for random pick
-     * if location and user preferences changed
-     */
-    protected void runningSearch() {
-        if (isChanged) {
-            // filteredSearch(term, address, category, range, sort, latitude, longitude)
-            allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
-            resDB.insertRestaurants(allRestaurant);
-        }
-        getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
-        Random_Number = rn.nextInt(20) + 1;
-        getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
-        isChanged = false;
-        startActivity(getResultIntent);
-
-
-    }
-
-
     /**
      * Dispatch onPause() to fragments.
      */
@@ -171,20 +156,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
         getActionBar();
+
+
         locationManager.removeUpdates(this);
         saveChanges();
-    }
-
-    protected void restoreChanges() {
-        SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
-        currentRange = sharedPref.getInt("range", 3);
-    }
-
-    protected void saveChanges() {
-        SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("range", currentRange);
-        editor.commit();
     }
 
     /**
@@ -209,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         String gpsProvider = LocationManager.GPS_PROVIDER;
         String networkProvider = LocationManager.NETWORK_PROVIDER;
         if (locationManager.isProviderEnabled(gpsProvider)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                || locationManager.isProviderEnabled(networkProvider)) {
             if (!locationManager.isProviderEnabled(gpsProvider)) {
                 serviceAvailable = networkProvider;
             } else {
@@ -223,6 +198,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         } else {
             Log.e("Location Err", "No location provider is not available. Does the device have location services enabled?");
+            /*
+            // Build the alert dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Location Services Not Active");
+            builder.setMessage("We notice your location services are not enabled, please go to settings and enable them.");
+            builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // Show location settings when the user acknowledges the alert dialog
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            builder.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent cont = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(cont);
+                }
+
+            });
+            Dialog alertDialog = builder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+            */
         }
     }
 
@@ -248,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onSensorChanged(SensorEvent event) {
 
@@ -258,6 +257,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+
+    // Session of LocationListener methods implementation
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
@@ -280,4 +281,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.d("Latitude", "disable");
     }
 
+
+    // Session of methods for preferences save and restore
+    protected void restoreChanges() {
+        SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
+        currentRange = sharedPref.getInt("range", 3);
+    }
+
+    protected void saveChanges() {
+        SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("range", currentRange);
+        editor.commit();
+    }
+
+    /*
+     * run yelp search and add data to database for random pick
+     * if location and user preferences changed
+     */
+    protected void runningSearch() {
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(500);
+        if (preferencesChanged) {
+            // filteredSearch(term, address, category, range, sort, latitude, longitude)
+            allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
+            resDB.insertRestaurants(allRestaurant);
+        }
+        getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
+        Random_Number = rn.nextInt(20) + 1;
+        // getResultIntent.putExtra("restaurant_picked", Random_Number);
+        getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
+        preferencesChanged = false;
+        startActivity(getResultIntent);
+    }
 }

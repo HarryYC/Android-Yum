@@ -1,69 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_result"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/yum_red"
+    android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/loadingPB"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/businessIV"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/restaurantInfo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true">
 
-    <ImageView
-        android:id="@+id/ratingIV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/nameTV"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp" />
+        <ImageView
+            android:id="@+id/restaurantIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="12dp" />
 
-    <TextView
-        android:id="@+id/countTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ratingIV"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/ratingIV"
-        android:text="Rating Count" />
+        <TextView
+            android:id="@+id/nameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/restaurantIV"
+            android:layout_centerHorizontal="true"
+            android:padding="12dp"
+            android:text="Name" />
 
-    <TextView
-        android:id="@+id/nameTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/businessIV"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:text="Name" />
+        <ImageView
+            android:id="@+id/ratingIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameTV"
+            android:layout_centerHorizontal="true"
+            android:padding="12dp" />
+
+        <TextView
+            android:id="@+id/countTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ratingIV"
+            android:layout_toRightOf="@+id/ratingIV"
+            android:labelFor="@id/ratingIV"
+            android:padding="12dp"
+            android:text="Rating Count" />
+
+    </RelativeLayout>
+
 
     <ImageButton
         android:id="@+id/tweetBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/businessIV"
-        android:layout_alignTop="@+id/businessIV"
+        android:layout_alignEnd="@+id/restaurantInfo"
+        android:layout_below="@+id/restaurantInfo"
         android:adjustViewBounds="true"
+        android:background="@color/tw__transparent"
         android:padding="0dp"
-        android:src="@mipmap/tweet_white_blue"
-        android:visibility="invisible" />
+        android:scaleType="fitXY"
+        android:src="@mipmap/tweet_white_blue" />
 
     <Button
         android:id="@+id/goBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/ratingIV"
+        android:layout_below="@+id/tweetBtn"
         android:layout_margin="32dp"
         android:text="GO" />
 
@@ -72,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/ratingIV"
+        android:layout_below="@+id/tweetBtn"
         android:layout_margin="32dp"
         android:text="Try Again" />
 </RelativeLayout>

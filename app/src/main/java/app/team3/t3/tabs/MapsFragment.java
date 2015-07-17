@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import app.team3.t3.R;
+import app.team3.t3.ResDatabaseHelper;
 import app.team3.t3.Restaurant;
 
 /**
@@ -29,23 +30,32 @@ public class MapsFragment extends Fragment {
     private static final double LATITUDE_TEST = 17.385044;
     private static final double LONGITUDE_TEST = 78.486671;
 
+    private static ViewPager mViewPager;
+
     private MapView mMapView;
     private GoogleMap mGoogleMap;
-    private Restaurant restaurant;
+    private MarkerOptions markerOptions;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        final ViewPager mViewPager = (ViewPager) container.findViewById(R.id.view_pager);
-
+        mViewPager = (ViewPager) container.findViewById(R.id.view_pager);
         mMapView = (MapView) view.findViewById(R.id.mapView);
+        //ResDatabaseHelper resDatabaseHelper = new ResDatabaseHelper(getActivity().getApplicationContext());
         mMapView.onCreate(savedInstanceState);
-
-        mMapView.onResume();
-
         Bundle intent = getActivity().getIntent().getExtras();
-        restaurant = intent.getParcelable("restaurant_picked");
+        //Restaurant restaurant = resDatabaseHelper.getRestaurant(intent.getInt("restaurant_picked"));
+        Restaurant restaurant = intent.getParcelable("restaurant_picked");
+        markerOptions = new MarkerOptions().position(
+                new LatLng(restaurant.getLatitude(), restaurant.getLongitude())).title(restaurant.getName());
+        mGoogleMap = mMapView.getMap();
+
+        markerOptions.icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+        mGoogleMap.addMarker(markerOptions);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 16.0f));
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -53,15 +63,6 @@ public class MapsFragment extends Fragment {
             e.printStackTrace();
         }
 
-        mGoogleMap = mMapView.getMap();
-
-        MarkerOptions markerOptions = new MarkerOptions().position(
-                new LatLng(restaurant.getLatitude(), restaurant.getLongitude())).title(restaurant.getName());
-
-        markerOptions.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-        mGoogleMap.addMarker(markerOptions);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 16.0f));
 
         return view;
     }

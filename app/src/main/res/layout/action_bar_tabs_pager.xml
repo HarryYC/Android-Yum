@@ -33,11 +33,10 @@
 
     <fragment
         android:id="@+id/fragment_navigation_drawer_fragment"
+        android:name="app.team3.t3.tabs.NavigationDrawerFragment"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:layout="@layout/fragment_navigation_drawer"
-        android:name="app.team3.t3.tabs.NavigationDrawerFragment"
         tools:layout="@layout/fragment_navigation_drawer"/>
-
 </android.support.v4.widget.DrawerLayout>

@@ -19,79 +19,75 @@ public class Restaurant implements Parcelable {
             return new Restaurant[size];
         }
     };
-    private String businessID;
+    private String restaurantID;
     private String name;
     private float rating;
     private int reviewCount;
     private String phone;
     private String categories;
     private String address;
-    private String city;
-    private int zipCode;
     private double latitude;
     private double longitude;
+    private String restaurantPage;
     private String ratingImgURL;
-    private String businessImgURL;
+    private String restaurantImgURL;
 
     // Default constructor
     public Restaurant() {
-        this.businessID = "";
+        this.restaurantID = "";
         this.name = "";
         this.rating = 0f;
         this.reviewCount = 0;
         this.phone = "";
         this.categories = "";
         this.address = "";
-        this.city = "";
-        this.zipCode = 0;
         this.latitude = 0.0;
         this.longitude = 0.0;
+        this.restaurantPage = "";
         this.ratingImgURL = "";
-        this.businessImgURL = "";
+        this.restaurantImgURL = "";
     }
 
     // Parcelling
     public Restaurant(Parcel source) {
-        this.businessID = source.readString();
+        this.restaurantID = source.readString();
         this.name = source.readString();
         this.rating = source.readFloat();
         this.reviewCount = source.readInt();
         this.phone = source.readString();
         this.categories = source.readString();
         this.address = source.readString();
-        this.city = source.readString();
-        this.zipCode = source.readInt();
         this.latitude = source.readDouble();
         this.longitude = source.readDouble();
+        this.restaurantPage = source.readString();
         this.ratingImgURL = source.readString();
-        this.businessImgURL = source.readString();
+        this.restaurantImgURL = source.readString();
     }
 
 
     // Parameterized Constructor
-    public Restaurant(String businessID, String name, float rating, int reviewCount, String phone, String categories, String Address, String City, int zipCode, double latitude, double longitude, String ratingImgURL, String businessImgURL) {
-        this.businessID = businessID;
+    public Restaurant(String restaurantID, String name, float rating, int reviewCount, String phone, String categories, String Address, double latitude, double longitude, String restaurantPage, String ratingImgURL, String restaurantImgURL) {
+        this.restaurantID = restaurantID;
         this.name = name;
         this.rating = rating;
         this.reviewCount = reviewCount;
         this.phone = phone;
         this.categories = categories;
         this.address = Address;
-        this.city = City;
-        this.zipCode = zipCode;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.restaurantPage = restaurantPage;
         this.ratingImgURL = ratingImgURL;
-        this.businessImgURL = businessImgURL;
+        this.restaurantImgURL = restaurantImgURL;
     }
 
     // Getters and Setters
-    public String getBusinessID() {
-        return businessID;
+    public String getRestaurantID() {
+        return restaurantID;
     }
 
-    public void setBusinessID(String businessID) {
-        this.businessID = businessID;
+    public void setRestaurantID(String restaurantID) {
+        this.restaurantID = restaurantID;
     }
 
     public String getName() {
@@ -142,22 +138,6 @@ public class Restaurant implements Parcelable {
         this.address = address;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public int getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(int zipCode) {
-        this.zipCode = zipCode;
-    }
-
     public double getLatitude() {
         return latitude;
     }
@@ -174,12 +154,20 @@ public class Restaurant implements Parcelable {
         this.longitude = longitude;
     }
 
-    public String getBusinessImgURL() {
-        return businessImgURL;
+    public String getRestaurantPage() {
+        return restaurantPage;
     }
 
-    public void setBusinessImgURL(String businessImgURL) {
-        this.businessImgURL = businessImgURL;
+    public void setRestaurantPage(String restaurantPage) {
+        this.restaurantPage = restaurantPage;
+    }
+
+    public String getRestaurantImgURL() {
+        return restaurantImgURL;
+    }
+
+    public void setRestaurantImgURL(String restaurantImgURL) {
+        this.restaurantImgURL = restaurantImgURL;
     }
 
     public String getRatingImgURL() {
@@ -197,18 +185,17 @@ public class Restaurant implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.businessID);
+        dest.writeString(this.restaurantID);
         dest.writeString(this.name);
         dest.writeFloat(this.rating);
         dest.writeInt(this.reviewCount);
         dest.writeString(this.phone);
         dest.writeString(this.categories);
         dest.writeString(this.address);
-        dest.writeString(this.city);
-        dest.writeInt(this.zipCode);
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
+        dest.writeString(this.restaurantPage);
         dest.writeString(this.ratingImgURL);
-        dest.writeString(this.businessImgURL);
+        dest.writeString(this.restaurantImgURL);
     }
 }
