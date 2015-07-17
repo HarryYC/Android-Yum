@@ -10,6 +10,8 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Vibrator;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private Random rn = new Random();
     private Intent getResultIntent;
+    SoundPool mySound;
+    int touchId,boomId;
 
     final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
@@ -68,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (mAccel > 22 && avoid_doubleShake == true) {
                 runningSearch();
                 avoid_doubleShake = false;
+                mySound.play(boomId, 1, 1, 1, 0, 1);
+
             }
         }
 
@@ -86,9 +92,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             startActivity(locationSetting);
         }
 
+        mySound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        touchId = mySound.load(this, R.raw.touch, 1);
+        boomId = mySound.load(this, R.raw.boom, 1);
+
         restoreChanges();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        new Eula(this).show();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -116,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         shakeIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mySound.play(boomId, 1, 1, 1, 0, 1);
+                // mySound.play(touchId, 1, 1, 1, 1, 1f);
                 runningSearch();
             }
         });
@@ -147,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
 
     } //end onCreat
+
 
     /**
      * Dispatch onPause() to fragments.
