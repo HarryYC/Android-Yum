@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import app.team3.t3.yelp.Restaurant;
+
 
 /**
  * Created by sssbug on 6/30/15.

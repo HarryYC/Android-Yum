@@ -1,4 +1,4 @@
-package app.team3.t3;
+package app.team3.t3.yelp;
 
 import android.os.Parcel;
 import android.os.Parcelable;

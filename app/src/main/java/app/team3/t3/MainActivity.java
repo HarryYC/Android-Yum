@@ -27,25 +27,26 @@ import android.widget.TextView;
 
 import java.util.Random;
 
+import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantFinder;
+
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
 
+    SoundPool mySound;
+    int touchId, boomId;
     private ResDatabaseHelper resDB;
     private LocationManager locationManager;
-
     private Location location;
     private double latitude;
     private double longitude;
     private String serviceAvailable = "";
     private int Random_Number;
-
     private ImageButton shakeIB;
     private TextView rangeTV;
     private SeekBar rangeSB;
-
     private int currentRange = 1;
     private boolean preferencesChanged = true;
-
     private RestaurantFinder mySearch;
     private Restaurant[] allRestaurant;
     private SensorManager mSensorManager;
@@ -55,9 +56,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private Random rn = new Random();
     private Intent getResultIntent;
-    SoundPool mySound;
-    int touchId,boomId;
-
     final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {

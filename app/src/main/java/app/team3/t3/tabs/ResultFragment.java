@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 import app.team3.t3.ImageDownloader;
 import app.team3.t3.R;
 import app.team3.t3.ResDatabaseHelper;
-import app.team3.t3.Restaurant;
+import app.team3.t3.yelp.Restaurant;
 
 /**
  * Created by nanden on 7/5/15.

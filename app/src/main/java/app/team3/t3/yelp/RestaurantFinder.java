@@ -1,4 +1,4 @@
-package app.team3.t3;
+package app.team3.t3.yelp;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,6 +6,8 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import app.team3.t3.R;
 
 /**
  * Created by ivan on 6/30/15.

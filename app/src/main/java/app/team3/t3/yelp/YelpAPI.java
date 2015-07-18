@@ -1,4 +1,4 @@
-package app.team3.t3;
+package app.team3.t3.yelp;
 
 import android.os.AsyncTask;
 
@@ -10,6 +10,8 @@ import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
 import java.util.concurrent.ExecutionException;
+
+import app.team3.t3.TwoStepOAuth;
 
 /**
  * Yelp API V2 from Code sample. (Modified for android)
