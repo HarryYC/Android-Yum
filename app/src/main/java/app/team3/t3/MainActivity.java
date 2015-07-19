@@ -43,22 +43,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Random rn = new Random();
     private Intent getResultIntent;
     final SensorEventListener mSensorListener = new SensorEventListener() {
+
         @Override
         public void onSensorChanged(SensorEvent event) {
 
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
-            mAccelLast = mAccelCurrent;
             mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
-            if (mAccel > 22 && avoid_doubleShake == true) {
+            if (mAccel > 15 && avoid_doubleShake == true) {
                 runningSearch();
                 avoid_doubleShake = false;
                 mySound.play(boomId, 1, 1, 1, 0, 1);
-
             }
+            mAccelLast = mAccelCurrent;
         }
 
         @Override
@@ -149,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onPause() {
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
-        getActionBar();
         saveChanges();
+        getActionBar();
     }
 
     /**

@@ -64,7 +64,8 @@
 
         <activity
             android:name=".LoadingActivity"
-            android:label="@string/title_activity_loading"></activity>
+            android:label="@string/title_activity_loading"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
