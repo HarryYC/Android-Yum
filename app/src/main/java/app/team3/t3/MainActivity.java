@@ -7,9 +7,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Vibrator;
@@ -27,28 +24,17 @@ import android.widget.TextView;
 
 import java.util.Random;
 
-import app.team3.t3.yelp.Restaurant;
-import app.team3.t3.yelp.RestaurantFinder;
 
-
-public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     SoundPool mySound;
     int touchId, boomId;
-    private ResDatabaseHelper resDB;
-    private LocationManager locationManager;
-    private Location location;
-    private double latitude;
-    private double longitude;
-    private String serviceAvailable = "";
     private int Random_Number;
     private ImageButton shakeIB;
     private TextView rangeTV;
     private SeekBar rangeSB;
     private int currentRange = 1;
     private boolean preferencesChanged = true;
-    private RestaurantFinder mySearch;
-    private Restaurant[] allRestaurant;
     private SensorManager mSensorManager;
     private float mAccel;
     private float mAccelCurrent;
@@ -100,22 +86,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         new Eula(this).show();
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-         /* Yelp  */
-        final Context context = getApplicationContext();
-        mySearch = new RestaurantFinder(context);
-
-
          /* Shake Sensor  */
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
-
-         /* Database  */
-        resDB = new ResDatabaseHelper(context);
 
          /* Components  */
         shakeIB = (ImageButton) findViewById(R.id.shakeIB);
@@ -160,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     } //end onCreat
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        restoreChanges();
+    }
 
     /**
      * Dispatch onPause() to fragments.
@@ -169,9 +150,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
         getActionBar();
-
-
-        locationManager.removeUpdates(this);
         saveChanges();
     }
 
@@ -187,54 +165,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-        restoreChanges();
         avoid_doubleShake = true;
         mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
 
-
-        String gpsProvider = LocationManager.GPS_PROVIDER;
-        String networkProvider = LocationManager.NETWORK_PROVIDER;
-        if (locationManager.isProviderEnabled(gpsProvider)
-                || locationManager.isProviderEnabled(networkProvider)) {
-            if (!locationManager.isProviderEnabled(gpsProvider)) {
-                serviceAvailable = networkProvider;
-            } else {
-                serviceAvailable = gpsProvider;
-            }
-            locationManager.requestLocationUpdates(serviceAvailable, 50000, 8045, this);
-            location = locationManager.getLastKnownLocation(serviceAvailable);
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-            }
-        } else {
-            Log.e("Location Err", "No location provider is not available. Does the device have location services enabled?");
-            /*
-            // Build the alert dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Location Services Not Active");
-            builder.setMessage("We notice your location services are not enabled, please go to settings and enable them.");
-            builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // Show location settings when the user acknowledges the alert dialog
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            builder.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Intent cont = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(cont);
-                }
-
-            });
-            Dialog alertDialog = builder.create();
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
-            */
-        }
     }
 
     @Override
@@ -270,31 +205,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-
-    // Session of LocationListener methods implementation
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            this.location = location;
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d("Latitude", "status");
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        Log.d("Latitude", "enable");
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Log.d("Latitude", "disable");
-    }
-
-
     // Session of methods for preferences save and restore
     protected void restoreChanges() {
         SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
@@ -315,15 +225,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void runningSearch() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-        if (preferencesChanged) {
-            // filteredSearch(term, address, category, range, sort, latitude, longitude)
-            allRestaurant = mySearch.filteredSearch(null, null, null, currentRange, 1, latitude, longitude);
-            resDB.insertRestaurants(allRestaurant);
-        }
-        getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
+        getResultIntent = new Intent(MainActivity.this, LoadingActivity.class);
         Random_Number = rn.nextInt(20) + 1;
-        // getResultIntent.putExtra("restaurant_picked", Random_Number);
-        getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
+        getResultIntent.putExtra("random_number", Random_Number);
         preferencesChanged = false;
         startActivity(getResultIntent);
     }
