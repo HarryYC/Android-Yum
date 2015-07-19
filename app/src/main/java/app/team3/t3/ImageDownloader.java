@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -13,22 +14,25 @@ import java.net.URL;
  * Created by ivan on 6/29/15.
  * Image Downloader
  */
-public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
 
-    protected boolean isScale;
-    protected Bitmap bitmap = null;
-    protected BufferedInputStream bufferedInputStream;
-    protected InputStream inputStream;
-    protected int width;
-    protected int height;
+    private ImageView imageView;
+    private boolean isScale;
+    private Bitmap bitmap = null;
+    private BufferedInputStream bufferedInputStream;
+    private InputStream inputStream;
+    private int width;
+    private int height;
 
-    public ImageDownloader(int width, int height) {
+    public ImageDownloader(ImageView imageView, int width, int height) {
+        this.imageView = imageView;
         isScale = true;
         this.width = width;
         this.height = height;
     }
 
-    public ImageDownloader() {
+    public ImageDownloader(ImageView imageView) {
+        this.imageView = imageView;
         isScale = false;
     }
 
@@ -39,7 +43,7 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
      * @return bitmap <tt>Bitmap</tt>
      */
     @Override
-    protected Bitmap doInBackground(String... params) {
+    protected Boolean doInBackground(String... params) {
         String urlString = params[0];
 
         try {
@@ -68,6 +72,10 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
             Log.e("Error", e.getMessage());
         }
 
-        return bitmap;
+        return true;
+    }
+
+    protected void onPostExecute(Boolean result) {
+        this.imageView.setImageBitmap(bitmap);
     }
 }

@@ -1,6 +1,10 @@
 package app.team3.t3.tabs;
 
-import android.content.Context;
+import app.team3.t3.ImageDownloader;
+import app.team3.t3.R;
+import app.team3.t3.ResDatabaseHelper;
+import app.team3.t3.yelp.Restaurant;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,23 +13,17 @@ import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import java.util.concurrent.ExecutionException;
 
-import app.team3.t3.ImageDownloader;
-import app.team3.t3.R;
-import app.team3.t3.ResDatabaseHelper;
-import app.team3.t3.yelp.Restaurant;
+// import twitter library
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 /**
  * Created by nanden on 7/5/15.
@@ -33,21 +31,16 @@ import app.team3.t3.yelp.Restaurant;
 public class ResultFragment extends Fragment {
 
     private static final String TAG = "result_fragment";
-    private ResDatabaseHelper resDatabaseHelper;
     private Restaurant restaurant;
-    private Context context;
     private int width;
     private int height;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this.getActivity().getApplicationContext();
         Bundle intent = getActivity().getIntent().getExtras();
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        resDatabaseHelper = new ResDatabaseHelper(context);
-        // restaurant = resDatabaseHelper.getRestaurant(intent.getInt("restaurant_picked"));
         restaurant = intent.getParcelable("restaurant_picked");
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
@@ -58,6 +51,7 @@ public class ResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_result, container, false);
 
+        final ProgressBar resultProgressBar = (ProgressBar) view.findViewById(R.id.resultProgressBar);
         final ImageView businessIV = (ImageView) view.findViewById(R.id.restaurantIV);
         final ImageView ratingIV = (ImageView) view.findViewById(R.id.ratingIV);
 
@@ -67,67 +61,11 @@ public class ResultFragment extends Fragment {
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
 
-        final ImageButton tweetBtn = (ImageButton) view.findViewById(R.id.tweetBtn);
-        final RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.fragment_result);
-        final TweetComposer.Builder builder = new TweetComposer.Builder(getActivity()).text(restaurant.getName() + "\n" + restaurant.getRestaurantPage());
-
-        tweetBtn.bringToFront();
-        tweetBtn.setOnTouchListener(new View.OnTouchListener() {
-            float m_lastTouchX;
-            float m_lastTouchY;
-            float m_dx;
-            float m_dy;
-            float m_prevX = 1.0f;
-            float m_prevY = 1.0f;
-            float m_posX;
-            float m_posY;
-            private long lastActionDownTime = 0;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-
-                        m_lastTouchX = event.getX();
-                        m_lastTouchY = event.getY();
-                        lastActionDownTime = System.currentTimeMillis();
-                        Log.e("x, y", String.valueOf(m_lastTouchX) + ", " + String.valueOf(m_lastTouchY));
-                        break;
-                    }
-
-                    case MotionEvent.ACTION_UP: {
-                        if (System.currentTimeMillis() - lastActionDownTime < 500) {
-                            builder.show();
-                        }
-                        break;
-                    }
-
-                    case MotionEvent.ACTION_MOVE: {
-                        m_dx = event.getX() - m_lastTouchX;
-                        m_dy = event.getY() - m_lastTouchY;
-
-                        m_posX = m_prevX + m_dx;
-                        m_posY = m_prevY + m_dy;
-
-                        Log.i("cx, cy", String.valueOf(m_posX) + ", " + String.valueOf(m_posY));
-
-                        if (m_posY >= 0 && (m_posY + v.getHeight()) < relativeLayout.getHeight()) {
-                            m_prevY = m_posY;
-                            tweetBtn.setY(m_posY);
-                        }
-
-                        if (m_posX >= 0 && (m_posX + v.getWidth()) < relativeLayout.getWidth()) {
-                            tweetBtn.setX(m_posX);
-                            m_prevX = m_posX;
-                        }
-                        break;
-                    }
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
+        /*
+        // code for tweet
+        TweetComposer.Builder builder = new TweetComposer.Builder(getActivity()).text(restaurant.getName() + "\n" + restaurant.getRestaurantPage());
+        builder.show();
+        */
 
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +77,7 @@ public class ResultFragment extends Fragment {
         goBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resDatabaseHelper.saveRestaurant(restaurant);
+                new ResDatabaseHelper(getActivity().getApplicationContext()).saveRestaurant(restaurant);
                 Intent directionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + restaurant.getAddress()));
                 directionIntent.setPackage("com.google.android.apps.maps");
                 startActivity(directionIntent);
@@ -148,22 +86,25 @@ public class ResultFragment extends Fragment {
 
         if (restaurant != null) {
             try {
-                businessIV.setImageBitmap(new ImageDownloader(width, height * 2 / 6).execute(restaurant.getRestaurantImgURL()).get());
-                // businessIV.setImageBitmap(new ImageDownloader().execute(restaurant.getRestaurantImgURL()).get());
-                ratingIV.setImageBitmap(new ImageDownloader().execute(restaurant.getRatingImgURL()).get());
+                ImageDownloader businessID = new ImageDownloader(businessIV, width, height * 2 / 6);
+                businessID.execute(restaurant.getRestaurantImgURL());
+                ImageDownloader ratingID = new ImageDownloader(ratingIV);
+                ratingID.execute(restaurant.getRatingImgURL());
+                nameTV.setText(restaurant.getName());
+                countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
+                while (businessID.get() != true && ratingID.get() != true) ;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            nameTV.setText(restaurant.getName());
-            countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
-
-            tweetBtn.setVisibility(View.VISIBLE);
-
         } else {
             Log.e(TAG, "Sorry, there is no result");
         }
+
+        view.findViewById(R.id.restaurantInfo).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.buttonContainer).setVisibility(View.VISIBLE);
+        resultProgressBar.setVisibility(View.GONE);
 
         Log.v("res_name", restaurant.getName());
 

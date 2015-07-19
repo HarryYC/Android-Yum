@@ -3,7 +3,6 @@ package app.team3.t3.tabs;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +26,6 @@ public class MapsFragment extends Fragment {
     private static final double LATITUDE_TEST = 17.385044;
     private static final double LONGITUDE_TEST = 78.486671;
 
-    private static ViewPager mViewPager;
-
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private MarkerOptions markerOptions;
@@ -37,12 +34,11 @@ public class MapsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        mViewPager = (ViewPager) container.findViewById(R.id.view_pager);
+
         mMapView = (MapView) view.findViewById(R.id.mapView);
-        //ResDatabaseHelper resDatabaseHelper = new ResDatabaseHelper(getActivity().getApplicationContext());
         mMapView.onCreate(savedInstanceState);
+
         Bundle intent = getActivity().getIntent().getExtras();
-        //Restaurant restaurant = resDatabaseHelper.getRestaurant(intent.getInt("restaurant_picked"));
         Restaurant restaurant = intent.getParcelable("restaurant_picked");
         markerOptions = new MarkerOptions().position(
                 new LatLng(restaurant.getLatitude(), restaurant.getLongitude())).title(restaurant.getName());

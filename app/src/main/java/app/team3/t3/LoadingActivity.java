@@ -5,8 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Vibrator;
-import android.support.v7.app.ActionBarActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import java.util.concurrent.ExecutionException;
 
 import app.team3.t3.yelp.Restaurant;
 import app.team3.t3.yelp.RestaurantFinder;
@@ -102,29 +103,6 @@ public class LoadingActivity extends AppCompatActivity {
                 longitude = currentlocation.getLongitude();
             } else {
                 Log.e("Location Err", "No location provider is not available. Does the device have location services enabled?");
-            /*
-            // Build the alert dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Location Services Not Active");
-            builder.setMessage("We notice your location services are not enabled, please go to settings and enable them.");
-            builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // Show location settings when the user acknowledges the alert dialog
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            builder.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Intent cont = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(cont);
-                }
-
-            });
-            Dialog alertDialog = builder.create();
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
-            */
             }
             selectedAddress = null;
         } else {
@@ -176,12 +154,24 @@ public class LoadingActivity extends AppCompatActivity {
      * if location and user preferences changed
      */
     protected void runningSearch() {
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(500);
         if (preferencesChanged) {
-            // filteredSearch(term, address, category, range, sort, latitude, longitude)
-            Restaurant[] allRestaurant = mySearch.filteredSearch(searchTerm, selectedAddress, selectedCategory, selectedRange, selectedSortMode, latitude, longitude);
-            resDB.insertRestaurants(allRestaurant);
+            AsyncTask searchTask = new AsyncTask<Void, Void, Boolean>() {
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    // filteredSearch(term, address, category, range, sort, latitude, longitude)
+                    Restaurant[] allRestaurant = mySearch.filteredSearch(searchTerm, selectedAddress, selectedCategory, selectedRange, selectedSortMode, latitude, longitude);
+                    resDB.insertRestaurants(allRestaurant);
+                    return true;
+                }
+            };
+            searchTask.execute();
+            try {
+                while (searchTask.get() != true) ;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
         Intent getResultIntent = new Intent(LoadingActivity.this, ActionBarTabsPager.class);
         getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
