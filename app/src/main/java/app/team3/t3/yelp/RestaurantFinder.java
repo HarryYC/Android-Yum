@@ -60,6 +60,7 @@ public class RestaurantFinder {
                                  int range, String coordinate) {
         searchResponseJSON =
                 yelpApi.searchForBusiness(term, location, category, sort, range, coordinate);
+        Log.v(TAG, searchResponseJSON);
     }
 
     /**
@@ -68,7 +69,6 @@ public class RestaurantFinder {
      * @return restaurant <tt>Restaurant[]</tt> for deserialized restautrant java object
      */
     public Restaurant[] toRestaurant(String allRestaurantJSON) {
-        Log.v(TAG, allRestaurantJSON);
         try {
             JSONObject response = new JSONObject(allRestaurantJSON);
             int totalResults = Integer.parseInt(response.getString("total"));

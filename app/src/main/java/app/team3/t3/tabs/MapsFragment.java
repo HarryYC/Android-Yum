@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -28,7 +29,6 @@ public class MapsFragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap mGoogleMap;
-    private MarkerOptions markerOptions;
 
     @Nullable
     @Override
@@ -38,17 +38,10 @@ public class MapsFragment extends Fragment {
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
+        mMapView.onResume();
+
         Bundle intent = getActivity().getIntent().getExtras();
         Restaurant restaurant = intent.getParcelable("restaurant_picked");
-        markerOptions = new MarkerOptions().position(
-                new LatLng(restaurant.getLatitude(), restaurant.getLongitude())).title(restaurant.getName());
-        mGoogleMap = mMapView.getMap();
-
-        markerOptions.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-
-        mGoogleMap.addMarker(markerOptions);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 16.0f));
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -56,6 +49,16 @@ public class MapsFragment extends Fragment {
             e.printStackTrace();
         }
 
+        mGoogleMap = mMapView.getMap();
+
+        MarkerOptions markerOptions = new MarkerOptions().position(
+                new LatLng(restaurant.getLatitude(), restaurant.getLongitude())).title(restaurant.getName());
+
+        markerOptions.icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+        mGoogleMap.addMarker(markerOptions);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 16.0f));
 
         return view;
     }

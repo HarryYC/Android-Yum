@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 runningSearch();
                 avoid_doubleShake = false;
                 mySound.play(boomId, 1, 1, 1, 0, 1);
+                preferencesChanged = false;
             }
             mAccelLast = mAccelCurrent;
         }
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         if (getIntent().getBooleanExtra("is_started", false)) {
             Intent locationSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(locationSetting);
@@ -81,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         boomId = mySound.load(this, R.raw.boom, 1);
 
         restoreChanges();
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         new Eula(this).show();
 
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mySound.play(boomId, 1, 1, 1, 0, 1);
                 // mySound.play(touchId, 1, 1, 1, 1, 1f);
                 runningSearch();
+                preferencesChanged = false;
             }
         });
 
@@ -150,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
         saveChanges();
-        getActionBar();
     }
 
     /**
@@ -228,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         getResultIntent = new Intent(MainActivity.this, LoadingActivity.class);
         Random_Number = rn.nextInt(20) + 1;
         getResultIntent.putExtra("random_number", Random_Number);
+        getResultIntent.putExtra("range", currentRange);
+        getResultIntent.putExtra("preferences_changed", preferencesChanged);
         preferencesChanged = false;
         startActivity(getResultIntent);
     }

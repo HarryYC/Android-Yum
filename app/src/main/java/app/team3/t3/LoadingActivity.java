@@ -20,7 +20,7 @@ import app.team3.t3.yelp.Restaurant;
 import app.team3.t3.yelp.RestaurantFinder;
 
 
-public class LoadingActivity extends AppCompatActivity {
+public class LoadingActivity extends AppCompatActivity implements LocationListener {
 
     private String searchTerm;
     private int selectedRange;
@@ -37,7 +37,6 @@ public class LoadingActivity extends AppCompatActivity {
     private Context context;
     private int Random_Number;
     private RestaurantFinder mySearch;
-    private LocationListener locationListener;
     private ProgressBar loadProgressBar;
 
     @Override
@@ -61,31 +60,7 @@ public class LoadingActivity extends AppCompatActivity {
         Random_Number = userPreferences.getInt("random_number", 0);
 
         if (!useAddress) {
-            // Session of LocationListener methods implementation
-            locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    if (location != null) {
-                        currentlocation = location;
-                    }
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            };
-
+            // Location Service
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             String gpsProvider = LocationManager.GPS_PROVIDER;
             String networkProvider = LocationManager.NETWORK_PROVIDER;
@@ -97,9 +72,10 @@ public class LoadingActivity extends AppCompatActivity {
                 } else {
                     serviceAvailable = gpsProvider;
                 }
-                locationManager.requestLocationUpdates(serviceAvailable, 30000, 0, locationListener);
+                locationManager.requestLocationUpdates(serviceAvailable, 500, 0, this);
                 currentlocation = locationManager.getLastKnownLocation(serviceAvailable);
                 latitude = currentlocation.getLatitude();
+                Log.e("location_msg", String.valueOf(latitude));
                 longitude = currentlocation.getLongitude();
             } else {
                 Log.e("Location Err", "No location provider is not available. Does the device have location services enabled?");
@@ -142,8 +118,8 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (locationManager != null && locationListener != null) {
-            locationManager.removeUpdates(locationListener);
+        if (!useAddress) {
+            locationManager.removeUpdates(this);
         }
         loadProgressBar.setVisibility(View.GONE);
         finish();
@@ -155,6 +131,11 @@ public class LoadingActivity extends AppCompatActivity {
      */
     protected void runningSearch() {
         if (preferencesChanged) {
+            mySearch.useAddress(useAddress);
+            // filteredSearch(term, address, category, range, sort, latitude, longitude)
+            Restaurant[] allRestaurant = mySearch.filteredSearch(searchTerm, selectedAddress, selectedCategory, selectedRange, selectedSortMode, latitude, longitude);
+            resDB.insertRestaurants(allRestaurant);
+            /*
             AsyncTask searchTask = new AsyncTask<Void, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Void... params) {
@@ -172,10 +153,35 @@ public class LoadingActivity extends AppCompatActivity {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            */
         }
         Intent getResultIntent = new Intent(LoadingActivity.this, ActionBarTabsPager.class);
         getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
         preferencesChanged = false;
         startActivity(getResultIntent);
+    }
+
+
+    // Implementing methods for LocationListener
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            currentlocation = location;
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }
