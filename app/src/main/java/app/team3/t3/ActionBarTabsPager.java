@@ -1,16 +1,10 @@
 package app.team3.t3;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 
 import app.team3.t3.tabs.NavigationDrawerFragment;
 import app.team3.t3.tabs.SlidingTabLayout;
