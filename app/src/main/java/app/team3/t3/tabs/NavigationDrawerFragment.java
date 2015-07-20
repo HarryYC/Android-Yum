@@ -1,6 +1,7 @@
 package app.team3.t3.tabs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import app.team3.t3.History;
+import app.team3.t3.MainActivity;
 import app.team3.t3.R;
 
 /**
@@ -23,7 +29,9 @@ public class NavigationDrawerFragment extends Fragment {
     private static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
+
     private DrawerLayout mDrawerLayout;
+    private ListView mDrawerListView;
     private View mContainerView;
 
     private boolean mUserLearnedDrawer;
@@ -46,36 +54,69 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mDrawerListView = (ListView)inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent();
+                switch (position) {
+                    case 0: {
+                        // Home
+                        intent.setClass(getActivity(), MainActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case 1: {
+                        // History
+                        intent.setClass(getActivity(), History.class);
+                        startActivity(intent);
+                        break;
+                    }
+                }
+
+            }
+        });
+        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_list_item_activated_1,
+                new String[]{
+                        "Home",
+                        "History"
+                }));
+        return mDrawerListView;
     }
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
-        mDrawerLayout = drawerLayout;
         mContainerView = getActivity().findViewById(fragmentId);
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout,toolbar, R.string.Open,R.string.Close) {
+        mDrawerLayout = drawerLayout;
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.Open,R.string.Close) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+                getActivity().invalidateOptionsMenu();
+            }
+
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 if(!mUserLearnedDrawer) {
                     mUserLearnedDrawer = true;
                     saveToPreferecences(getActivity(), KEY_USER_LEARNED_DRAWER, mUserLearnedDrawer+"");
-                    getActivity().invalidateOptionsMenu();
                 }
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
+                getActivity().invalidateOptionsMenu();
             }
         };
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
         mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {
                 mActionBarDrawerToggle.syncState();
             }
         });
+        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
     }
 
     public static void saveToPreferecences(Context context, String preferenceName, String preferencesValue) {
