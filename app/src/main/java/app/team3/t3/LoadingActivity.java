@@ -5,16 +5,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-
-import java.util.concurrent.ExecutionException;
 
 import app.team3.t3.yelp.Restaurant;
 import app.team3.t3.yelp.RestaurantFinder;
@@ -72,10 +70,9 @@ public class LoadingActivity extends AppCompatActivity implements LocationListen
                 } else {
                     serviceAvailable = gpsProvider;
                 }
-                locationManager.requestLocationUpdates(serviceAvailable, 500, 0, this);
+                locationManager.requestLocationUpdates(serviceAvailable, 5000, 0, this);
                 currentlocation = locationManager.getLastKnownLocation(serviceAvailable);
                 latitude = currentlocation.getLatitude();
-                Log.e("location_msg", String.valueOf(latitude));
                 longitude = currentlocation.getLongitude();
             } else {
                 Log.e("Location Err", "No location provider is not available. Does the device have location services enabled?");
@@ -130,35 +127,25 @@ public class LoadingActivity extends AppCompatActivity implements LocationListen
      * if location and user preferences changed
      */
     protected void runningSearch() {
+        final int WAIT_TIME = 1500;
+
         if (preferencesChanged) {
             mySearch.useAddress(useAddress);
+
             // filteredSearch(term, address, category, range, sort, latitude, longitude)
             Restaurant[] allRestaurant = mySearch.filteredSearch(searchTerm, selectedAddress, selectedCategory, selectedRange, selectedSortMode, latitude, longitude);
             resDB.insertRestaurants(allRestaurant);
-            /*
-            AsyncTask searchTask = new AsyncTask<Void, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    // filteredSearch(term, address, category, range, sort, latitude, longitude)
-                    Restaurant[] allRestaurant = mySearch.filteredSearch(searchTerm, selectedAddress, selectedCategory, selectedRange, selectedSortMode, latitude, longitude);
-                    resDB.insertRestaurants(allRestaurant);
-                    return true;
-                }
-            };
-            searchTask.execute();
-            try {
-                while (searchTask.get() != true) ;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            */
         }
-        Intent getResultIntent = new Intent(LoadingActivity.this, ActionBarTabsPager.class);
-        getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
         preferencesChanged = false;
-        startActivity(getResultIntent);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent getResultIntent = new Intent(LoadingActivity.this, ActionBarTabsPager.class);
+                getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
+                startActivity(getResultIntent);
+                finish();
+            }
+        }, WAIT_TIME);
     }
 
 
