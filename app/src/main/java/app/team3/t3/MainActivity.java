@@ -124,10 +124,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 serviceAvailable = gpsProvider;
             }
             locationManager.requestLocationUpdates(serviceAvailable, 5000, 0, this);
-            Location currentlocation = locationManager.getLastKnownLocation(serviceAvailable);
-            mySearch.setLatitude(currentlocation.getLatitude());
+            Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
+            mySearch.setLatitude(currentLocation.getLatitude());
             Log.e("####lati", String.valueOf(mySearch.getLatitude()));
-            mySearch.setLongitude(currentlocation.getLongitude());
+            mySearch.setLongitude(currentLocation.getLongitude());
             Log.e("####longi", String.valueOf(mySearch.getLongitude()));
             restaurants = mySearch.filteredSearch();
             resDB.insertRestaurants(restaurants);
@@ -174,10 +174,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void getResultPage() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-        Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
+        Intent getResultIntent = new Intent(MainActivity.this, LoadingActivity.class);
         int Random_Number = new Random().nextInt(20) + 1;
         getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
         startActivity(getResultIntent);
+
     }
 
     /* fillter button */

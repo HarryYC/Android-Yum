@@ -32,8 +32,8 @@ public class ActionBarTabsPager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.action_bar_tabs_pager);
 
-//        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-//        Fabric.with(this, new Twitter(authConfig));
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
 
         mToolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
