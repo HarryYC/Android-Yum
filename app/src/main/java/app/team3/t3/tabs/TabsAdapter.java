@@ -33,9 +33,9 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
                 return mapsFragment;
             }
             case 2: {
-                TestFragmentTwo testFragmentTwo = new TestFragmentTwo();
-                Log.d(TAG, "TestFragmentTwo called");
-                return testFragmentTwo;
+                TwitterFragment twitterFragment = new TwitterFragment();
+                Log.d(TAG, "TwitterFragment called");
+                return twitterFragment;
             }
             default:
                 return null;

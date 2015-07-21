@@ -61,11 +61,6 @@ public class ResultFragment extends Fragment {
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
 
-        /*
-        // code for tweet
-        TweetComposer.Builder builder = new TweetComposer.Builder(getActivity()).text(restaurant.getName() + "\n" + restaurant.getRestaurantPage());
-        builder.show();
-        */
 
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
