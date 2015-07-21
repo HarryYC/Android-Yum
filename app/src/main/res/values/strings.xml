@@ -18,6 +18,37 @@
     <string name="updates">Upates in this version: Donec sollicitudin sodales turpis eget congue. Nulla facilisi. Proin facilisis eros vel mauris mollis tempus. </string>
     <string name="title_activity_loading">LoadingActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string-array name="distance_dropdown_item">
+        <item>Best Match</item>
+        <item>2 blocks</item>
+        <item>6 blocks</item>
+        <item>1 mile</item>
+        <item>5 mile</item>
+        <item>10 mile</item>
+    </string-array>
+
+    <string-array name="category_dropdown_item">
+        <item>All</item>
+        <item>Japanese</item>
+        <item>American (Traditional)</item>
+        <item>Chinese</item>
+        <item>Indian</item>
+        <item>Pizza</item>
+        <item>American (New)</item>
+        <item>Mexican</item>
+        <item>Mediterranean</item>
+        <item>Middle Eastern</item>
+        <item>Modern European</item>
+        <item>French</item>
+        <item>Thai</item>
+        <item>Steakhouses</item>
+        <item>Asian Fusion</item>
+        <item>Tapas Bars</item>
+        <item>Latin American</item>
+        <item>Seafood</item>
+        <item>Italian</item>
+        <item>Greek</item>
+        <item></item>
+    </string-array>
 
 </resources>

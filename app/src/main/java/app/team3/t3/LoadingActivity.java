@@ -73,9 +73,11 @@ public class LoadingActivity extends AppCompatActivity implements LocationListen
                 locationManager.requestLocationUpdates(serviceAvailable, 5000, 0, this);
                 currentlocation = locationManager.getLastKnownLocation(serviceAvailable);
                 latitude = currentlocation.getLatitude();
+                Log.e("####lati", String.valueOf(latitude));
                 longitude = currentlocation.getLongitude();
+                Log.e("####longi", String.valueOf(longitude));
             } else {
-                Log.e("Location Err", "No location provider is not available. Does the device have location services enabled?");
+                Log.e("####Location Err", "No location provider is not available. Does the device have location services enabled?");
             }
             selectedAddress = null;
         } else {

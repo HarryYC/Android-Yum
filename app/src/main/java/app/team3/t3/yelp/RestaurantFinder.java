@@ -27,10 +27,20 @@ public class RestaurantFinder {
     private static final String DEFAULT_CATEGORY = "restaurants";
     private static final String DEFAULT_COORDINATE = null;
     private static final String TAG = "yelp_interface";
+    /**
+     * big six params *
+     */
+    private static final int SORT = 0;
     private static String searchResponseJSON;
     boolean addressFlag = false;
     private YelpAPI yelpApi = null;
     private Restaurant[] restaurant;
+    private String term;
+    private String location;
+    private String category;
+    private int range;
+    private Double latitude;
+    private Double longitude;
 
     /**
      * Restaurant constructor initialize YelpAPI with OAuth credential from string.xml
@@ -42,6 +52,15 @@ public class RestaurantFinder {
                 context.getString(R.string.yelp_consumer_secret),
                 context.getString(R.string.yelp_token),
                 context.getString(R.string.yelp_token_secret));
+
+        /** set default to big six params **/
+        term = "restaurants";
+        location = null;
+        category = "restaurants";
+        range = 2000;
+        latitude = 0.0;
+        longitude = 0.0;
+
     }
 
     /**
@@ -60,7 +79,8 @@ public class RestaurantFinder {
                                  int range, String coordinate) {
         searchResponseJSON =
                 yelpApi.searchForBusiness(term, location, category, sort, range, coordinate);
-        Log.v(TAG, searchResponseJSON);
+//        Log.v(TAG, searchResponseJSON);
+        Log.e("####Yelp", searchResponseJSON);
     }
 
     /**
@@ -192,7 +212,84 @@ public class RestaurantFinder {
         }
     }
 
+    public Restaurant[] filteredSearch() {
+        String coordinate = null;
+        if (latitude != 0.0 && longitude != 0.0) {
+            if (!addressFlag) {
+                coordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
+            }
+        }
+        if (location == null && coordinate == null) {
+            Log.e(TAG, "Sorry, there is no location parameter for query");
+            return null;
+        } else {
+            Log.e("####Term:", getTerm());
+//            if (addressFlag) {Log.e("####Location:",getLocation());}
+            Log.e("####Category:", getCategory());
+            Log.e("####Sort:", String.valueOf(SORT));
+            Log.e("####Range", String.valueOf(range));
+            Log.e("####coor:", coordinate);
+//            queryAPI(yelpApi, "restaurants", "San Francisco,CA", "restaurants", 1, 2000, null);
+            queryAPI(yelpApi, term, location, category, SORT, range, coordinate);
+            return toRestaurant(searchResponseJSON);
+        }
+    }
+
     public void useAddress(boolean addressFlag) {
         this.addressFlag = addressFlag;
     }
+
+    /**
+     * getters and setters *
+     */
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 }
+
+
