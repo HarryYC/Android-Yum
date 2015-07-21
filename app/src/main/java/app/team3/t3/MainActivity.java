@@ -2,7 +2,6 @@ package app.team3.t3;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,16 +18,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -40,26 +35,18 @@ import app.team3.t3.yelp.RestaurantFinder;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
 
-    protected Location currentlocation;
     SoundPool mySound;
     int touchId, boomId;
-    //    private int Random_Number;
-    private ImageButton shakeIB;
-    //    private TextView rangeTV;
-//    private SeekBar rangeSB;
-//    private int currentRange = 1;
-//    private boolean preferencesChanged = true;
+    private ImageButton mShakeImageButton;
     private SensorManager mSensorManager;
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
-    private Random rn = new Random();
-    private Intent getResultIntent;
-    //    protected String serviceAvailable = "";
     private ResDatabaseHelper resDB;
     final SensorEventListener mSensorListener = new SensorEventListener() {
 
+        /* Sensor Listener  */
         @Override
         public void onSensorChanged(SensorEvent event) {
 
@@ -70,10 +57,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 15 && avoid_doubleShake == true) {
-                runningSearch();
+                getResultPage();
                 avoid_doubleShake = false;
-//                mySound.play(boomId, 1, 1, 1, 0, 1);
-//                preferencesChanged = false;
+                mySound.play(boomId, 1, 1, 1, 0, 1);
             }
             mAccelLast = mAccelCurrent;
         }
@@ -86,10 +72,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private RestaurantFinder mySearch;
     private Restaurant[] restaurants;
 
-     /* Sensor Listener  */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String gpsProvider = LocationManager.GPS_PROVIDER;
+        String networkProvider = LocationManager.NETWORK_PROVIDER;
+        String serviceAvailable;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (getIntent().getBooleanExtra("is_started", false)) {
@@ -103,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         resDB = new ResDatabaseHelper(MainActivity.this);
         mySearch = new RestaurantFinder(getApplicationContext());
-//        restoreChanges();
 
         new Eula(this).show();
 
@@ -115,53 +102,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mAccelLast = SensorManager.GRAVITY_EARTH;
 
          /* Components  */
-        shakeIB = (ImageButton) findViewById(R.id.shakeIB);
-//        rangeTV = (TextView) findViewById(R.id.rangeTV);
-//        rangeSB = (SeekBar) findViewById(R.id.rangeSB);
+        mShakeImageButton = (ImageButton) findViewById(R.id.shake_ImageButton);
 
          /* Listeners  */
-        shakeIB.setOnClickListener(new View.OnClickListener() {
+        mShakeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mySound.play(boomId, 1, 1, 1, 0, 1);
-                // mySound.play(touchId, 1, 1, 1, 1, 1f);
-                runningSearch();
-//                preferencesChanged = false;
+                mySound.play(boomId, 1, 1, 1, 0, 1);
+                mySound.play(touchId, 1, 1, 1, 1, 1f);
+                getResultPage();
             }
         });
 
-//        rangeSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                currentRange = progress + 1;
-//                String unit = "";
-//                if (currentRange > 1) {
-//                    unit = " Miles";
-//                } else {
-//                    unit = " Mile";
-//                }
-//                rangeTV.setText("Range: " + currentRange + unit);
-//                preferencesChanged = true;
-//                saveChanges();
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//        });
-
+        /* Location service, get current location */
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-
-        String gpsProvider = LocationManager.GPS_PROVIDER;
-        String networkProvider = LocationManager.NETWORK_PROVIDER;
-        String serviceAvailable;
         if (locationManager.isProviderEnabled(gpsProvider)
                 || locationManager.isProviderEnabled(networkProvider)) {
             if (!locationManager.isProviderEnabled(gpsProvider)) {
@@ -170,11 +124,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 serviceAvailable = gpsProvider;
             }
             locationManager.requestLocationUpdates(serviceAvailable, 5000, 0, this);
-            currentlocation = locationManager.getLastKnownLocation(serviceAvailable);
-//            double latitude = currentlocation.getLatitude();
+            Location currentlocation = locationManager.getLastKnownLocation(serviceAvailable);
             mySearch.setLatitude(currentlocation.getLatitude());
             Log.e("####lati", String.valueOf(mySearch.getLatitude()));
-//            double longitude = currentlocation.getLongitude();
             mySearch.setLongitude(currentlocation.getLongitude());
             Log.e("####longi", String.valueOf(mySearch.getLongitude()));
             restaurants = mySearch.filteredSearch();
@@ -182,15 +134,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         } else {
             Log.e("####Location Err", "No location provider is not available. Does the device have location services enabled?");
         }
-
-
-
     } //end onCreat
 
     @Override
     protected void onStart() {
         super.onStart();
-//        restoreChanges();
     }
 
     /**
@@ -200,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onPause() {
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
-//        saveChanges();
     }
 
     /**
@@ -222,72 +169,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    /* pass a random restaurant object to result page */
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
-
-    // Session of methods for preferences save and restore
-//    protected void restoreChanges() {
-//        SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
-//        currentRange = sharedPref.getInt("range", 3);
-//    }
-//
-//    protected void saveChanges() {
-//        SharedPreferences sharedPref = this.getSharedPreferences("user_preferences", 0);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//        editor.putInt("range", currentRange);
-//        editor.commit();
-//    }
-
-    /*
-     * run yelp search and add data to database for random pick
-     * if location and user preferences changed
-     */
-    protected void runningSearch() {
+    protected void getResultPage() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-//        getResultIntent = new Intent(MainActivity.this, LoadingActivity.class);
-//        Random_Number = rn.nextInt(20) + 1;
-//        getResultIntent.putExtra("random_number", Random_Number);
-//        getResultIntent.putExtra("range", currentRange);
-//        getResultIntent.putExtra("preferences_changed", preferencesChanged);
-//        preferencesChanged = false;
-//        startActivity(getResultIntent);
-
-
-        getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
-        int Random_Number = rn.nextInt(20) + 1;
+        Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
+        int Random_Number = new Random().nextInt(20) + 1;
         getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
         startActivity(getResultIntent);
     }
 
+    /* fillter button */
     public void onFilterClick(View view) {
         Button filterButton = (Button) findViewById(R.id.filter_button);
         LayoutInflater mLayoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -313,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             @Override
             public void onClick(View v) {
+                /* category parameters */
                 if (categorySpinner.getSelectedItem().toString().equals("All")) {
                     mySearch.setCategory("restaurants");
                 } else if (categorySpinner.getSelectedItem().toString().equals("Japanese")) {
@@ -352,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 } else if (categorySpinner.getSelectedItem().toString().equals("Greek")) {
                     mySearch.setCategory("greek");
                 }
-
+                /* distance parameters */
                 if (distanceSpinner.getSelectedItem().toString().equals("Best Match")) {
                     mySearch.setRange(2000);
                 } else if (distanceSpinner.getSelectedItem().toString().equals("2 blocks")) {
@@ -369,35 +263,49 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 Log.e("###categorySpinner", categorySpinner.getSelectedItem().toString());
 
                 mPopupWindow.dismiss();
-                Toast.makeText(getApplicationContext(),
-                        "Results Updated. Read to Shake",
-                        Toast.LENGTH_LONG).show();
+
+
                 restaurants = mySearch.filteredSearch();
-                resDB.insertRestaurants(restaurants);
+
+                Log.e("####", String.valueOf(restaurants.length));
+                if (restaurants.length == 0) {
+                    Toast.makeText(getApplicationContext(),
+                            "No Results, please choose again!",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    resDB.insertRestaurants(restaurants);
+                    Toast.makeText(getApplicationContext(),
+                            "Results Updated. Read to Shake",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-
     @Override
     public void onLocationChanged(Location location) {
-
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
     }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
 }
