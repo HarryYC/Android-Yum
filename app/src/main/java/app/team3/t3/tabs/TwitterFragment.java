@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
@@ -26,11 +27,12 @@ public class TwitterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_twitter, container, false);
         final EditText editText = (EditText) view.findViewById(R.id.editText);
-        Button tweetButton = (Button) view.findViewById(R.id.tweet_button);
+        ImageButton btn = (ImageButton) view.findViewById(R.id.tweet2_ImageButton);
+        //Button ImageButton = (Button) view.findViewById(R.id.ImageButton);
         bundle = getActivity().getIntent().getExtras();
         restaurant = bundle.getParcelable("restaurant_picked");
 
-        tweetButton.setOnClickListener(new View.OnClickListener() {
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // code for tweet
