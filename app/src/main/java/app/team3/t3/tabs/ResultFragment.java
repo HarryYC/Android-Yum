@@ -1,10 +1,5 @@
 package app.team3.t3.tabs;
 
-import app.team3.t3.ImageDownloader;
-import app.team3.t3.R;
-import app.team3.t3.ResDatabaseHelper;
-import app.team3.t3.yelp.Restaurant;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,8 +17,12 @@ import android.widget.TextView;
 
 import java.util.concurrent.ExecutionException;
 
+import app.team3.t3.ImageDownloader;
+import app.team3.t3.R;
+import app.team3.t3.ResDatabaseHelper;
+import app.team3.t3.yelp.Restaurant;
+
 // import twitter library
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 /**
  * Created by nanden on 7/5/15.
@@ -52,6 +51,7 @@ public class ResultFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_result, container, false);
 
         final ProgressBar resultProgressBar = (ProgressBar) view.findViewById(R.id.resultProgressBar);
+
         final ImageView businessIV = (ImageView) view.findViewById(R.id.restaurantIV);
         final ImageView ratingIV = (ImageView) view.findViewById(R.id.ratingIV);
 

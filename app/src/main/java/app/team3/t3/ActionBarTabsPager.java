@@ -6,13 +6,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+
 import app.team3.t3.tabs.NavigationDrawerFragment;
 import app.team3.t3.tabs.SlidingTabLayout;
 import app.team3.t3.tabs.TabsAdapter;
 import io.fabric.sdk.android.Fabric;
-
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 
 /**
