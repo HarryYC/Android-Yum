@@ -316,7 +316,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 //            Log.e("#Cursor#: ", cursor.getString(1));
             restaurant.put("RestaurantID", cursor.getString(1));
             restaurant.put("Name", cursor.getString(2));
-            restaurant.put("Count", cursor.getString(14));
+            restaurant.put("Count", cursor.getString(13));
             restaurantsList.add(restaurant);
         }
         return restaurantsList;
