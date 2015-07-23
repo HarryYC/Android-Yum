@@ -57,6 +57,7 @@ public class ResultFragment extends Fragment {
 
         final TextView nameTV = (TextView) view.findViewById(R.id.nameTV);
         final TextView countTV = (TextView) view.findViewById(R.id.countTV);
+        final TextView moreInfoTV = (TextView) view.findViewById(R.id.moreInfoTV);
 
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
@@ -87,6 +88,8 @@ public class ResultFragment extends Fragment {
                 ratingID.execute(restaurant.getRatingImgURL());
                 nameTV.setText(restaurant.getName());
                 countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
+                moreInfoTV.setText("Phone: " + restaurant.getPhone() +
+                        "\n\nAddress: " + restaurant.getAddress());
                 while (businessID.get() != true && ratingID.get() != true) ;
             } catch (InterruptedException e) {
                 e.printStackTrace();
