@@ -15,7 +15,7 @@ public class Eula {
 	private Activity mActivity; 
 	
 	public Eula(Activity context) {
-		mActivity = context; 
+        mActivity = context;
 	}
 	
 	private PackageInfo getPackageInfo() {
@@ -46,6 +46,7 @@ public class Eula {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
                     .setTitle(title)
                     .setMessage(message)
+                    .setCancelable(false)
                     .setPositiveButton("Agree", new Dialog.OnClickListener() {
 
                         @Override
