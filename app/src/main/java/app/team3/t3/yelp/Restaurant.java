@@ -19,6 +19,7 @@ public class Restaurant implements Parcelable {
             return new Restaurant[size];
         }
     };
+
     private String restaurantID;
     private String name;
     private float rating;
