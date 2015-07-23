@@ -228,7 +228,7 @@ public class RestaurantFinder {
             Log.e("####Category:", getCategory());
             Log.e("####Sort:", String.valueOf(SORT));
             Log.e("####Range", String.valueOf(range));
-            Log.e("####coor:", coordinate);
+//            Log.e("####coor:", coordinate);
 //            queryAPI(yelpApi, "restaurants", "San Francisco,CA", "restaurants", 1, 2000, null);
             queryAPI(yelpApi, term, location, category, SORT, range, coordinate);
             return toRestaurant(searchResponseJSON);
