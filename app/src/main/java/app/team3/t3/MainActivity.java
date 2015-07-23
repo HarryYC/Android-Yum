@@ -14,8 +14,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Vibrator;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -33,7 +32,6 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import java.util.Random;
 
@@ -358,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(gpsProvider)
                 || locationManager.isProviderEnabled(networkProvider)) {
-            if (!locationManager.isProviderEnabled(gpsProvider)) {
+            if (locationManager.isProviderEnabled(networkProvider)) {
                 serviceAvailable = networkProvider;
             } else {
                 serviceAvailable = gpsProvider;
