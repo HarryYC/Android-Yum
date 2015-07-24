@@ -7,10 +7,10 @@ import android.util.Log;
 /**
  * This class is implementation of the RestaurantManager
  */
-public class RestaurantManagerImp implements RestaurantManager, Parcelable {
+public class RestaurantAdapter implements RestaurantManager, Parcelable {
 
     //Used for Log message
-    private static final String TAG = RestaurantManagerImp.class.getSimpleName();
+    private static final String TAG = RestaurantAdapter.class.getSimpleName();
 
     public static final Parcelable.Creator<Restaurant> CREATOR = new Parcelable.Creator<Restaurant>() {
         @Override
@@ -37,8 +37,8 @@ public class RestaurantManagerImp implements RestaurantManager, Parcelable {
     private String mRatingImgURL;
     private String mRestaurantImgURL;
 
-    // Default constructor
-    public RestaurantManagerImp( String id, String name, float ratingCount, int reviewCount, String phone, String category, String address, double latitude, double longitude, String page, String ratingImgUrl, String restaurantImgUrl) {
+    // constructor
+    public RestaurantAdapter(String id, String name, float ratingCount, int reviewCount, String phone, String category, String address, double latitude, double longitude, String page, String ratingImgUrl, String restaurantImgUrl) {
         mRestaurantID = id;
         mRestaurantName = name;
         mRatingCount = ratingCount;
@@ -58,7 +58,7 @@ public class RestaurantManagerImp implements RestaurantManager, Parcelable {
     }
 
     // Parcelling
-    public RestaurantManagerImp(Parcel source) {
+    public RestaurantAdapter(Parcel source) {
         mRestaurantID = source.readString();
         mRestaurantName = source.readString();
         mRatingCount = source.readFloat();
