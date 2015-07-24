@@ -139,7 +139,7 @@ public class LoadingActivity extends AppCompatActivity implements LocationListen
             public void run() {
                 Bundle intent = getIntent().getExtras();
                 Restaurant restaurant = intent.getParcelable("restaurant_picked");
-                Intent getResultIntent = new Intent(LoadingActivity.this, ActionBarTabsPager.class);
+                Intent getResultIntent = new Intent(LoadingActivity.this, ActionBarTabsPagerActivity.class);
                 getResultIntent.putExtra("restaurant_picked", restaurant);
                 startActivity(getResultIntent);
                 finish();

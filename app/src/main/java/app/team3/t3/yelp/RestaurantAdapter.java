@@ -37,6 +37,22 @@ public class RestaurantAdapter implements RestaurantManager, Parcelable {
     private String mRatingImgURL;
     private String mRestaurantImgURL;
 
+    // default constructor;
+    public RestaurantAdapter() {
+        mRestaurantID = "";
+        mRestaurantName = "";
+        mRatingCount = 0f;
+        mReviewCount = 0;
+        mPhoneNumber = "";
+        mCategory = "";
+        mAddress = "";
+        mLatitude = 0.0;
+        mLongitude = 0.0;
+        mRestaurantPage = "";
+        mRatingImgURL = "";
+        mRestaurantImgURL = "";
+    }
+
     // constructor
     public RestaurantAdapter(String id, String name, float ratingCount, int reviewCount, String phone, String category, String address, double latitude, double longitude, String page, String ratingImgUrl, String restaurantImgUrl) {
         mRestaurantID = id;

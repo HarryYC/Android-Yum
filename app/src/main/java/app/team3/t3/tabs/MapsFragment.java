@@ -39,11 +39,12 @@ public class MapsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mGoButton = (Button) view.findViewById(R.id.map_go_bt);
-        mTryAgainButton = (Button)view.findViewById(R.id.map_try_again_bt);
+        mTryAgainButton = (Button) view.findViewById(R.id.map_try_again_bt);
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();

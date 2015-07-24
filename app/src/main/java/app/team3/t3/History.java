@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -74,7 +73,7 @@ public class History extends Activity {
 //                System.out.println(separatedTwo[0].replace("=",""));
 
 
-                Intent getRestaurantDetail = new Intent(History.this, ActionBarTabsPager.class);
+                Intent getRestaurantDetail = new Intent(History.this, ActionBarTabsPagerActivity.class);
                 finish();
                 getRestaurantDetail.putExtra("restaurant_picked", db.getRestaurant(separatedTwo[0].replace("=", "").trim()));
                 getRestaurantDetail.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
