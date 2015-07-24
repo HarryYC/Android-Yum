@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_result"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/yum_red"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/restaurantInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/restaurantIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/nameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/restaurantIV"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:text="Name" />
+
+        <ImageView
+            android:id="@+id/ratingIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameTV"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/countTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ratingIV"
+            android:layout_toRightOf="@+id/ratingIV"
+            android:labelFor="@id/ratingIV"
+            android:padding="10dp"
+            android:text="Rating Count" />
+
+        <TextView
+            android:id="@+id/moreInfoTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ratingIV"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <Button
+            android:id="@+id/goBtn"
+            android:background="@drawable/button_red_round_corners"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/abc_ic_go_search_api_mtrl_alpha"
+            android:drawableStart="@drawable/abc_ic_go_search_api_mtrl_alpha"
+            android:paddingLeft="8dp"
+            android:drawablePadding="8dp"
+            android:layout_margin="8dp"
+            android:textAllCaps="true"
+            android:gravity="left|center_vertical"
+            android:textColor="@android:color/white"
+            android:text="GO" />
+
+        <Button
+            android:id="@+id/tryAgainIBtn"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/button_red_round_corners"
+            android:drawableLeft="@drawable/abc_ic_clear_mtrl_alpha"
+            android:drawableStart="@drawable/abc_ic_clear_mtrl_alpha"
+            android:drawablePadding="8dp"
+            android:paddingLeft="8dp"
+            android:layout_margin="8dp"
+            android:textAllCaps="true"
+            android:gravity="left|center_vertical"
+            android:textColor="@android:color/white"
+            android:text="Try Again" />
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/resultProgressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+</LinearLayout>

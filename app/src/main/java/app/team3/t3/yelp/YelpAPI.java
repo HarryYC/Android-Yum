@@ -1,4 +1,4 @@
-package app.team3.t3;
+package app.team3.t3.yelp;
 
 import android.os.AsyncTask;
 
@@ -11,8 +11,10 @@ import org.scribe.oauth.OAuthService;
 
 import java.util.concurrent.ExecutionException;
 
+import app.team3.t3.TwoStepOAuth;
+
 /**
- * Modified version of code sample for accessing the Yelp API V2.
+ * Yelp API V2 from Code sample. (Modified for android)
  * <p/>
  * See <a href="http://www.yelp.com/developers/documentation">Yelp Documentation</a> for more info.
  */
@@ -95,22 +97,23 @@ public class YelpAPI {
      * @return <tt>String</tt> body of API response
      */
     private String sendRequestAndGetResponse(OAuthRequest request) {
-        String threadResponse = "";
+        String taskResponse = "";
 
         try {
-            threadResponse = new YelpAPIThread().execute(request, this.service, this.accessToken).get();
+            taskResponse = new sendRequestAndGetRequestTask().execute(request, this.service, this.accessToken).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return threadResponse;
+        return taskResponse;
     }
 
     /**
-     * Class for process request and response in the background threads
+     * Class to do Sends {@link OAuthRequest},
+     * and returns the {@link Response} in the background thread
      */
-    private class YelpAPIThread extends AsyncTask<Object, Void, String> {
+    private class sendRequestAndGetRequestTask extends AsyncTask<Object, Void, String> {
 
         @Override
         protected String doInBackground(Object... params) {

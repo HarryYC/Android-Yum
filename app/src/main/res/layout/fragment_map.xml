@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/yum_red"
+        android:paddingTop="10dp" />
+
+    <Button
+        android:id="@+id/map_go_bt"
+        android:background="@drawable/button_red_round_corners"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/abc_ic_go_search_api_mtrl_alpha"
+        android:drawableStart="@drawable/abc_ic_go_search_api_mtrl_alpha"
+        android:paddingLeft="8dp"
+        android:drawablePadding="8dp"
+        android:layout_margin="8dp"
+        android:textAllCaps="true"
+        android:gravity="left|center_vertical"
+        android:textColor="@android:color/white"
+        android:text="GO" />
+
+    <Button
+        android:id="@+id/map_try_again_bt"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/button_red_round_corners"
+        android:drawableLeft="@drawable/abc_ic_clear_mtrl_alpha"
+        android:drawableStart="@drawable/abc_ic_clear_mtrl_alpha"
+        android:drawablePadding="8dp"
+        android:paddingLeft="8dp"
+        android:layout_margin="8dp"
+        android:textAllCaps="true"
+        android:gravity="left|center_vertical"
+        android:textColor="@android:color/white"
+        android:text="Try Again" />
+
+    </RelativeLayout>
+
+

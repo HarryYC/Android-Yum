@@ -1,58 +1,81 @@
 package app.team3.t3;
 
-import android.content.Context;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
 /**
  * Created by ivan on 6/29/15.
+ * Image Downloader
  */
-public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
-    ImageView imageView;
-    boolean scale;
-    WindowManager windowManager;
-    Display display;
+public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
 
-    public ImageDownloader(Context context, ImageView imagView, boolean scaleImg) {
-        this.imageView = imagView;
-        scale = scaleImg;
-        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        display = windowManager.getDefaultDisplay();
+    private ImageView imageView;
+    private boolean isScale;
+    private Bitmap bitmap = null;
+    private BufferedInputStream bufferedInputStream;
+    private InputStream inputStream;
+    private int width;
+    private int height;
+
+    public ImageDownloader(ImageView imageView, int width, int height) {
+        this.imageView = imageView;
+        isScale = true;
+        this.width = width;
+        this.height = height;
     }
 
-    @Override
-    protected Bitmap doInBackground(String... params) {
-        String url = params[0];
-        Bitmap applicationIcon = null;
-        Point size = new Point();
-        display.getSize(size);
-        int inWidth = size.x;
-        int inHeight = size.y;
-        try {
-            InputStream inputStream = new URL(url).openStream();
-            applicationIcon = BitmapFactory.decodeStream(inputStream);
+    public ImageDownloader(ImageView imageView) {
+        this.imageView = imageView;
+        isScale = false;
+    }
 
-            if (scale) {
-                applicationIcon = Bitmap.createScaledBitmap(applicationIcon, inWidth, inHeight * 3 / 5, true);
+    /**
+     * Return an bitmap object for display.
+     *
+     * @param params <tt>String</tt> for image URL
+     * @return bitmap <tt>Bitmap</tt>
+     */
+    @Override
+    protected Boolean doInBackground(String... params) {
+        String urlString = params[0];
+
+        try {
+            URL url = new URL(urlString);
+            inputStream = url.openStream();
+            bufferedInputStream = new BufferedInputStream(inputStream);
+
+            if (isScale) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+
+                bitmap = BitmapFactory.decodeStream(bufferedInputStream, null, options);
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+            } else {
+                bitmap = BitmapFactory.decodeStream(bufferedInputStream);
+            }
+
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (bufferedInputStream != null) {
+                bufferedInputStream.close();
             }
 
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
         }
 
-        return applicationIcon;
+        return true;
     }
 
-    protected void onPostExecute(Bitmap result) {
-        imageView.setImageBitmap(result);
+    protected void onPostExecute(Boolean result) {
+        this.imageView.setImageBitmap(bitmap);
     }
 }

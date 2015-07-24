@@ -2,7 +2,6 @@ package app.team3.t3;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,10 +74,10 @@ public class History extends Activity {
 //                System.out.println(separatedTwo[0].replace("=",""));
 
 
-                Intent getRestaurantDetail = new Intent(History.this, Result.class);
+                Intent getRestaurantDetail = new Intent(History.this, ActionBarTabsPager.class);
                 finish();
-                getRestaurantDetail.putExtra("Business_ID", separatedTwo[0].replace("=", "").trim());
-                getRestaurantDetail.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                getRestaurantDetail.putExtra("restaurant_picked", db.getRestaurant(separatedTwo[0].replace("=", "").trim()));
+                getRestaurantDetail.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(getRestaurantDetail);
             }
         };

@@ -2,16 +2,16 @@ package app.team3.t3.tabs;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
+
 
 /**
  * Created by nanden on 6/30/15.
  */
-public class TabsAdapter extends FragmentPagerAdapter {
+public class TabsAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = TabsAdapter.class.getSimpleName();
-
     final int TAB_COUNT = 3;
 
     public TabsAdapter(FragmentManager supportFragmentManager) {
@@ -23,22 +23,23 @@ public class TabsAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0: {
-                TestFragmentOne testFragmentOne = new TestFragmentOne();
-                Log.d(TAG, "TestFragmentOne called");
-                return testFragmentOne;
+                ResultFragment resultFragment = new ResultFragment();
+                Log.d(TAG, "ResultFragment called");
+                return resultFragment;
             }
             case 1: {
-                TestFragmentTwo testFragmentTwo = new TestFragmentTwo();
-                Log.d(TAG, "TestFragmentTwo called");
-                return testFragmentTwo;
+                MapsFragment mapsFragment = new MapsFragment();
+                Log.d(TAG, "mapsFragment called");
+                return mapsFragment;
             }
             case 2: {
-                TestFragmentThree testFragmentThree = new TestFragmentThree();
-                Log.d(TAG, "TestFragmentThree called");
-                return testFragmentThree;
+                TwitterFragment twitterFragment = new TwitterFragment();
+                Log.d(TAG, "TwitterFragment called");
+                return twitterFragment;
             }
+            default:
+                return null;
         }
-        return null;
     }
 
     @Override
