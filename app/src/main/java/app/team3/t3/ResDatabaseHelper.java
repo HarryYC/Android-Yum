@@ -206,7 +206,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                 cursor.moveToFirst();
             }
 
-            contentValues.put(COLUMN_COUNT, cursor.getInt(12) + 1); //get the current count from database and increase one
+            contentValues.put(COLUMN_COUNT, cursor.getInt(13) + 1); //get the current count from database and increase one
 
             db.update(TABLE_HISTORY,
                     contentValues,
