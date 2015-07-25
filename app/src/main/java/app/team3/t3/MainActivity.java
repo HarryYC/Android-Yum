@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -37,8 +39,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 import app.team3.t3.yelp.Restaurant;
 import app.team3.t3.yelp.RestaurantFinder;
+import app.team3.t3.yelp.RestaurantSearchException;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
@@ -54,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private RestaurantFinder mySearch;
     private Restaurant restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
+    private double latitude;
+    private double longitude;
 
     final SensorEventListener mSensorListener = new SensorEventListener() {
 
@@ -167,9 +174,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    if (changeLocation.getText().toString().isEmpty()) {
-                        clearTextButton.setVisibility(View.INVISIBLE);
-                    } else {
+                    if (!changeLocation.getText().toString().isEmpty()) {
                         clearTextButton.setVisibility(View.VISIBLE);
                         changeLocation.selectAll();
                     }
@@ -180,20 +185,49 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+
+        changeLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!changeLocation.getText().toString().isEmpty()) {
+                    clearTextButton.setVisibility(View.VISIBLE);
+                } else {
+                    clearTextButton.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         changeLocation.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (!changeLocation.getText().toString().isEmpty()) {
-                        mySearch.setLongitude(0.0);
-                        mySearch.setLatitude(0.0);
+                        latitude = 0.0;
+                        longitude = 0.0;
+                        mySearch.setLongitude(longitude);
+                        mySearch.setLatitude(latitude);
                         mySearch.setLocation(changeLocation.getText().toString());
                     } else {
                         changeLocation.setText("");
                         mySearch.setLocation(null);
                         getLocation();
                     }
-                    restaurant = mySearch.filteredSearch();
+                    try {
+                        restaurant = mySearch.filteredSearch();
+                    } catch (RestaurantSearchException rse) {
+                        rse.printStackTrace();
+                        Log.e("restaurantFinder", rse.toString());
+                    }
                     Toast.makeText(getApplicationContext(),
                             "Results Updated. Read to Shake",
                             Toast.LENGTH_LONG).show();
@@ -202,11 +236,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
                     findViewById(R.id.a1).requestFocus();
                     return true;
-                } else {
-                    if (!changeLocation.getText().toString().isEmpty()) {
-                        clearTextButton.setVisibility(View.VISIBLE);
-                    }
                 }
+
                 return false;
             }
         });
@@ -244,7 +275,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
-        restaurant = mySearch.filteredSearch();
+        try {
+            restaurant = mySearch.filteredSearch();
+        } catch (RestaurantSearchException rse) {
+            rse.printStackTrace();
+            Log.e("restaurantFinder", rse.toString());
+        }
     }
 
     /* pass a random restaurant object to result page */
@@ -252,9 +288,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void getResultPage() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
+        float distance = 0;
+
+        // Calculate distance
+        Location myLocation = new Location("my_location");
+        myLocation.setLatitude(latitude);
+        myLocation.setLongitude(longitude);
+        Location restaurantLocation = new Location("restaurant_location");
+        restaurantLocation.setLatitude(restaurant.getLatitude());
+        restaurantLocation.setLongitude(restaurant.getLongitude());
+        distance = Float.parseFloat(new DecimalFormat("##.##").format(myLocation.distanceTo(restaurantLocation) / 1609.34));
+
         // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
         Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPagerActivity.class);
         getResultIntent.putExtra("restaurant_picked", restaurant);
+        getResultIntent.putExtra("distance", distance);
         startActivity(getResultIntent);
 
     }
@@ -361,7 +409,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 prefEditor.commit();
 
 
-                restaurant = mySearch.filteredSearch();
+                try {
+                    restaurant = mySearch.filteredSearch();
+                } catch (RestaurantSearchException rse) {
+                    rse.printStackTrace();
+                    Log.e("restaurantFinder", rse.toString());
+                }
 
                 if (restaurant == null) {
                     AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
@@ -400,12 +453,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
             locationManager.requestLocationUpdates(serviceAvailable, 3000, 0, this);
             Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
-            mySearch.setLatitude(currentLocation.getLatitude());
+            latitude = currentLocation.getLatitude();
+            mySearch.setLatitude(latitude);
             Log.e("####lati", String.valueOf(mySearch.getLatitude()));
-            mySearch.setLongitude(currentLocation.getLongitude());
+            longitude = currentLocation.getLongitude();
+            mySearch.setLongitude(longitude);
             Log.e("####longi", String.valueOf(mySearch.getLongitude()));
             locationManager.removeUpdates(this);
-            restaurant = mySearch.filteredSearch();
+            try {
+                restaurant = mySearch.filteredSearch();
+            } catch (RestaurantSearchException rse) {
+                rse.printStackTrace();
+                Log.e("restaurantFinder", rse.toString());
+            }
         } else {
             Log.e("####Location Err", "No location provider is not available. Does the device have location services enabled?");
         }

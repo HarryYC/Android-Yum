@@ -1,6 +1,5 @@
 package app.team3.t3.tabs;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -36,6 +34,7 @@ public class ResultFragment extends Fragment {
     private Restaurant restaurant;
     private int width;
     private int height;
+    private float distance;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +43,7 @@ public class ResultFragment extends Fragment {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         restaurant = intent.getParcelable("restaurant_picked");
+        distance = intent.getFloat("distance");
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
     }
@@ -64,7 +64,6 @@ public class ResultFragment extends Fragment {
 
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
-
 
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +89,7 @@ public class ResultFragment extends Fragment {
                 businessID.execute(restaurant.getRestaurantImgURL());
                 ImageDownloader ratingID = new ImageDownloader(ratingIV);
                 ratingID.execute(restaurant.getRatingImgURL());
-                nameTV.setText(restaurant.getName());
+                nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getName() + "</font></b><br>(" + String.valueOf(distance) + " miles)"));
                 countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
                 moreInfoTV.setText(Html.fromHtml("<b>Phone:</b> " + restaurant.getPhone() +
                         "<br><br><b>Address:</b> " + restaurant.getAddress()));
