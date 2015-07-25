@@ -26,6 +26,8 @@
 
         <TextView
             android:id="@+id/nameTV"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/restaurantIV"
@@ -39,22 +41,26 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/nameTV"
             android:layout_centerHorizontal="true"
-            android:padding="10dp" />
+            android:padding="10dip" />
 
         <TextView
             android:id="@+id/countTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#ffffff"
             android:layout_alignTop="@+id/ratingIV"
             android:layout_toRightOf="@+id/ratingIV"
             android:labelFor="@id/ratingIV"
-            android:padding="10dp"
+            android:padding="10dip"
             android:text="Rating Count" />
 
         <TextView
             android:id="@+id/moreInfoTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:paddingStart="30dip"
+            android:paddingEnd="30dip"
             android:layout_below="@+id/ratingIV"
             android:layout_centerHorizontal="true" />
 

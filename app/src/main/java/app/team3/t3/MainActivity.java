@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -24,16 +25,17 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Random;
 
 import app.team3.t3.yelp.Restaurant;
 import app.team3.t3.yelp.RestaurantFinder;
@@ -52,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private RestaurantFinder mySearch;
     private Restaurant restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
-
 
     final SensorEventListener mSensorListener = new SensorEventListener() {
 
@@ -83,12 +84,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        final Button clearTextButton = (Button) findViewById(R.id.cleartext_button);
+        clearTextButton.setVisibility(View.INVISIBLE);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         String gpsProvider = LocationManager.GPS_PROVIDER;
         String networkProvider = LocationManager.NETWORK_PROVIDER;
         String serviceAvailable;
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         if (getIntent().getBooleanExtra("is_started", false)) {
             Intent locationSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(locationSetting);
@@ -150,27 +156,62 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         changeLocation.setThreshold(1);
         changeLocation.setAdapter(mAdapter);
 
-//        changeLocation.setOnClickListener();
+        clearTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeLocation.setText("");
+            }
+        });
+
+        changeLocation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (changeLocation.getText().toString().isEmpty()) {
+                        clearTextButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        clearTextButton.setVisibility(View.VISIBLE);
+                        changeLocation.selectAll();
+                    }
+                } else {
+                    findViewById(R.id.a1).requestFocus();
+                    clearTextButton.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         changeLocation.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                    mySearch.setLongitude(0.0);
-                    mySearch.setLatitude(0.0);
-                    mySearch.setLocation(changeLocation.getText().toString());
-
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (!changeLocation.getText().toString().isEmpty()) {
+                        mySearch.setLongitude(0.0);
+                        mySearch.setLatitude(0.0);
+                        mySearch.setLocation(changeLocation.getText().toString());
+                    } else {
+                        changeLocation.setText("");
+                        mySearch.setLocation(null);
+                        getLocation();
+                    }
                     restaurant = mySearch.filteredSearch();
                     Toast.makeText(getApplicationContext(),
                             "Results Updated. Read to Shake",
                             Toast.LENGTH_LONG).show();
+
+                    final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
+                    findViewById(R.id.a1).requestFocus();
+                    return true;
+                } else {
+                    if (!changeLocation.getText().toString().isEmpty()) {
+                        clearTextButton.setVisibility(View.VISIBLE);
+                    }
                 }
-            return handled;
+                return false;
             }
         });
-        getLocation();
 
+        getLocation();
     } //end onCreat
 
     @Override
@@ -260,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
                 /* category parameters */
-                if (categorySpinner.getSelectedItem().toString().equals("All")) {
+                if (categorySpinner.getSelectedItem().toString().equals("Select Category")) {
                     mySearch.setCategory("restaurants");
                 } else if (categorySpinner.getSelectedItem().toString().equals("Japanese")) {
                     mySearch.setCategory("japanese");
@@ -301,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
 
                 /* distance parameters */
-                if (distanceSpinner.getSelectedItem().toString().equals("Best Match")) {
+                if (distanceSpinner.getSelectedItem().toString().equals("Select Distance")) {
                     mySearch.setRange(2000);
                 } else if (distanceSpinner.getSelectedItem().toString().equals("2 blocks")) {
                     mySearch.setRange(161);
@@ -357,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             } else {
                 serviceAvailable = gpsProvider;
             }
-            locationManager.requestLocationUpdates(serviceAvailable, 5000, 0, this);
+            locationManager.requestLocationUpdates(serviceAvailable, 3000, 0, this);
             Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
             mySearch.setLatitude(currentLocation.getLatitude());
             Log.e("####lati", String.valueOf(mySearch.getLatitude()));

@@ -1,76 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <RelativeLayout
-        android:id="@+id/a1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        tools:context=".MainActivity">
-
-        <ImageButton
-            android:id="@+id/shake_ImageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/searching_edit_text"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:adjustViewBounds="true"
-            android:clickable="false"
-            android:padding="0dp"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/test" />
-
-        <EditText
-            android:id="@+id/searching_edit_text"
-            android:layout_width="280dp"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/edit_text_style"
-            android:hint="   Keyword for Shaking"
-            android:imeOptions="actionSearch"
-            android:inputType="text" />
-
-        <Button
-            android:id="@+id/filter_button"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/searching_edit_text"
-            android:layout_alignEnd="@+id/searching_edit_text"
-            android:onClick="onFilterClick"
-            android:text="Filter" />
-
-        <AutoCompleteTextView
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/set_location_textView"
-            android:inputType="textAutoComplete"
-            android:paddingBottom="20dp"
-            android:imeOptions="actionSearch"
-            android:hint="Current Location"
-            android:textColorHint="@drawable/selector"
-            android:textStyle="bold"
-            android:gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/searching_edit_text" />
-
-
-    </RelativeLayout>
-
-    <fragment
-        android:id="@+id/fragment_navigation_drawer_fragment"
-        android:name="app.team3.t3.tabs.NavigationDrawerFragment"
-        android:layout_width="280dp"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:layout="@layout/fragment_navigation_drawer"
-        tools:layout="@layout/fragment_navigation_drawer" />
-</android.support.v4.widget.DrawerLayout>
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:id="@+id/a1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            tools:context=".MainActivity">
+
+            <ImageButton
+                android:id="@+id/shake_ImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/searching_edit_text"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:adjustViewBounds="true"
+                android:clickable="false"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/test" />
+
+            <EditText
+                android:id="@+id/searching_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/abc_action_button_min_height_material"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="10dip"
+                android:layout_marginEnd="10dip"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_text_style"
+                android:hint="   Keyword for Shaking"
+                android:imeOptions="actionSearch"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/filter_button"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_marginEnd="3dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/searching_edit_text"
+                android:layout_alignEnd="@+id/searching_edit_text"
+                android:onClick="onFilterClick"
+                android:text="Filter" />
+
+            <AutoCompleteTextView
+                android:id="@+id/set_location_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shake_ImageButton"
+                android:layout_toRightOf="@+id/addressLabel"
+                android:gravity="center"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="My Location"
+                android:imeOptions="actionSearch"
+                android:inputType="textAutoComplete|textNoSuggestions"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/edit_text_style"
+                android:singleLine="true"
+                android:textColorHint="@drawable/selector"
+                android:textStyle="bold" />
+
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/addressLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/set_location_textView"
+                android:layout_alignParentStart="true"
+                android:layout_margin="10dp"
+                android:textSize="@dimen/tw__text_size_large"
+                android:gravity="center_vertical"
+                android:labelFor="@id/set_location_textView"
+                android:text="Address:" />
+
+            <Button
+                android:id="@+id/cleartext_button"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="30dip"
+                android:layout_height="30dip"
+                android:layout_marginTop="5dip"
+                android:layout_marginEnd="5dip"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_alignEnd="@+id/set_location_textView"
+                android:layout_alignTop="@+id/set_location_textView"
+                android:background="@drawable/clear_text_button"
+                android:text="x" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

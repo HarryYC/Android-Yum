@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,8 +92,8 @@ public class ResultFragment extends Fragment {
                 ratingID.execute(restaurant.getRatingImgURL());
                 nameTV.setText(restaurant.getName());
                 countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
-                moreInfoTV.setText("Phone: " + restaurant.getPhone() +
-                        "\n\nAddress: " + restaurant.getAddress());
+                moreInfoTV.setText(Html.fromHtml("<b>Phone:</b> " + restaurant.getPhone() +
+                        "<br><br><b>Address:</b> " + restaurant.getAddress()));
                 while (businessID.get() != true && ratingID.get() != true) ;
             } catch (InterruptedException e) {
                 e.printStackTrace();
