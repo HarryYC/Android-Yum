@@ -13,46 +13,32 @@
             android:id="@+id/a1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            tools:context=".MainActivity">
+            tools:context=".MainActivity"
+            android:background="@color/yum_red">
 
             <ImageButton
                 android:id="@+id/shake_ImageButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/searching_edit_text"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
                 android:adjustViewBounds="true"
                 android:clickable="false"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
-                android:src="@mipmap/test" />
-
-            <EditText
-                android:id="@+id/searching_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/abc_action_button_min_height_material"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="10dip"
-                android:layout_marginEnd="10dip"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/edit_text_style"
-                android:hint="   Keyword for Shaking"
-                android:imeOptions="actionSearch"
-                android:inputType="text" />
+                android:src="@mipmap/test"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
 
             <Button
                 android:id="@+id/filter_button"
                 style="?android:attr/buttonStyleSmall"
-                android:layout_marginEnd="3dip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/searching_edit_text"
-                android:layout_alignEnd="@+id/searching_edit_text"
                 android:onClick="onFilterClick"
-                android:text="Filter" />
+                android:text="    Optional Filter    "
+                android:textColor="@color/white"
+                android:background="@drawable/white_border_button"
+                android:layout_alignParentEnd="true" />
 
             <AutoCompleteTextView
                 android:id="@+id/set_location_textView"
@@ -84,10 +70,11 @@
                 android:layout_alignTop="@+id/set_location_textView"
                 android:layout_alignParentStart="true"
                 android:layout_margin="10dp"
-                android:textSize="@dimen/tw__text_size_large"
+                android:textSize="9pt"
                 android:gravity="center_vertical"
                 android:labelFor="@id/set_location_textView"
-                android:text="Address:" />
+                android:text="Address:"
+                android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/cleartext_button"
@@ -102,6 +89,20 @@
                 android:layout_alignTop="@+id/set_location_textView"
                 android:background="@drawable/clear_text_button"
                 android:text="x" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="              Press to input new location"
+                android:id="@+id/textView2"
+                android:layout_below="@+id/addressLabel"
+                android:layout_alignParentBottom="true"
+                android:layout_alignEnd="@+id/set_location_textView"
+                android:layout_alignStart="@+id/set_location_textView"
+                android:textColor="#eeeeee"
+                android:textAlignment="center"
+                android:singleLine="false"
+                android:background="@color/yum_red" />
 
 
         </RelativeLayout>

@@ -26,14 +26,17 @@
 
         <TextView
             android:id="@+id/nameTV"
-            android:textColor="#ffffff"
+            android:textColor="@color/white"
             android:gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/restaurantIV"
             android:layout_centerHorizontal="true"
             android:padding="10dp"
-            android:text="Name" />
+            android:text="Name"
+            android:textStyle="bold"
+            android:textSize="9pt"
+            android:textIsSelectable="false" />
 
         <ImageView
             android:id="@+id/ratingIV"
@@ -79,15 +82,16 @@
             android:layout_alignParentRight="true"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/abc_ic_go_search_api_mtrl_alpha"
-            android:drawableStart="@drawable/abc_ic_go_search_api_mtrl_alpha"
             android:paddingLeft="8dp"
             android:drawablePadding="8dp"
             android:layout_margin="8dp"
             android:textAllCaps="true"
             android:gravity="left|center_vertical"
-            android:textColor="@android:color/white"
-            android:text="GO" />
+            android:textColor="@android:color/black"
+            android:text="@string/Go"
+            android:textAlignment="center"
+            android:singleLine="true"
+            android:elegantTextHeight="false" />
 
         <Button
             android:id="@+id/tryAgainIBtn"
@@ -96,15 +100,15 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:background="@drawable/button_red_round_corners"
-            android:drawableLeft="@drawable/abc_ic_clear_mtrl_alpha"
-            android:drawableStart="@drawable/abc_ic_clear_mtrl_alpha"
             android:drawablePadding="8dp"
             android:paddingLeft="8dp"
             android:layout_margin="8dp"
             android:textAllCaps="true"
             android:gravity="left|center_vertical"
-            android:textColor="@android:color/white"
-            android:text="Try Again" />
+            android:textColor="@android:color/black"
+            android:text="@string/Try"
+            android:singleLine="true"
+            android:textAlignment="center" />
 
     </RelativeLayout>
 

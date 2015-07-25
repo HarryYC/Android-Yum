@@ -5,6 +5,14 @@
     <string name="Open">Open</string>
     <string name="Close">Close</string>
 
+    <string name="Go">GO</string>
+    <string name="Try">Try Again</string>
+
+    <string name="tweet">Tweet</string>
+    <string name="map">Map</string>
+    <string name="restaurant">Restaurant</string>
+
+
     <string name="title_activity_res_list">ResListActivity</string>
     <string name="title_activity_result">Result</string>
 

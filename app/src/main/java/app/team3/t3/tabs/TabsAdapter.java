@@ -56,7 +56,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
         String title = "";
         switch (position) {
             case 0: {
-                title = "Result";
+                title = "Restaurant";
                 break;
             }
             case 1: {
