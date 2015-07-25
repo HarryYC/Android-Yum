@@ -43,14 +43,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     SoundPool mySound;
     int touchId, boomId;
+
     private ImageButton mShakeImageButton;
     private SensorManager mSensorManager;
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
     private RestaurantFinder mySearch;
-    private Restaurant[] restaurants;
-    private ResDatabaseHelper resDB;
+    private Restaurant restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
 
 
@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         touchId = mySound.load(this, R.raw.touch, 1);
         boomId = mySound.load(this, R.raw.boom, 1);
 
-        resDB = new ResDatabaseHelper(MainActivity.this);
         mySearch = new RestaurantFinder(getApplicationContext());
 
         new Eula(this).show();
@@ -162,8 +161,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     mySearch.setLatitude(0.0);
                     mySearch.setLocation(changeLocation.getText().toString());
 
-                    restaurants = mySearch.filteredSearch();
-                    resDB.insertRestaurants(restaurants);
+                    restaurant = mySearch.filteredSearch();
                     Toast.makeText(getApplicationContext(),
                             "Results Updated. Read to Shake",
                             Toast.LENGTH_LONG).show();
@@ -205,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
-
+        restaurant = mySearch.filteredSearch();
     }
 
     /* pass a random restaurant object to result page */
@@ -213,10 +211,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void getResultPage() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-//        Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
-        Intent getResultIntent = new Intent(MainActivity.this, LoadingActivity.class);
-        int Random_Number = new Random().nextInt(20) + 1;
-        getResultIntent.putExtra("restaurant_picked", resDB.getRestaurant(Random_Number));
+        // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
+        Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPagerActivity.class);
+        getResultIntent.putExtra("restaurant_picked", restaurant);
         startActivity(getResultIntent);
 
     }
@@ -323,10 +320,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 prefEditor.commit();
 
 
-                restaurants = mySearch.filteredSearch();
-                resDB.insertRestaurants(restaurants);
+                restaurant = mySearch.filteredSearch();
 
-                if (restaurants.length == 0) {
+                if (restaurant == null) {
                     AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
                     mAlert.setTitle("No Result");
                     mAlert.setMessage("Please choose again!");
@@ -368,8 +364,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mySearch.setLongitude(currentLocation.getLongitude());
             Log.e("####longi", String.valueOf(mySearch.getLongitude()));
             locationManager.removeUpdates(this);
-            restaurants = mySearch.filteredSearch();
-            resDB.insertRestaurants(restaurants);
+            restaurant = mySearch.filteredSearch();
         } else {
             Log.e("####Location Err", "No location provider is not available. Does the device have location services enabled?");
         }

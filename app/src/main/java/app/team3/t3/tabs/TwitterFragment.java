@@ -1,14 +1,16 @@
 package app.team3.t3.tabs;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
@@ -27,12 +29,15 @@ public class TwitterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_twitter, container, false);
         final EditText editText = (EditText) view.findViewById(R.id.editText);
-        ImageButton btn = (ImageButton) view.findViewById(R.id.tweet2_ImageButton);
-        //Button ImageButton = (Button) view.findViewById(R.id.ImageButton);
+        final Button tweetButton = (Button) view.findViewById(R.id.tweetButton);
+
         bundle = getActivity().getIntent().getExtras();
         restaurant = bundle.getParcelable("restaurant_picked");
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        editText.requestFocus();
+        tweetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // code for tweet
@@ -43,4 +48,5 @@ public class TwitterFragment extends Fragment {
         return view;
 
     }
+
 }

@@ -62,10 +62,6 @@
             android:name="io.fabric.ApiKey"
             android:value="6a62d03fe6a35859deb90ff9210fc9e80d3f5102" />
 
-        <activity
-            android:name=".LoadingActivity"
-            android:label="@string/title_activity_loading"
-            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

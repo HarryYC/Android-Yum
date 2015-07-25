@@ -85,6 +85,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
      * @param db
      */
     public void createDB(SQLiteDatabase db) {
+        /*
         //Create the "restaurants" table
         db.execSQL("CREATE TABLE " + TABLE_RESTAURANTS + "("
                         + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -101,6 +102,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
                         + COLUMN_RATING_IMG + " BLOB, "
                         + COLUMN_RESTAURANT_IMG + " BLOB)"
         );
+        */
         //Create the "history" table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_HISTORY + "("
                         + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -131,12 +133,11 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         createDB(db);
     }
 
-
     /**
      * Insert a single Restaurant object into the database
      *
      * @param res
-     */
+     *
     public void insertRestaurant(Restaurant res) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -160,6 +161,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
         db.close();
     }
+     */
 
     /**
      * Save the restaurant object into history table
@@ -215,25 +217,25 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+
     /**
      * Insert an array of object restaurants into database
      *
      * @param restaurants
-     */
     public void insertRestaurants(Restaurant[] restaurants) {
         updateDB();
         for (int i = 0; i < restaurants.length; i++) {
             insertRestaurant(restaurants[i]);
         }
     }
+     */
 
     /**
      * use the param id to pull out the data from database
      * return an object restaurant
      *
-     * @param id
+     * @param
      * @return Restaurant
-     */
     public Restaurant getRestaurant(int id) {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -264,6 +266,8 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
         return restaurant;
     }
+     */
+
 
     public Restaurant getRestaurant(String BussinessID) {
 

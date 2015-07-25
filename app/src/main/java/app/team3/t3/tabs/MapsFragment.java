@@ -1,5 +1,6 @@
 package app.team3.t3.tabs;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,8 +41,7 @@ public class MapsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        final View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mGoButton = (Button) view.findViewById(R.id.map_go_bt);

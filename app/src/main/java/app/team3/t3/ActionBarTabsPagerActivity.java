@@ -1,11 +1,13 @@
 package app.team3.t3;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.inputmethod.InputMethodManager;
 
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -42,7 +44,27 @@ public class ActionBarTabsPagerActivity extends AppCompatActivity {
 
         mTabsAdapter = new TabsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mTabsAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (position < 2) {
+                    inputMethodManager.hideSoftInputFromWindow(mViewPager.getWindowToken(), 0);
+                } else {
+                    inputMethodManager.toggleSoftInputFromWindow(mViewPager.getWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mTabLayout.setupWithViewPager(mViewPager);
 
         setSupportActionBar(mToolbar);
