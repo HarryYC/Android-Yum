@@ -21,13 +21,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:adjustViewBounds="true"
+                android:adjustViewBounds="false"
                 android:clickable="false"
                 android:padding="0dp"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/test"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:scaleType="center"
+                android:src="@mipmap/egg"
+                android:background="@color/yum_red"
+                android:layout_below="@+id/filter_button"
+                android:layout_alignStart="@+id/addressLabel"
+                android:layout_above="@+id/set_location_textView" />
 
             <Button
                 android:id="@+id/filter_button"
@@ -35,32 +37,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onFilterClick"
-                android:text="    Optional Filter    "
+                android:text=" Filter    "
                 android:textColor="@color/white"
-                android:background="@drawable/white_border_button"
+                android:background="@color/yum_red"
+                android:drawableLeft="@mipmap/ic_filter_list_white_36dp"
+                android:singleLine="false"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true" />
 
             <AutoCompleteTextView
                 android:id="@+id/set_location_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/shake_ImageButton"
-                android:layout_toRightOf="@+id/addressLabel"
                 android:gravity="center"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:hint="My Location"
                 android:imeOptions="actionSearch"
                 android:inputType="textAutoComplete|textNoSuggestions"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:paddingEnd="16dp"
                 android:background="@drawable/edit_text_style"
                 android:singleLine="true"
                 android:textColorHint="@drawable/selector"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="51dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/addressLabel" />
 
             <TextView
                 android:textStyle="bold"
@@ -99,7 +107,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignEnd="@+id/set_location_textView"
                 android:layout_alignStart="@+id/set_location_textView"
-                android:textColor="#eeeeee"
+                android:textColor="#d2d5b4ae"
                 android:textAlignment="center"
                 android:singleLine="false"
                 android:background="@color/yum_red" />
