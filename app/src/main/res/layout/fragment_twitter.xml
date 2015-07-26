@@ -34,10 +34,12 @@
                 android:id="@+id/tweetButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:text="Tweet"
                 android:background="@drawable/tweet_button"
-                android:layout_margin="10dp" />
+                android:drawableLeft="@drawable/tw__ic_logo_default"
+                android:layout_margin="10dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
 
         </LinearLayout>
     </LinearLayout>
