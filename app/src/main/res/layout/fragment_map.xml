@@ -18,16 +18,16 @@
         android:layout_alignParentRight="true"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/abc_ic_go_search_api_mtrl_alpha"
-        android:drawableStart="@drawable/abc_ic_go_search_api_mtrl_alpha"
         android:paddingLeft="8dp"
-        android:drawablePadding="8dp"
+        android:drawablePadding="44dp"
         android:layout_margin="8dp"
         android:textAllCaps="true"
         android:gravity="left|center_vertical"
         android:textColor="@android:color/black"
         android:text="@string/Go"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:drawableLeft="@mipmap/ic_navigation_black_18dp"
+        android:elegantTextHeight="false" />
 
     <Button
         android:id="@+id/map_try_again_bt"
@@ -36,9 +36,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@drawable/button_red_round_corners"
-        android:drawableLeft="@drawable/abc_ic_clear_mtrl_alpha"
-        android:drawableStart="@drawable/abc_ic_clear_mtrl_alpha"
-        android:drawablePadding="8dp"
+        android:drawableLeft="@mipmap/ic_arrow_back_black_18dp"
+        android:drawablePadding="20dp"
         android:paddingLeft="8dp"
         android:layout_margin="8dp"
         android:textAllCaps="true"

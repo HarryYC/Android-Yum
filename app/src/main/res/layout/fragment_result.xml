@@ -82,14 +82,15 @@
             android:layout_alignParentRight="true"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/ic_navigation_black_18dp"
             android:paddingLeft="8dp"
-            android:drawablePadding="8dp"
+            android:drawablePadding="44dp"
             android:layout_margin="8dp"
             android:textAllCaps="true"
             android:gravity="left|center_vertical"
             android:textColor="@android:color/black"
             android:text="@string/Go"
-            android:textAlignment="center"
+            android:textAlignment="gravity"
             android:singleLine="true"
             android:elegantTextHeight="false" />
 
@@ -100,15 +101,16 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:background="@drawable/button_red_round_corners"
-            android:drawablePadding="8dp"
-            android:paddingLeft="8dp"
+            android:drawableLeft="@mipmap/ic_arrow_back_black_18dp"
+            android:drawablePadding="20dp"
             android:layout_margin="8dp"
             android:textAllCaps="true"
             android:gravity="left|center_vertical"
             android:textColor="@android:color/black"
             android:text="@string/Try"
             android:singleLine="true"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:paddingLeft="8dp" />
 
     </RelativeLayout>
 
