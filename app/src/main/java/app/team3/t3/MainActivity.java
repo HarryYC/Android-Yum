@@ -354,18 +354,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
 
-        if (firstRunprefs.getBoolean("firstrun", true)) {
-            // Do first run stuff here then set 'firstrun' as false
-            // using the following line to edit/commit prefs
-            firstRunprefs.edit().putBoolean("firstrun", false).commit();
-        } else {
+        
             try {
                 restaurant = mySearch.filteredSearch();
             } catch (RestaurantSearchException rse) {
                 rse.printStackTrace();
                 Log.e("restaurantFinder", rse.toString());
             }
-        }
+      
 
         avoid_doubleShake = true;
         mSensorManager.registerListener(mSensorListener,
