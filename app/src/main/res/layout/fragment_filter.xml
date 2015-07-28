@@ -84,9 +84,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="This filter is optional to use. Values are set to default."
+            android:text="Filter is optional. Default is set to best match."
             android:id="@+id/textView4"
-            android:singleLine="true"
+            android:singleLine="false"
             android:layout_below="@+id/cancel_filter_button"
             android:layout_centerHorizontal="true" />
 
