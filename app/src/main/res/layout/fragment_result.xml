@@ -24,6 +24,14 @@
             android:layout_alignParentTop="true"
             android:padding="10dp" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/yelp_display"
+            android:layout_alignTop="@+id/restaurantIV"
+            android:layout_alignEnd="@+id/restaurantIV"
+            android:src="@mipmap/powered_by_yelp" />
+
         <TextView
             android:id="@+id/nameTV"
             android:textColor="@color/white"
