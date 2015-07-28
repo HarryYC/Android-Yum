@@ -27,9 +27,8 @@
                 android:scaleType="center"
                 android:src="@mipmap/egg"
                 android:background="@color/yum_red"
-                android:layout_below="@+id/filter_button"
-                android:layout_alignStart="@+id/addressLabel"
-                android:layout_above="@+id/set_location_textView" />
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
 
             <Button
                 android:id="@+id/filter_button"
@@ -39,21 +38,24 @@
                 android:onClick="onFilterClick"
                 android:text=" Filter    "
                 android:textColor="@color/white"
-                android:background="@color/yum_red"
+                android:background="@drawable/white_border_button"
                 android:drawableLeft="@mipmap/ic_filter_list_white_36dp"
+                android:drawablePadding="15dp"
                 android:singleLine="false"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:elegantTextHeight="false" />
 
             <AutoCompleteTextView
                 android:id="@+id/set_location_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:hint="My Location"
+                android:hint="Near Me"
                 android:imeOptions="actionSearch"
                 android:inputType="textAutoComplete|textNoSuggestions"
                 android:paddingTop="10dp"
@@ -65,9 +67,8 @@
                 android:textStyle="bold"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="51dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/textView2"
+                android:layout_alignEnd="@+id/filter_button"
                 android:layout_toEndOf="@+id/addressLabel" />
 
             <TextView
@@ -81,7 +82,7 @@
                 android:textSize="9pt"
                 android:gravity="center_vertical"
                 android:labelFor="@id/set_location_textView"
-                android:text="Address:"
+                android:text="Location:"
                 android:textColor="@color/white" />
 
             <Button
@@ -101,16 +102,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="              Press to input new location"
+                android:text="Touch to input new (city) location"
                 android:id="@+id/textView2"
-                android:layout_below="@+id/addressLabel"
                 android:layout_alignParentBottom="true"
                 android:layout_alignEnd="@+id/set_location_textView"
                 android:layout_alignStart="@+id/set_location_textView"
                 android:textColor="#d2d5b4ae"
                 android:textAlignment="center"
-                android:singleLine="false"
-                android:background="@color/yum_red" />
+                android:singleLine="true"
+                android:background="@color/yum_red"
+                android:paddingLeft="20dp" />
 
 
         </RelativeLayout>
