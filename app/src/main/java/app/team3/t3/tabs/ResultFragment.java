@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 import app.team3.t3.ImageDownloader;
 import app.team3.t3.R;
 import app.team3.t3.ResDatabaseHelper;
-import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantAdapter;
 
 // import twitter library
 
@@ -31,7 +31,7 @@ import app.team3.t3.yelp.Restaurant;
 public class ResultFragment extends Fragment {
 
     private static final String TAG = "result_fragment";
-    private Restaurant restaurant;
+    private RestaurantAdapter restaurant;
     private int width;
     private int height;
     private float distance;
@@ -86,12 +86,12 @@ public class ResultFragment extends Fragment {
 
             try {
                 ImageDownloader businessID = new ImageDownloader(businessIV, width, height * 2 / 6);
-                businessID.execute(restaurant.getRestaurantImgURL());
+                businessID.execute(restaurant.getRestaurantImgUrl());
                 ImageDownloader ratingID = new ImageDownloader(ratingIV);
-                ratingID.execute(restaurant.getRatingImgURL());
-                nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getName() + "</font></b><br>(" + String.valueOf(distance) + " miles)"));
+                ratingID.execute(restaurant.getRatingImgUrl());
+                nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName() + "</font></b><br>(" + String.valueOf(distance) + " miles)"));
                 countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
-                moreInfoTV.setText(Html.fromHtml("<b>Phone:</b> " + restaurant.getPhone() +
+                moreInfoTV.setText(Html.fromHtml("<b>Phone:</b> " + restaurant.getPhoneNumber() +
                         "<br><br><b>Address:</b> " + restaurant.getAddress()));
                 while (businessID.get() != true && ratingID.get() != true) ;
             } catch (InterruptedException e) {
@@ -106,7 +106,7 @@ public class ResultFragment extends Fragment {
         view.findViewById(R.id.restaurantInfo).setVisibility(View.VISIBLE);
         resultProgressBar.setVisibility(View.GONE);
 
-        Log.v("res_name", restaurant.getName());
+        Log.v("res_name", restaurant.getRestaurantName());
 
         return view;
 

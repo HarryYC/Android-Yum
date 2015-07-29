@@ -17,11 +17,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import app.team3.t3.History;
-import app.team3.t3.MainActivity;
 import app.team3.t3.R;
 
 /**
- * Created by nanden on 7/5/15.
+ * Android Material Design: Burger menu
  */
 public class NavigationDrawerFragment extends Fragment {
 
@@ -63,9 +62,7 @@ public class NavigationDrawerFragment extends Fragment {
                 switch (position) {
                     case 0: {
                         // Home
-                        intent.setClass(getActivity(), MainActivity.class);
-                        startActivity(intent);
-                        mDrawerLayout.closeDrawers();
+                        getActivity().finish();
                         break;
                     }
                     case 1: {
