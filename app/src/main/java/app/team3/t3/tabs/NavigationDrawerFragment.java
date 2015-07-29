@@ -63,9 +63,12 @@ public class NavigationDrawerFragment extends Fragment {
                 switch (position) {
                     case 0: {
                         // Home
+
                         intent.setClass(getActivity(), MainActivity.class);
                         startActivity(intent);
+
                         mDrawerLayout.closeDrawers();
+
                         break;
                     }
                     case 1: {
@@ -122,14 +125,14 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public static void saveToPreferecences(Context context, String preferenceName, String preferencesValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(preferenceName, preferencesValue);
         editor.apply();
     }
 
     public static String readFromPreferecences(Context context, String preferenceName, String defaultValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(preferenceName, defaultValue);
     }
 }

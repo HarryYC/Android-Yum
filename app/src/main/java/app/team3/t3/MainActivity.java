@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 restaurant = mySearch.getFromPreviousSearch();
             } catch (RestaurantSearchException e) {
                 e.printStackTrace();
-            }
+        }
         }
 
 

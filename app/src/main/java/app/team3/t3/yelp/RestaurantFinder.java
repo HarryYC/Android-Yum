@@ -210,8 +210,8 @@ public class RestaurantFinder {
         if (category != null) {
             qcategory = "restaurants," + category;
         }
-        if (range > 1 && range <= 25) {
-            qrange = range * 1609;
+        if (range > 1 && range <= 40000) {
+            qrange = range;
         }
         if (sort >= 0 && sort < 3) {
             qsort = sort;
