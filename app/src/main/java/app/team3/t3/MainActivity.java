@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         final Button clearTextButton = (Button) findViewById(R.id.cleartext_button);
         clearTextButton.setVisibility(View.INVISIBLE);
 
-        firstRunprefs = getSharedPreferences("com.mycompany.myAppName", MODE_PRIVATE);
+        firstRunprefs = getSharedPreferences("app.team3.t3", MODE_PRIVATE);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -128,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
          /* Components  */
         mShakeImageButton = (ImageButton) findViewById(R.id.shake_ImageButton);
-        mShakeImageButton.requestFocus();
+        // mShakeImageButton.requestFocus();
+
          /* Listeners  */
         mShakeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
         final AutoCompleteTextView changeLocation = (AutoCompleteTextView) findViewById(R.id.set_location_textView);
+        final InputMethodManager inputMethodManager = (InputMethodManager) changeLocation.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         changeLocation.requestFocusFromTouch();
 
@@ -170,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         myArrayAdapter<String> mAdapter = new myArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, cityArray);
         changeLocation.setThreshold(1);
         changeLocation.setAdapter(mAdapter);
-        
+
         clearTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     }
                 } else {
                     findViewById(R.id.a1).requestFocus();
+                    inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
                     clearTextButton.setVisibility(View.INVISIBLE);
                 }
             }
@@ -237,7 +240,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             "Results Updated. Read to Shake",
                             Toast.LENGTH_LONG).show();
 
-                    final InputMethodManager inputMethodManager = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
                     findViewById(R.id.a1).requestFocus();
                     return true;
@@ -277,7 +279,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
 
-        
+
+        if (firstRunprefs.getBoolean("firstrun", true)) {
+            // Do first run stuff here then set 'firstrun' as false
+            // using the following line to edit/commit prefs
+            firstRunprefs.edit().putBoolean("firstrun", false).commit();
             try {
                 // need to change
                 restaurant = mySearch.filteredSearch();
@@ -285,7 +291,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 rse.printStackTrace();
                 Log.e("restaurantFinder", rse.toString());
             }
-      
+        } else {
+            try {
+                restaurant = mySearch.getFromPreviousSearch();
+            } catch (RestaurantSearchException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         avoid_doubleShake = true;
         mSensorManager.registerListener(mSensorListener,

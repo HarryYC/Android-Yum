@@ -1,134 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_result"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/yum_red"
-    android:orientation="vertical">
+    android:scrollbars="none">
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/restaurantInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible">
-
-        <ImageView
-            android:id="@+id/restaurantIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:padding="10dp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/yelp_display"
-            android:layout_alignEnd="@+id/restaurantIV"
-            android:src="@mipmap/powered_by_yelp"
-            android:layout_alignBottom="@+id/restaurantIV" />
-
-        <TextView
-            android:id="@+id/nameTV"
-            android:textColor="@color/white"
-            android:gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/restaurantIV"
-            android:layout_centerHorizontal="true"
-            android:padding="10dp"
-            android:text="Name"
-            android:textStyle="bold"
-            android:textSize="9pt"
-            android:textIsSelectable="false" />
-
-        <ImageView
-            android:id="@+id/ratingIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nameTV"
-            android:layout_centerHorizontal="true"
-            android:padding="10dip" />
-
-        <TextView
-            android:id="@+id/countTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:layout_alignTop="@+id/ratingIV"
-            android:layout_toRightOf="@+id/ratingIV"
-            android:labelFor="@id/ratingIV"
-            android:padding="10dip"
-            android:text="Rating Count" />
-
-        <TextView
-            android:id="@+id/moreInfoTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:paddingStart="30dip"
-            android:paddingEnd="30dip"
-            android:layout_below="@+id/ratingIV"
-            android:layout_centerHorizontal="true" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/buttonContainer"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/goBtn"
-            android:background="@drawable/button_red_round_corners"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_width="160dp"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/restaurantInfo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/ic_navigation_black_18dp"
-            android:paddingLeft="8dp"
-            android:drawablePadding="44dp"
-            android:layout_margin="8dp"
-            android:textAllCaps="true"
-            android:gravity="left|center_vertical"
-            android:textColor="@android:color/black"
-            android:text="@string/Go"
-            android:textAlignment="gravity"
-            android:singleLine="true"
-            android:elegantTextHeight="false" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible">
 
-        <Button
-            android:id="@+id/tryAgainIBtn"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/button_red_round_corners"
-            android:drawableLeft="@mipmap/ic_arrow_back_black_18dp"
-            android:drawablePadding="20dp"
-            android:layout_margin="8dp"
-            android:textAllCaps="true"
-            android:gravity="left|center_vertical"
-            android:textColor="@android:color/black"
-            android:text="@string/Try"
-            android:singleLine="true"
-            android:textAlignment="center"
-            android:paddingLeft="8dp" />
+            <ImageView
+                android:id="@+id/restaurantIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:padding="10dp" />
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/yelp_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/restaurantIV"
+                android:layout_alignEnd="@+id/restaurantIV"
+                android:src="@mipmap/powered_by_yelp" />
 
-    <ProgressBar
-        android:id="@+id/resultProgressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:visibility="invisible" />
-</LinearLayout>
+            <TextView
+                android:id="@+id/nameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/restaurantIV"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="Name"
+                android:textColor="@color/white"
+                android:textIsSelectable="false"
+                android:textSize="9pt"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ratingIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameTV"
+                android:layout_centerHorizontal="true"
+                android:padding="10dip" />
+
+            <TextView
+                android:id="@+id/countTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/ratingIV"
+                android:layout_toRightOf="@+id/ratingIV"
+                android:labelFor="@id/ratingIV"
+                android:padding="10dip"
+                android:text="Rating Count"
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:id="@+id/moreInfoTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ratingIV"
+                android:layout_centerHorizontal="true"
+                android:paddingEnd="30dip"
+                android:paddingStart="30dip"
+                android:textColor="#ffffff" />
+
+            <ProgressBar
+                android:id="@+id/resultProgressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/tryAgainIBtn"
+                android:layout_weight="1"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/button_red_round_corners"
+                android:drawableLeft="@mipmap/ic_arrow_back_black_18dp"
+                android:drawablePadding="20dp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="8dp"
+                android:singleLine="true"
+                android:text="@string/Try"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@android:color/black" />
+
+            <Button
+                android:id="@+id/goBtn"
+                android:layout_weight="1"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/button_red_round_corners"
+                android:drawableLeft="@mipmap/ic_navigation_black_18dp"
+                android:drawablePadding="44dp"
+                android:elegantTextHeight="false"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="8dp"
+                android:singleLine="true"
+                android:text="@string/Go"
+                android:textAlignment="gravity"
+                android:textAllCaps="true"
+                android:textColor="@android:color/black" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

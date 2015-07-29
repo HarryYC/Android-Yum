@@ -104,7 +104,6 @@ public class ResultFragment extends Fragment {
         }
 
         view.findViewById(R.id.restaurantInfo).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.buttonContainer).setVisibility(View.VISIBLE);
         resultProgressBar.setVisibility(View.GONE);
 
         Log.v("res_name", restaurant.getName());

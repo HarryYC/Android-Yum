@@ -261,6 +261,12 @@ public class RestaurantFinder {
         }
     }
 
+    public Restaurant getFromPreviousSearch() throws RestaurantSearchException {
+        Restaurant randomRestaurant = null;
+        randomRestaurant = toRestaurant(searchResponseJSON);
+        return randomRestaurant;
+    }
+
     public void useAddress(boolean addressFlag) {
         this.addressFlag = addressFlag;
     }
