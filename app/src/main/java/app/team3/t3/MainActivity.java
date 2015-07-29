@@ -139,26 +139,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-        /* Location service, get current location */
-//        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        if (locationManager.isProviderEnabled(gpsProvider)
-//                || locationManager.isProviderEnabled(networkProvider)) {
-//            if (!locationManager.isProviderEnabled(gpsProvider)) {
-//                serviceAvailable = networkProvider;
-//            } else {
-//                serviceAvailable = gpsProvider;
-//            }
-//            locationManager.requestLocationUpdates(serviceAvailable, 5000, 0, this);
-//            Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
-//            mySearch.setLatitude(currentLocation.getLatitude());
-//            Log.e("####lati", String.valueOf(mySearch.getLatitude()));
-//            mySearch.setLongitude(currentLocation.getLongitude());
-//            Log.e("####longi", String.valueOf(mySearch.getLongitude()));
-//            restaurants = mySearch.filteredSearch();
-//            resDB.insertRestaurants(restaurants);
-//        } else {
-//            Log.e("####Location Err", "No location provider is not available. Does the device have location services enabled?");
-//        }
+
 
 
         final AutoCompleteTextView changeLocation = (AutoCompleteTextView) findViewById(R.id.set_location_textView);
