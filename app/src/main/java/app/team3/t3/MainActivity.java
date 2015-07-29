@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
          /* Components  */
         mShakeImageButton = (ImageButton) findViewById(R.id.shake_ImageButton);
+        // mShakeImageButton.requestFocus();
 
          /* Listeners  */
         mShakeImageButton.setOnClickListener(new View.OnClickListener() {
@@ -300,7 +301,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Location restaurantLocation = new Location("restaurant_location");
         restaurantLocation.setLatitude(restaurant.getLatitude());
         restaurantLocation.setLongitude(restaurant.getLongitude());
-        distance = Float.parseFloat(new DecimalFormat("##.####").format((myLocation.distanceTo(restaurantLocation) / 1609.34)));
+
+        distance = (float) (myLocation.distanceTo(restaurantLocation) / 1609.34);
+        int multiplier = 10;
+        String distanceFormat = "##.#";
+        if (distance < 1) {
+            while (distance * multiplier < 1) {
+                multiplier *= 10;
+                distanceFormat += "#";
+            }
+        }
+        distance = Float.parseFloat(new DecimalFormat(distanceFormat).format(distance));
 
         // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
         Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPagerActivity.class);
