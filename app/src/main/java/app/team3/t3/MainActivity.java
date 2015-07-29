@@ -40,12 +40,14 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 
 // need to change
-import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantAdapter;
 import app.team3.t3.yelp.RestaurantFinder;
 import app.team3.t3.yelp.RestaurantSearchException;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
+    // Log
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     SoundPool mySound;
     int touchId, boomId;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float mAccelLast;
     private RestaurantFinder mySearch;
     // need to change
-    private Restaurant restaurant;
+    private RestaurantAdapter restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private double latitude;
     private double longitude;
@@ -223,15 +225,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (!changeLocation.getText().toString().isEmpty()) {
                         mySearch.setLongitude(0.0);
                         mySearch.setLatitude(0.0);
-                        mySearch.setLocation(changeLocation.getText().toString());
+                        mySearch.setLocation(changeLocation.getText().toString());  // passing the location
                     } else {
                         changeLocation.setText("");
-                        mySearch.setLocation(null);
-                        getLocation();
+                        mySearch.setLocation(null);     // or passing the current location=> user did not pick a location
+                        getLocation();                  // setting current location
                     }
                     try {
                         // need to change
-                        restaurant = mySearch.filteredSearch();
+                        restaurant = mySearch.filteredSearch();     // setting restaurant value here
                     } catch (RestaurantSearchException rse) {
                         rse.printStackTrace();
                         Log.e("restaurantFinder", rse.toString());
@@ -466,6 +468,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
+    /**
+     * this method is getting user's current location and setting the location into RestaurantFinder class
+     */
     public void getLocation() {
         String gpsProvider = LocationManager.GPS_PROVIDER;
         String networkProvider = LocationManager.NETWORK_PROVIDER;
@@ -482,14 +487,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
             latitude = currentLocation.getLatitude();
             mySearch.setLatitude(latitude);
-            Log.e("####lati", String.valueOf(mySearch.getLatitude()));
+            Log.e(TAG, "####lati: " + String.valueOf(mySearch.getLatitude()));
             longitude = currentLocation.getLongitude();
             mySearch.setLongitude(longitude);
-            Log.e("####longi", String.valueOf(mySearch.getLongitude()));
+            Log.e(TAG,"####longi: "+ String.valueOf(mySearch.getLongitude()));
             locationManager.removeUpdates(this);
             try {
                 // need to change
-                restaurant = mySearch.filteredSearch();
+                restaurant = mySearch.filteredSearch(); // assign the value into restaurant object, restaurant value is setting in RestaurantFinder as well
             } catch (RestaurantSearchException rse) {
                 rse.printStackTrace();
                 Log.e("restaurantFinder", rse.toString());

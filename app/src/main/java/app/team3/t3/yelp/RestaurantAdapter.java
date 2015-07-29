@@ -12,15 +12,15 @@ public class RestaurantAdapter implements RestaurantManager, Parcelable {
     //Used for Log message
     private static final String TAG = RestaurantAdapter.class.getSimpleName();
 
-    public static final Parcelable.Creator<Restaurant> CREATOR = new Parcelable.Creator<Restaurant>() {
+    public static final Parcelable.Creator<RestaurantAdapter> CREATOR = new Parcelable.Creator<RestaurantAdapter>() {
         @Override
-        public Restaurant createFromParcel(Parcel source) {
-            return new Restaurant(source);
+        public RestaurantAdapter createFromParcel(Parcel source) {
+            return new RestaurantAdapter(source);
         }
 
         @Override
-        public Restaurant[] newArray(int size) {
-            return new Restaurant[size];
+        public RestaurantAdapter[] newArray(int size) {
+            return new RestaurantAdapter[size];
         }
     };
 

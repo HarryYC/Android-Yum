@@ -39,7 +39,7 @@ public class RestaurantFinder {
     private static String searchResponseJSON;
     boolean addressFlag = false;
     private YelpAPI yelpApi = null;
-    private Restaurant[] restaurant;
+    private RestaurantAdapter[] restaurant;
     private String term;
     private String location;
     private String category;
@@ -84,7 +84,6 @@ public class RestaurantFinder {
                                  int range, String coordinate) {
         searchResponseJSON =
                 yelpApi.searchForBusiness(term, location, category, sort, range, coordinate);
-//        Log.v(TAG, searchResponseJSON);
         Log.e(LOG_TAG, "####Yelp "+ searchResponseJSON);
     }
 
@@ -94,7 +93,7 @@ public class RestaurantFinder {
      * @param allRestaurantJSON <tt>String</tt> for json from Yelp API
      * @return restaurant <tt>Restaurant[]</tt> for deserialized restautrant java object
      */
-    public Restaurant toRestaurant(String allRestaurantJSON) throws RestaurantSearchException {
+    public RestaurantAdapter toRestaurant(String allRestaurantJSON) throws RestaurantSearchException {
         String restaurantId = "";
         String restaurantName = "";
         float restaurantRating = 0.0f;
@@ -177,7 +176,7 @@ public class RestaurantFinder {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Restaurant(restaurantId, restaurantName, restaurantRating, restaurantReviewCount, restaurantPhone,
+        return new RestaurantAdapter(restaurantId, restaurantName, restaurantRating, restaurantReviewCount, restaurantPhone,
                 restaurantCategory, restaurantAddress, restaurantLatitude, restaurantLongitude, restaurantYelpUrl,
                 restaurantRatingImgUrl, restaurantImgUrl);
     }
@@ -192,7 +191,7 @@ public class RestaurantFinder {
      * @param longitude <tt>float</tt> for lontitude input
      * @return <tt>Restaurant</tt> one random restaurant data
      */
-    public Restaurant filteredSearch(String term, String location, String category, int range, int sort, Double latitude, Double longitude) throws RestaurantSearchException {
+    public RestaurantAdapter filteredSearch(String term, String location, String category, int range, int sort, Double latitude, Double longitude) throws RestaurantSearchException {
 
         String qterm = DEFAULT_TERM;
         String qlocation = DEFAULT_LOCATION;
@@ -237,10 +236,12 @@ public class RestaurantFinder {
      * @return Restaurant
      * @throws RestaurantSearchException
      */
-    public Restaurant filteredSearch() throws RestaurantSearchException {
+    public RestaurantAdapter filteredSearch() throws RestaurantSearchException {
         Log.d(LOG_TAG, "filteredSearch called.");
         String coordinate = null;
+        // for when you get current location = user did not type location
         if (latitude != 0.0 && longitude != 0.0) {
+            Log.d(LOG_TAG, "latitude: " + latitude + " longitude: " + longitude);
             if (!addressFlag) {
                 coordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
             }
@@ -256,13 +257,15 @@ public class RestaurantFinder {
             Log.e(LOG_TAG, "####Range " + String.valueOf(range));   // 2000 -> default value
             Log.e(LOG_TAG, "####coor:" + coordinate);
             // queryAPI(yelpApi, "restaurants", "San Francisco,CA", "restaurants", 1, 2000, null);
+            // making api request to yelp
             queryAPI(yelpApi, term, location, category, SORT, range, coordinate);
+
             return toRestaurant(searchResponseJSON);
         }
     }
 
-    public Restaurant getFromPreviousSearch() throws RestaurantSearchException {
-        Restaurant randomRestaurant = null;
+    public RestaurantAdapter getFromPreviousSearch() throws RestaurantSearchException {
+        RestaurantAdapter randomRestaurant = null;
         randomRestaurant = toRestaurant(searchResponseJSON);
         return randomRestaurant;
     }

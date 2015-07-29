@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantAdapter;
 
 
 /**
@@ -170,23 +170,23 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
      *
      * @param res
      */
-    public void saveRestaurant(Restaurant res) {
+    public void saveRestaurant(RestaurantAdapter res) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(COLUMN_RESTAURANT_ID, res.getRestaurantID());
-        contentValues.put(COLUMN_NAME, res.getName());
+        contentValues.put(COLUMN_RESTAURANT_ID, res.getRestaurantId());
+        contentValues.put(COLUMN_NAME, res.getRestaurantName());
         contentValues.put(COLUMN_RATING, res.getRating());
-        contentValues.put(COLUMN_PHONE, res.getPhone());
+        contentValues.put(COLUMN_PHONE, res.getPhoneNumber());
         contentValues.put(COLUMN_REVIEW_COUNT, res.getReviewCount());
-        contentValues.put(COLUMN_CATEGORIES, res.getCategories());
+        contentValues.put(COLUMN_CATEGORIES, res.getCategory());
         contentValues.put(COLUMN_ADDRESS, res.getAddress());
         contentValues.put(COLUMN_LATITUDE, res.getLatitude());
         contentValues.put(COLUMN_LONGITUDE, res.getLongitude());
         contentValues.put(COLUMN_RESTAURANT_PAGE, res.getRestaurantPage());
-        contentValues.put(COLUMN_RATING_IMG, res.getRatingImgURL());
-        contentValues.put(COLUMN_RESTAURANT_IMG, res.getRestaurantImgURL());
+        contentValues.put(COLUMN_RATING_IMG, res.getRatingImgUrl());
+        contentValues.put(COLUMN_RESTAURANT_IMG, res.getRestaurantImgUrl());
         contentValues.put(COLUMN_COUNT, 1);
 
         try {
@@ -199,7 +199,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
             Cursor cursor = db.query(TABLE_HISTORY,
                     new String[]{"*"},
                     COLUMN_RESTAURANT_ID + "=?",
-                    new String[]{res.getRestaurantID()},
+                    new String[]{res.getRestaurantId()},
                     null, null, null, null);
 
             if (cursor != null) {
@@ -210,7 +210,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
 
             db.update(TABLE_HISTORY,
                     contentValues,
-                    COLUMN_RESTAURANT_ID + " = " + "\"" + res.getRestaurantID() + "\"",
+                    COLUMN_RESTAURANT_ID + " = " + "\"" + res.getRestaurantId() + "\"",
                     null);
         }
 
@@ -222,7 +222,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
      * Insert an array of object restaurants into database
      *
      * @param restaurants
-    public void insertRestaurants(Restaurant[] restaurants) {
+    public void insertRestaurants(RestaurantAdapter[] restaurants) {
         updateDB();
         for (int i = 0; i < restaurants.length; i++) {
             insertRestaurant(restaurants[i]);
@@ -269,7 +269,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
      */
 
 
-    public Restaurant getRestaurant(String BussinessID) {
+    public RestaurantAdapter getRestaurant(String BussinessID) {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -283,7 +283,7 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
         }
 
-        Restaurant restaurant = new Restaurant(
+        RestaurantAdapter restaurant = new RestaurantAdapter(
                 cursor.getString(1),
                 cursor.getString(2),
                 Float.parseFloat(cursor.getString(3)),
