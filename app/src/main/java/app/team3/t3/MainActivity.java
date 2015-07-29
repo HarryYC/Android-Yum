@@ -31,6 +31,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
@@ -39,15 +40,12 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
-// need to change
-import app.team3.t3.yelp.RestaurantAdapter;
+import app.team3.t3.yelp.Restaurant;
 import app.team3.t3.yelp.RestaurantFinder;
 import app.team3.t3.yelp.RestaurantSearchException;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
-    // Log
-    private static final String TAG = MainActivity.class.getSimpleName();
 
     SoundPool mySound;
     int touchId, boomId;
@@ -58,8 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float mAccelCurrent;
     private float mAccelLast;
     private RestaurantFinder mySearch;
-    // need to change
-    private RestaurantAdapter restaurant;
+    private Restaurant restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private double latitude;
     private double longitude;
@@ -130,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
          /* Components  */
         mShakeImageButton = (ImageButton) findViewById(R.id.shake_ImageButton);
-        // mShakeImageButton.requestFocus();
 
          /* Listeners  */
         mShakeImageButton.setOnClickListener(new View.OnClickListener() {
@@ -142,26 +138,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-        /* Location service, get current location */
-//        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        if (locationManager.isProviderEnabled(gpsProvider)
-//                || locationManager.isProviderEnabled(networkProvider)) {
-//            if (!locationManager.isProviderEnabled(gpsProvider)) {
-//                serviceAvailable = networkProvider;
-//            } else {
-//                serviceAvailable = gpsProvider;
-//            }
-//            locationManager.requestLocationUpdates(serviceAvailable, 5000, 0, this);
-//            Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
-//            mySearch.setLatitude(currentLocation.getLatitude());
-//            Log.e("####lati", String.valueOf(mySearch.getLatitude()));
-//            mySearch.setLongitude(currentLocation.getLongitude());
-//            Log.e("####longi", String.valueOf(mySearch.getLongitude()));
-//            restaurants = mySearch.filteredSearch();
-//            resDB.insertRestaurants(restaurants);
-//        } else {
-//            Log.e("####Location Err", "No location provider is not available. Does the device have location services enabled?");
-//        }
+
 
 
         final AutoCompleteTextView changeLocation = (AutoCompleteTextView) findViewById(R.id.set_location_textView);
@@ -218,6 +195,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+
+        /* Listener for Location TextView */
+
         changeLocation.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -225,15 +205,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (!changeLocation.getText().toString().isEmpty()) {
                         mySearch.setLongitude(0.0);
                         mySearch.setLatitude(0.0);
-                        mySearch.setLocation(changeLocation.getText().toString());  // passing the location
+                        mySearch.setLocation(changeLocation.getText().toString());
                     } else {
                         changeLocation.setText("");
-                        mySearch.setLocation(null);     // or passing the current location=> user did not pick a location
-                        getLocation();                  // setting current location
+                        mySearch.setLocation(null);
+                        getLocation();
                     }
                     try {
-                        // need to change
-                        restaurant = mySearch.filteredSearch();     // setting restaurant value here
+                        restaurant = mySearch.filteredSearch();
                     } catch (RestaurantSearchException rse) {
                         rse.printStackTrace();
                         Log.e("restaurantFinder", rse.toString());
@@ -287,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // using the following line to edit/commit prefs
             firstRunprefs.edit().putBoolean("firstrun", false).commit();
             try {
-                // need to change
                 restaurant = mySearch.filteredSearch();
             } catch (RestaurantSearchException rse) {
                 rse.printStackTrace();
@@ -320,15 +298,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         myLocation.setLatitude(latitude);
         myLocation.setLongitude(longitude);
         Location restaurantLocation = new Location("restaurant_location");
-                                    // need to change
         restaurantLocation.setLatitude(restaurant.getLatitude());
-                                    // need to change
         restaurantLocation.setLongitude(restaurant.getLongitude());
         distance = Float.parseFloat(new DecimalFormat("##.####").format((myLocation.distanceTo(restaurantLocation) / 1609.34)));
 
         // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
         Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPagerActivity.class);
-                                            // need to change
         getResultIntent.putExtra("restaurant_picked", restaurant);
         getResultIntent.putExtra("distance", distance);
         startActivity(getResultIntent);
@@ -438,14 +413,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
                 try {
-                    // need to change
                     restaurant = mySearch.filteredSearch();
+                    mPopupWindow.dismiss();
+                    Toast.makeText(getApplicationContext(),
+                            "Results Updated. Ready to Shake",
+                            Toast.LENGTH_LONG).show();
                 } catch (RestaurantSearchException rse) {
+
                     rse.printStackTrace();
                     Log.e("restaurantFinder", rse.toString());
-                }
-                // need to change
-                if (restaurant == null) {
                     AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
                     mAlert.setTitle("No Result");
                     mAlert.setMessage("Please choose again!");
@@ -456,11 +432,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         }
                     });
                     mAlert.create().show();
-                } else {
-                    mPopupWindow.dismiss();
-                    Toast.makeText(getApplicationContext(),
-                            "Results Updated. Ready to Shake",
-                            Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -468,9 +439,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    /**
-     * this method is getting user's current location and setting the location into RestaurantFinder class
-     */
     public void getLocation() {
         String gpsProvider = LocationManager.GPS_PROVIDER;
         String networkProvider = LocationManager.NETWORK_PROVIDER;
@@ -487,14 +455,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
             latitude = currentLocation.getLatitude();
             mySearch.setLatitude(latitude);
-            Log.e(TAG, "####lati: " + String.valueOf(mySearch.getLatitude()));
+            Log.e("####lati", String.valueOf(mySearch.getLatitude()));
             longitude = currentLocation.getLongitude();
             mySearch.setLongitude(longitude);
-            Log.e(TAG,"####longi: "+ String.valueOf(mySearch.getLongitude()));
+            Log.e("####longi", String.valueOf(mySearch.getLongitude()));
             locationManager.removeUpdates(this);
             try {
-                // need to change
-                restaurant = mySearch.filteredSearch(); // assign the value into restaurant object, restaurant value is setting in RestaurantFinder as well
+                restaurant = mySearch.filteredSearch();
             } catch (RestaurantSearchException rse) {
                 rse.printStackTrace();
                 Log.e("restaurantFinder", rse.toString());
