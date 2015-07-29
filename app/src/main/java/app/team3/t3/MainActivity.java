@@ -39,10 +39,11 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
-// need to change
 import app.team3.t3.yelp.RestaurantAdapter;
 import app.team3.t3.yelp.RestaurantFinder;
 import app.team3.t3.yelp.RestaurantSearchException;
+
+// need to change
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
         final Button clearTextButton = (Button) findViewById(R.id.cleartext_button);
         clearTextButton.setVisibility(View.INVISIBLE);
+        getActionBar();
 
         firstRunprefs = getSharedPreferences("app.team3.t3", MODE_PRIVATE);
 

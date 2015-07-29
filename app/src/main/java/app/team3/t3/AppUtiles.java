@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * Created by nanden on 7/28/15.
+ * Helper class
  */
 public class AppUtiles {
 
