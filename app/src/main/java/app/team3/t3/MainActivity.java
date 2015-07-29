@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
          /* Components  */
         mShakeImageButton = (ImageButton) findViewById(R.id.shake_ImageButton);
-        // mShakeImageButton.requestFocus();
 
          /* Listeners  */
         mShakeImageButton.setOnClickListener(new View.OnClickListener() {
@@ -195,6 +194,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             }
         });
+
+
+        /* Listener for Location TextView */
 
         changeLocation.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
             @Override
@@ -412,12 +414,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 try {
                     restaurant = mySearch.filteredSearch();
+                    mPopupWindow.dismiss();
+                    Toast.makeText(getApplicationContext(),
+                            "Results Updated. Ready to Shake",
+                            Toast.LENGTH_LONG).show();
                 } catch (RestaurantSearchException rse) {
+
                     rse.printStackTrace();
                     Log.e("restaurantFinder", rse.toString());
-                }
-
-                if (restaurant == null) {
                     AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
                     mAlert.setTitle("No Result");
                     mAlert.setMessage("Please choose again!");
@@ -428,11 +432,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         }
                     });
                     mAlert.create().show();
-                } else {
-                    mPopupWindow.dismiss();
-                    Toast.makeText(getApplicationContext(),
-                            "Results Updated. Ready to Shake",
-                            Toast.LENGTH_LONG).show();
                 }
             }
         });
