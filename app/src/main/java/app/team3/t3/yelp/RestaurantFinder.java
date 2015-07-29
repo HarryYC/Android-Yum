@@ -21,6 +21,9 @@ import app.team3.t3.R;
  * See <a href="http://www.yelp.com/developers/documentation">Yelp Documentation</a> for more info.
  */
 public class RestaurantFinder {
+    //Log
+    private static final String LOG_TAG = RestaurantFinder.class.getSimpleName();
+
     private static final int MAX_RESTAURANT = 20;
     private static final String DEFAULT_TERM = "restaurants";
     private static final String DEFAULT_LOCATION = null;
@@ -28,7 +31,7 @@ public class RestaurantFinder {
     private static final int DEFAULT_SORT = 1;
     private static final String DEFAULT_CATEGORY = "restaurants";
     private static final String DEFAULT_COORDINATE = null;
-    private static final String TAG = "yelp_interface";
+//    private static final String TAG = "yelp_interface";
     /**
      * big six params *
      */
@@ -82,7 +85,7 @@ public class RestaurantFinder {
         searchResponseJSON =
                 yelpApi.searchForBusiness(term, location, category, sort, range, coordinate);
 //        Log.v(TAG, searchResponseJSON);
-        Log.e("####Yelp", searchResponseJSON);
+        Log.e(LOG_TAG, "####Yelp "+ searchResponseJSON);
     }
 
     /**
@@ -229,7 +232,13 @@ public class RestaurantFinder {
         }
     }
 
+    /**
+     *
+     * @return Restaurant
+     * @throws RestaurantSearchException
+     */
     public Restaurant filteredSearch() throws RestaurantSearchException {
+        Log.d(LOG_TAG, "filteredSearch called.");
         String coordinate = null;
         if (latitude != 0.0 && longitude != 0.0) {
             if (!addressFlag) {
@@ -239,12 +248,13 @@ public class RestaurantFinder {
         if (location == null && coordinate == null) {
             throw new RestaurantSearchException("Unspecified location");
         } else {
-            Log.e("####Term:", getTerm());
+            Log.e(LOG_TAG, "####Term: " + getTerm());   // restaurant -> default value
+            Log.e(LOG_TAG, "####Location: " + getLocation());
 //            if (addressFlag) {Log.e("####Location:",getLocation());}
-            Log.e("####Category:", getCategory());
-            Log.e("####Sort:", String.valueOf(SORT));
-            Log.e("####Range", String.valueOf(range));
-//            Log.e("####coor:", coordinate);
+            Log.e(LOG_TAG, "####Category: " + getCategory());   //restaurant -> default value
+            Log.e(LOG_TAG, "####Sort: " + String.valueOf(SORT));    // 0 -> default value
+            Log.e(LOG_TAG, "####Range " + String.valueOf(range));   // 2000 -> default value
+            Log.e(LOG_TAG, "####coor:" + coordinate);
             // queryAPI(yelpApi, "restaurants", "San Francisco,CA", "restaurants", 1, 2000, null);
             queryAPI(yelpApi, term, location, category, SORT, range, coordinate);
             return toRestaurant(searchResponseJSON);

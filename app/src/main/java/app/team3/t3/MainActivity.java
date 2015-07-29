@@ -31,7 +31,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
@@ -40,6 +39,7 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
+// need to change
 import app.team3.t3.yelp.Restaurant;
 import app.team3.t3.yelp.RestaurantFinder;
 import app.team3.t3.yelp.RestaurantSearchException;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float mAccelCurrent;
     private float mAccelLast;
     private RestaurantFinder mySearch;
+    // need to change
     private Restaurant restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private double latitude;
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         getLocation();
                     }
                     try {
+                        // need to change
                         restaurant = mySearch.filteredSearch();
                     } catch (RestaurantSearchException rse) {
                         rse.printStackTrace();
@@ -277,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         
             try {
+                // need to change
                 restaurant = mySearch.filteredSearch();
             } catch (RestaurantSearchException rse) {
                 rse.printStackTrace();
@@ -302,12 +305,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         myLocation.setLatitude(latitude);
         myLocation.setLongitude(longitude);
         Location restaurantLocation = new Location("restaurant_location");
+                                    // need to change
         restaurantLocation.setLatitude(restaurant.getLatitude());
+                                    // need to change
         restaurantLocation.setLongitude(restaurant.getLongitude());
         distance = Float.parseFloat(new DecimalFormat("##.####").format((myLocation.distanceTo(restaurantLocation) / 1609.34)));
 
         // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
         Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPagerActivity.class);
+                                            // need to change
         getResultIntent.putExtra("restaurant_picked", restaurant);
         getResultIntent.putExtra("distance", distance);
         startActivity(getResultIntent);
@@ -417,12 +423,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
                 try {
+                    // need to change
                     restaurant = mySearch.filteredSearch();
                 } catch (RestaurantSearchException rse) {
                     rse.printStackTrace();
                     Log.e("restaurantFinder", rse.toString());
                 }
-
+                // need to change
                 if (restaurant == null) {
                     AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
                     mAlert.setTitle("No Result");
@@ -468,6 +475,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Log.e("####longi", String.valueOf(mySearch.getLongitude()));
             locationManager.removeUpdates(this);
             try {
+                // need to change
                 restaurant = mySearch.filteredSearch();
             } catch (RestaurantSearchException rse) {
                 rse.printStackTrace();
