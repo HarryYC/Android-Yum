@@ -31,7 +31,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
@@ -40,12 +39,14 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
-import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantAdapter;
 import app.team3.t3.yelp.RestaurantFinder;
 import app.team3.t3.yelp.RestaurantSearchException;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
+    // Log
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     SoundPool mySound;
     int touchId, boomId;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float mAccelCurrent;
     private float mAccelLast;
     private RestaurantFinder mySearch;
-    private Restaurant restaurant;
+    private RestaurantAdapter restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private double latitude;
     private double longitude;
