@@ -74,7 +74,8 @@ public class History extends Activity {
 //                System.out.println(separatedTwo[0].replace("=",""));
 
                 Intent getRestaurantDetail = new Intent(History.this, ActionBarTabsPagerActivity.class);
-                getRestaurantDetail.putExtra("restaurant_picked", db.getRestaurant(separatedTwo[0].replace("=", "").trim()));
+                getRestaurantDetail.putExtra("restaurant_picked",
+                        db.getRestaurant(separatedTwo[0].replace("=", "").replace("}", "").replace("{", "").trim()));
                 getRestaurantDetail.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(getRestaurantDetail);
                 finish();
