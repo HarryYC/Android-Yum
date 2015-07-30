@@ -58,6 +58,7 @@ public class SplashScreen extends Activity {
         builder.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent cont = new Intent("app.team3.t3.MAINACTIVITY");
+                cont.putExtra("location_service", false);
                 startActivity(cont);
             }
 
