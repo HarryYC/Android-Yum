@@ -13,7 +13,7 @@ import android.widget.EditText;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import app.team3.t3.R;
-import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantAdapter;
 
 /**
  * Created by nanden on 7/5/15.
@@ -21,7 +21,7 @@ import app.team3.t3.yelp.Restaurant;
 public class TwitterFragment extends Fragment {
 
     Bundle bundle;
-    Restaurant restaurant;
+    RestaurantAdapter restaurant;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class TwitterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // code for tweet
-                TweetComposer.Builder builder = new TweetComposer.Builder(getActivity()).text(editText.getText() + "\n\n" + restaurant.getName() + "\n" + restaurant.getRestaurantPage());
+                TweetComposer.Builder builder = new TweetComposer.Builder(getActivity()).text(editText.getText() + "\n\n" + restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPage());
                 builder.show();
             }
         });

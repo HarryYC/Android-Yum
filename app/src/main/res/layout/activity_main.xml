@@ -1,125 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/yum_red"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:fillViewport="true"
-    android:scrollbars="none">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/a1"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/yum_red"
+        tools:context=".MainActivity">
 
-        <RelativeLayout
-            android:id="@+id/a1"
+        <ImageButton
+            android:id="@+id/shake_ImageButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:adjustViewBounds="false"
             android:background="@color/yum_red"
-            tools:context=".MainActivity">
+            android:clickable="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:padding="0dp"
+            android:scaleType="center"
+            android:src="@mipmap/egg" />
 
-            <ImageButton
-                android:id="@+id/shake_ImageButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:adjustViewBounds="false"
-                android:background="@color/yum_red"
-                android:clickable="false"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:padding="0dp"
-                android:scaleType="center"
-                android:src="@mipmap/egg" />
+        <Button
+            android:id="@+id/filter_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/white_border_button"
+            android:drawableLeft="@mipmap/ic_filter_list_white_36dp"
+            android:drawablePadding="15dp"
+            android:elegantTextHeight="false"
+            android:onClick="onFilterClick"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:singleLine="false"
+            android:text=" Filter    "
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/filter_button"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/white_border_button"
-                android:drawableLeft="@mipmap/ic_filter_list_white_36dp"
-                android:drawablePadding="15dp"
-                android:elegantTextHeight="false"
-                android:onClick="onFilterClick"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:singleLine="false"
-                android:text=" Filter    "
-                android:textColor="@color/white"
-                android:textStyle="bold" />
+        <AutoCompleteTextView
+            android:id="@+id/set_location_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView2"
+            android:layout_alignEnd="@+id/filter_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toEndOf="@+id/addressLabel"
+            android:background="@drawable/edit_text_style"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:hint="Near Me"
+            android:imeOptions="actionSearch"
+            android:inputType="textAutoComplete|textNoSuggestions"
+            android:paddingBottom="10dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="10dp"
+            android:singleLine="true"
+            android:textColorHint="@drawable/selector"
+            android:textStyle="bold" />
 
-            <app.team3.t3.myAutoCompleteTextView
-                android:id="@+id/set_location_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/textView2"
-                android:layout_alignEnd="@+id/filter_button"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_toEndOf="@+id/addressLabel"
-                android:background="@drawable/edit_text_style"
-                android:focusableInTouchMode="true"
-                android:gravity="center"
-                android:hint="Near Me"
-                android:imeOptions="actionSearch"
-                android:inputType="textAutoComplete|textNoSuggestions"
-                android:paddingBottom="10dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="10dp"
-                android:singleLine="true"
-                android:textColorHint="@drawable/selector"
-                android:textStyle="bold"
-                />
+        <TextView
+            android:id="@+id/addressLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/set_location_textView"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:labelFor="@id/set_location_textView"
+            android:text="Location:"
+            android:textColor="@color/white"
+            android:textSize="9pt"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/addressLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/set_location_textView"
-                android:layout_margin="10dp"
-                android:gravity="center_vertical"
-                android:labelFor="@id/set_location_textView"
-                android:text="Location:"
-                android:textColor="@color/white"
-                android:textSize="9pt"
-                android:textStyle="bold" />
+        <Button
+            android:id="@+id/cleartext_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_alignEnd="@+id/set_location_textView"
+            android:layout_alignTop="@+id/set_location_textView"
+            android:layout_marginEnd="5dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/clear_text_button"
+            android:gravity="center"
+            android:text="x"
+            android:textColor="#ffffff" />
 
-            <Button
-                android:id="@+id/cleartext_button"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="30dip"
-                android:layout_height="30dip"
-                android:layout_alignEnd="@+id/set_location_textView"
-                android:layout_alignTop="@+id/set_location_textView"
-                android:layout_marginEnd="5dip"
-                android:layout_marginTop="5dip"
-                android:background="@drawable/clear_text_button"
-                android:gravity="center"
-                android:text="x"
-                android:textColor="#ffffff" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/set_location_textView"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/set_location_textView"
-                android:background="@color/yum_red"
-                android:paddingLeft="20dp"
-                android:singleLine="true"
-                android:text="Touch to input new (city) location"
-                android:textAlignment="center"
-                android:textColor="#d2d5b4ae" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/set_location_textView"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/set_location_textView"
+            android:background="@color/yum_red"
+            android:paddingLeft="20dp"
+            android:singleLine="true"
+            android:text="Touch to input new (city) location"
+            android:textAlignment="center"
+            android:textColor="#d2d5b4ae" />
 
 
-        </RelativeLayout>
-    </LinearLayout>
-</ScrollView>
+    </RelativeLayout>
+</LinearLayout>

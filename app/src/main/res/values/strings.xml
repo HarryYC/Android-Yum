@@ -171,4 +171,10 @@
         <item>Greek</item>
     </string-array>
 
+    <!--for alart dialog-->
+    <string name="title_error">Error</string>
+    <string name="title">Warning</string>
+    <string name="message_no_internet">No Internet. Please check your internet connection.</string>
+    <string name="message_enter_location">Please enter location.</string>
+
 </resources>

@@ -31,7 +31,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
@@ -40,12 +39,14 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
-import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantAdapter;
 import app.team3.t3.yelp.RestaurantFinder;
 import app.team3.t3.yelp.RestaurantSearchException;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
+    // Log
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     SoundPool mySound;
     int touchId, boomId;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float mAccelCurrent;
     private float mAccelLast;
     private RestaurantFinder mySearch;
-    private Restaurant restaurant;
+    private RestaurantAdapter restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private double latitude;
     private double longitude;
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
          /* Components  */
         mShakeImageButton = (ImageButton) findViewById(R.id.shake_ImageButton);
+        // mShakeImageButton.requestFocus();
 
          /* Listeners  */
         mShakeImageButton.setOnClickListener(new View.OnClickListener() {
@@ -300,7 +302,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Location restaurantLocation = new Location("restaurant_location");
         restaurantLocation.setLatitude(restaurant.getLatitude());
         restaurantLocation.setLongitude(restaurant.getLongitude());
-        distance = Float.parseFloat(new DecimalFormat("##.####").format((myLocation.distanceTo(restaurantLocation) / 1609.34)));
+
+        distance = (float) (myLocation.distanceTo(restaurantLocation) / 1609.34);
+        int multiplier = 10;
+        String distanceFormat = "##.#";
+        if (distance < 1) {
+            while (distance * multiplier < 1) {
+                multiplier *= 10;
+                distanceFormat += "#";
+            }
+        }
+        distance = Float.parseFloat(new DecimalFormat(distanceFormat).format(distance));
 
         // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
         Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPagerActivity.class);
