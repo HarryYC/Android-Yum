@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-        final AutoCompleteTextView changeLocation = (AutoCompleteTextView) findViewById(R.id.set_location_textView);
+        final myAutoCompleteTextView changeLocation = (myAutoCompleteTextView) findViewById(R.id.set_location_textView);
         final InputMethodManager inputMethodManager = (InputMethodManager) changeLocation.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
 
@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             Toast.LENGTH_LONG).show();
 
                     inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
-                    findViewById(R.id.a1).requestFocus();
+                    findViewById(R.id.shake_ImageButton).requestFocus();
                     return true;
                 }
 

@@ -54,7 +54,7 @@
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
-            <AutoCompleteTextView
+            <app.team3.t3.myAutoCompleteTextView
                 android:id="@+id/set_location_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,7 +74,8 @@
                 android:paddingTop="10dp"
                 android:singleLine="true"
                 android:textColorHint="@drawable/selector"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
             <TextView
                 android:id="@+id/addressLabel"
