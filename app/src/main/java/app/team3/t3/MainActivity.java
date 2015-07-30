@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         String serviceAvailable;
 
         if (getIntent().getBooleanExtra("is_started", false)) {
+            firstRunprefs.edit().putBoolean("goto_setting", false).commit();
             Intent locationSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(locationSetting);
         }
@@ -148,12 +149,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
 
 
-
-
         final myAutoCompleteTextView changeLocation = (myAutoCompleteTextView) findViewById(R.id.set_location_textView);
         final InputMethodManager inputMethodManager = (InputMethodManager) changeLocation.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        if (!getIntent().getBooleanExtra("location_service", true)){
+        if (!getIntent().getBooleanExtra("location_service", true)) {
             changeLocation.setHint("Enter Location");
         }
 
@@ -174,9 +173,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     if (!changeLocation.getText().toString().isEmpty()) {
-                        clearTextButton.setVisibility(View.VISIBLE);
                         changeLocation.selectAll();
+                        clearTextButton.setVisibility(View.VISIBLE);
                     }
+                    inputMethodManager.showSoftInput(changeLocation, InputMethodManager.SHOW_IMPLICIT);
                 } else {
                     mShakeImageButton.requestFocus();
                     inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
@@ -240,7 +240,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 return false;
             }
         });
-        getLocation();
+        if (firstRunprefs.getBoolean("goto_setting", true)) {
+            getLocation();
+        }
     } //end onCreate
 
     @Override
@@ -271,31 +273,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
 
         findViewById(R.id.shake_ImageButton).requestFocus();
-
-        if (firstRunprefs.getBoolean("firstrun", true)) {
-            // Do first run stuff here then set 'firstrun' as false
-            // using the following line to edit/commit prefs
-            firstRunprefs.edit().putBoolean("firstrun", false).commit();
-
-            if (!locationIsEnable) {
-                findViewById(R.id.set_location_textView).requestFocus();
-                try {
-                    restaurant = mySearch.filteredSearch();
-                } catch (RestaurantSearchException rse) {
-                    rse.printStackTrace();
-                    Log.e("restaurantFinder", rse.toString());
+        if (firstRunprefs.getBoolean("goto_setting", true)) {
+            Log.e("###onResume", "goto_setting, true");
+            if (firstRunprefs.getBoolean("firstrun", true)) {
+                // Do first run stuff here then set 'firstrun' as false
+                // using the following line to edit/commit prefs
+                if (!locationIsEnable) {
+                    findViewById(R.id.set_location_textView).requestFocus();
+                } else {
+                    getLocation();
                 }
+                firstRunprefs.edit().putBoolean("firstrun", false).commit();
+            } else {
+                // pick restaurant from the previous search 20 results
+                // if no user preferences change
+                if (locationIsEnable) {
+                    try {
+                        restaurant = mySearch.getFromPreviousSearch();
+                    } catch (RestaurantSearchException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    findViewById(R.id.set_location_textView).requestFocus();
+                }
+
             }
         } else {
-            // pick restaurant from the previous search 20 results
-            // if no user preferences change
-            try {
-                restaurant = mySearch.getFromPreviousSearch();
-            } catch (RestaurantSearchException e) {
-                e.printStackTrace();
-            }
+            firstRunprefs.edit().putBoolean("firstrun", true).commit();
+            firstRunprefs.edit().putBoolean("goto_setting", true).commit();
         }
-
 
         avoid_doubleShake = true;
         mSensorManager.registerListener(mSensorListener,
@@ -308,26 +314,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void getResultPage() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-        float distance = 0;
+        float distance = 0.0f;
 
         // Calculate distance
-        Location myLocation = new Location("my_location");
-        myLocation.setLatitude(latitude);
-        myLocation.setLongitude(longitude);
-        Location restaurantLocation = new Location("restaurant_location");
-        restaurantLocation.setLatitude(restaurant.getLatitude());
-        restaurantLocation.setLongitude(restaurant.getLongitude());
+        if (locationIsEnable) {
+            Location myLocation = new Location("my_location");
+            myLocation.setLatitude(latitude);
+            myLocation.setLongitude(longitude);
+            Location restaurantLocation = new Location("restaurant_location");
+            restaurantLocation.setLatitude(restaurant.getLatitude());
+            restaurantLocation.setLongitude(restaurant.getLongitude());
 
-        distance = (float) (myLocation.distanceTo(restaurantLocation) / 1609.34);
-        int multiplier = 10;
-        String distanceFormat = "##.#";
-        if (distance < 1) {
-            while (distance * multiplier < 1) {
-                multiplier *= 10;
-                distanceFormat += "#";
+            distance = (float) (myLocation.distanceTo(restaurantLocation) / 1609.34);
+            int multiplier = 10;
+            String distanceFormat = "##.#";
+            if (distance < 1) {
+                while (distance * multiplier < 1) {
+                    multiplier *= 10;
+                    distanceFormat += "#";
+                }
             }
+            distance = Float.parseFloat(new DecimalFormat(distanceFormat).format(distance));
         }
-        distance = Float.parseFloat(new DecimalFormat(distanceFormat).format(distance));
 
         // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
         Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPagerActivity.class);
