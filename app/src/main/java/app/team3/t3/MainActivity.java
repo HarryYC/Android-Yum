@@ -100,8 +100,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         firstRunprefs = getSharedPreferences("app.team3.t3", MODE_PRIVATE);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         String gpsProvider = LocationManager.GPS_PROVIDER;
         String networkProvider = LocationManager.NETWORK_PROVIDER;
         String serviceAvailable;
@@ -171,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         changeLocation.selectAll();
                     }
                 } else {
-                    findViewById(R.id.a1).requestFocus();
+                    mShakeImageButton.requestFocus();
                     inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
                     clearTextButton.setVisibility(View.INVISIBLE);
                 }
@@ -226,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             Toast.LENGTH_LONG).show();
 
                     inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
-                    findViewById(R.id.shake_ImageButton).requestFocus();
+                    mShakeImageButton.requestFocus();
                     return true;
                 }
 
@@ -264,6 +262,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
 
+        findViewById(R.id.shake_ImageButton).requestFocus();
 
         if (firstRunprefs.getBoolean("firstrun", true)) {
             // Do first run stuff here then set 'firstrun' as false
@@ -278,13 +277,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     Log.e("restaurantFinder", rse.toString());
                 }
             }
-        } //else {
-          //  try {
-          //      restaurant = mySearch.getFromPreviousSearch();
-          //  } catch (RestaurantSearchException e) {
-          //      e.printStackTrace();
-            // }
-        //}
+        } else {
+            // pick restaurant from the previous search 20 results
+            // if no user preferences change
+            try {
+                restaurant = mySearch.getFromPreviousSearch();
+            } catch (RestaurantSearchException e) {
+                e.printStackTrace();
+            }
+        }
 
 
         avoid_doubleShake = true;

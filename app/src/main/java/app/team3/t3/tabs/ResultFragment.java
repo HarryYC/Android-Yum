@@ -43,7 +43,7 @@ public class ResultFragment extends Fragment {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         restaurant = intent.getParcelable("restaurant_picked");
-        distance = intent.getFloat("distance");
+        distance = intent.getFloat("distance", 0.0f);
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
     }
@@ -89,7 +89,11 @@ public class ResultFragment extends Fragment {
                 businessID.execute(restaurant.getRestaurantImgUrl());
                 ImageDownloader ratingID = new ImageDownloader(ratingIV);
                 ratingID.execute(restaurant.getRatingImgUrl());
-                nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName() + "</font></b><br>(" + String.valueOf(distance) + " miles)"));
+                if (distance > 0) {
+                    nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName() + "</font></b><br>(" + String.valueOf(distance) + " miles)"));
+                } else {
+                    nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName() + "</font></b>"));
+                }
                 countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
                 moreInfoTV.setText(Html.fromHtml("<b>Phone:</b> " + restaurant.getPhoneNumber() +
                         "<br><br><b>Address:</b> " + restaurant.getAddress()));
