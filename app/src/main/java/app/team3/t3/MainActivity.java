@@ -121,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         boomId = mySound.load(this, R.raw.boom, 1);
 
         mySearch = new RestaurantFinder(getApplicationContext());
+        mySearch.setCategory(getPreferenceCategory(sharedPref.getInt("categorySpinner", 0)));
+        mySearch.setRange(getPreferenceDistance(sharedPref.getInt("distanceSpinner", 0)));
 
         new Eula(this).show();
 
@@ -274,8 +276,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // Do first run stuff here then set 'firstrun' as false
             // using the following line to edit/commit prefs
             firstRunprefs.edit().putBoolean("firstrun", false).commit();
-            mySearch.setCategory(getPreferenceCategory(sharedPref.getInt("categorySpinner", 0)));
-            mySearch.setRange(getPreferenceDistance(sharedPref.getInt("distanceSpinner", 0)));
+
             if (!locationIsEnable) {
                 findViewById(R.id.set_location_textView).requestFocus();
                 try {
