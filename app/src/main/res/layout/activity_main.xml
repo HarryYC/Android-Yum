@@ -73,6 +73,7 @@
                 android:singleLine="true"
                 android:textColorHint="@drawable/selector"
                 android:textStyle="bold"
+                android:selectAllOnFocus="true"
                 />
         <TextView
             android:id="@+id/addressLabel"
