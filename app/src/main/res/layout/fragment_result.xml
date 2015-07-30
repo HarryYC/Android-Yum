@@ -40,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/restaurantIV"
                     android:layout_alignEnd="@+id/restaurantIV"
+                    android:padding="16dip"
                     android:src="@mipmap/powered_by_yelp" />
 
                 <TextView

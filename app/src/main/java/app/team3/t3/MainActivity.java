@@ -56,11 +56,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+    private boolean locationIsEnable;
     private RestaurantFinder mySearch;
     private RestaurantAdapter restaurant;
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private double latitude;
     private double longitude;
+    private SharedPreferences.Editor prefEditor;
+    private SharedPreferences sharedPref;
 
     SharedPreferences firstRunprefs = null;
 
@@ -95,8 +98,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        locationIsEnable = getIntent().getBooleanExtra("location_service", true);
         final Button clearTextButton = (Button) findViewById(R.id.cleartext_button);
         clearTextButton.setVisibility(View.INVISIBLE);
+
+        sharedPref = getSharedPreferences("settings", 0);
+        prefEditor = sharedPref.edit();
 
         firstRunprefs = getSharedPreferences("app.team3.t3", MODE_PRIVATE);
 
@@ -231,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 return false;
             }
         });
-
         getLocation();
     } //end onCreate
 
@@ -268,7 +274,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // Do first run stuff here then set 'firstrun' as false
             // using the following line to edit/commit prefs
             firstRunprefs.edit().putBoolean("firstrun", false).commit();
-            if (!getIntent().getBooleanExtra("location_service", true)) {
+            mySearch.setCategory(getPreferenceCategory(sharedPref.getInt("categorySpinner", 0)));
+            mySearch.setRange(getPreferenceDistance(sharedPref.getInt("distanceSpinner", 0)));
+            if (!locationIsEnable) {
                 findViewById(R.id.set_location_textView).requestFocus();
                 try {
                     restaurant = mySearch.filteredSearch();
@@ -334,8 +342,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         LayoutInflater mLayoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View mView = mLayoutInflater.inflate(R.layout.fragment_filter, null);
 
-        SharedPreferences sharedPref = getSharedPreferences("settings", 0);
-        final SharedPreferences.Editor prefEditor = sharedPref.edit();
         Button filterButton = (Button) findViewById(R.id.filter_button);
         final PopupWindow mPopupWindow = new PopupWindow(mView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -354,11 +360,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mPopupWindow.dismiss();
             }
         });
-        int categoryValue = sharedPref.getInt("categorySpinner", -1);
+        final int categoryValue = sharedPref.getInt("categorySpinner", -1);
         Log.e("####CaValue:", String.valueOf(categoryValue));
         if (categoryValue != -1)
             categorySpinner.setSelection(categoryValue);
-        int distanceValue = sharedPref.getInt("distanceSpinner", -1);
+        final int distanceValue = sharedPref.getInt("distanceSpinner", -1);
         Log.e("####DisValue:", String.valueOf(distanceValue));
         if (distanceValue != -1)
             distanceSpinner.setSelection(distanceValue);
@@ -370,60 +376,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
                 /* category parameters */
-                if (categorySpinner.getSelectedItem().toString().equals("Select Category")) {
-                    mySearch.setCategory("restaurants");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Japanese")) {
-                    mySearch.setCategory("japanese");
-                } else if (categorySpinner.getSelectedItem().toString().equals("American (Traditional)")) {
-                    mySearch.setCategory("tradamerican");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Chinese")) {
-                    mySearch.setCategory("chinese");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Indian")) {
-                    mySearch.setCategory("indpak");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Pizza")) {
-                    mySearch.setCategory("pizza");
-                } else if (categorySpinner.getSelectedItem().toString().equals("American (New)")) {
-                    mySearch.setCategory("newamerican");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Mexican")) {
-                    mySearch.setCategory("mexican");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Middle Eastern")) {
-                    mySearch.setCategory("mediterranean");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Modern European")) {
-                    mySearch.setCategory("modern_european");
-                } else if (categorySpinner.getSelectedItem().toString().equals("French")) {
-                    mySearch.setCategory("french");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Thai")) {
-                    mySearch.setCategory("thai");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Steakhouses")) {
-                    mySearch.setCategory("steak");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Asian Fusion")) {
-                    mySearch.setCategory("asianfusion");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Tapas Bars")) {
-                    mySearch.setCategory("tapas");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Latin American")) {
-                    mySearch.setCategory("latin");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Seafood")) {
-                    mySearch.setCategory("seafood");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Italian")) {
-                    mySearch.setCategory("italian");
-                } else if (categorySpinner.getSelectedItem().toString().equals("Greek")) {
-                    mySearch.setCategory("greek");
-                }
+                mySearch.setCategory(getPreferenceCategory(categorySpinner.getSelectedItemPosition()));
 
                 /* distance parameters */
-                if (distanceSpinner.getSelectedItem().toString().equals("Select Distance")) {
-                    mySearch.setRange(2000);
-                } else if (distanceSpinner.getSelectedItem().toString().equals("2 blocks")) {
-                    mySearch.setRange(161);
-                } else if (distanceSpinner.getSelectedItem().toString().equals("6 blocks")) {
-                    mySearch.setRange(483);
-                } else if (distanceSpinner.getSelectedItem().toString().equals("1 mile")) {
-                    mySearch.setRange(1609);
-                } else if (distanceSpinner.getSelectedItem().toString().equals("5 mile")) {
-                    mySearch.setRange(5 * 1609);
-                } else if (distanceSpinner.getSelectedItem().toString().equals("10 mile")) {
-                    mySearch.setRange(10000);
-                }
+                mySearch.setRange(getPreferenceDistance(distanceSpinner.getSelectedItemPosition()));
 
                 prefEditor.putInt("categorySpinner", categorySpinner.getSelectedItemPosition());
                 prefEditor.putInt("distanceSpinner", distanceSpinner.getSelectedItemPosition());
@@ -469,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             } else {
                 serviceAvailable = gpsProvider;
             }
-            locationManager.requestLocationUpdates(serviceAvailable, 3000, 0, this);
+            locationManager.requestLocationUpdates(serviceAvailable, 3000, 161, this);
             Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
             latitude = currentLocation.getLatitude();
             mySearch.setLatitude(latitude);
@@ -491,6 +447,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onLocationChanged(Location location) {
+        /*
+        if(locationIsEnable) {
+            getLocation();
+        }
+        */
     }
 
     @Override
@@ -513,4 +474,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    public String getPreferenceCategory(int index) {
+
+        String[] categoryList = {"restaurants", "japanese", "tradamerican", "chinese",
+                "indpak", "pizza", "newamerican", "mexican", "mediterranean", "modern_european",
+                "french", "thai", "steak", "asianfusion", "tapas", "latin", "seafood",
+                "italian", "greek"};
+
+        return categoryList[index];
+    }
+
+    public int getPreferenceDistance(int index) {
+        int[] distanceList = {2000, 161, 483, 1609, (5 * 1609), (10000 * 1609)};
+        return distanceList[index];
+    }
 }
