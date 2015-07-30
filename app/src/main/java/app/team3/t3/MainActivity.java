@@ -485,7 +485,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public int getPreferenceDistance(int index) {
-        int[] distanceList = {2000, 161, 483, 1609, (5 * 1609), (10000 * 1609)};
+        int[] distanceList = {2000, 161, 483, 1609, (5 * 1609), (10 * 1609)};
         return distanceList[index];
     }
 }
