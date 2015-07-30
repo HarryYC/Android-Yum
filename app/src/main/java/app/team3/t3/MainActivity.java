@@ -478,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public String getPreferenceCategory(int index) {
 
         String[] categoryList = {"restaurants", "japanese", "tradamerican", "chinese",
-                "indpak", "pizza", "newamerican", "mexican", "mediterranean", "mideastern,
+                "indpak", "pizza", "newamerican", "mexican", "mediterranean", "mideastern",
                 "modern_european", "french", "thai", "steak", "asianfusion", "tapas",
                 "latin", "seafood", "italian", "greek"};
 
