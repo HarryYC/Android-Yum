@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -37,6 +38,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.games.Notifications;
+
 import java.text.DecimalFormat;
 
 import app.team3.t3.yelp.RestaurantAdapter;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     int touchId, boomId;
 
     private ImageButton mShakeImageButton;
+    private myAutoCompleteTextView changeLocation;
     private SensorManager mSensorManager;
     private float mAccel;
     private float mAccelCurrent;
@@ -62,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean avoid_doubleShake = true; //use to avoid to get multiple searching results
     private double latitude;
     private double longitude;
+    private SharedPreferences firstRunprefs = null;
     private SharedPreferences.Editor prefEditor;
     private SharedPreferences sharedPref;
-
-    SharedPreferences firstRunprefs = null;
+    private int execption_id = 0;
 
     final SensorEventListener mSensorListener = new SensorEventListener() {
 
@@ -80,8 +84,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 21 && avoid_doubleShake == true) {
-                getResultPage();
                 avoid_doubleShake = false;
+                if (validateResult()) {
+                    getResultPage();
+                }
                 mySound.play(boomId, 1, 1, 1, 0, 1);
             }
             mAccelLast = mAccelCurrent;
@@ -106,13 +112,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         prefEditor = sharedPref.edit();
 
         firstRunprefs = getSharedPreferences("app.team3.t3", MODE_PRIVATE);
-
-        String gpsProvider = LocationManager.GPS_PROVIDER;
-        String networkProvider = LocationManager.NETWORK_PROVIDER;
-        String serviceAvailable;
+        firstRunprefs.edit().putBoolean("firstrun", true).commit();
 
         if (getIntent().getBooleanExtra("is_started", false)) {
-            firstRunprefs.edit().putBoolean("goto_setting", false).commit();
+            firstRunprefs.edit().putBoolean("goto_setting", true).commit();
             Intent locationSetting = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(locationSetting);
         }
@@ -142,14 +145,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mShakeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mySound.play(boomId, 1, 1, 1, 0, 1);
+                //mySound.play(boomId, 1, 1, 1, 0, 1);
                 mySound.play(touchId, 1, 1, 1, 1, 1f);
-                getResultPage();
+                if (validateResult()) {
+                    getResultPage();
+                }
             }
         });
 
 
-        final myAutoCompleteTextView changeLocation = (myAutoCompleteTextView) findViewById(R.id.set_location_textView);
+        changeLocation = (myAutoCompleteTextView) findViewById(R.id.set_location_textView);
         final InputMethodManager inputMethodManager = (InputMethodManager) changeLocation.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (!getIntent().getBooleanExtra("location_service", true)) {
@@ -176,10 +181,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         changeLocation.selectAll();
                         clearTextButton.setVisibility(View.VISIBLE);
                     }
-                    inputMethodManager.showSoftInput(changeLocation, InputMethodManager.SHOW_IMPLICIT);
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 } else {
                     mShakeImageButton.requestFocus();
-                    inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
+                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     clearTextButton.setVisibility(View.INVISIBLE);
                 }
             }
@@ -222,27 +227,34 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         mySearch.setLocation(null);
                         getLocation();
                     }
+
                     try {
                         restaurant = mySearch.filteredSearch();
+                        Toast.makeText(getApplicationContext(),
+                                "Results Updated. Read to Shake",
+                                Toast.LENGTH_LONG).show();
+
+                        mShakeImageButton.requestFocus();
+                        return true;
                     } catch (RestaurantSearchException rse) {
                         rse.printStackTrace();
                         Log.e("restaurantFinder", rse.toString());
-                    }
-                    Toast.makeText(getApplicationContext(),
-                            "Results Updated. Read to Shake",
-                            Toast.LENGTH_LONG).show();
+                        AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
+                        mAlert.setTitle("Invalid City");
+                        mAlert.setMessage("Please enter city again.");
+                        mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                    inputMethodManager.hideSoftInputFromWindow(changeLocation.getWindowToken(), 0);
-                    mShakeImageButton.requestFocus();
-                    return true;
+                            }
+                        });
+                        mAlert.create().show();
+                    }
                 }
 
                 return false;
             }
         });
-        if (firstRunprefs.getBoolean("goto_setting", true)) {
-            getLocation();
-        }
     } //end onCreate
 
     @Override
@@ -257,6 +269,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onPause() {
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
+        if (firstRunprefs.getBoolean("goto_setting", true)) {
+            firstRunprefs.edit().putBoolean("goto_setting", false).commit();
+        }
     }
 
     /**
@@ -271,36 +286,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-
-        findViewById(R.id.shake_ImageButton).requestFocus();
-        if (firstRunprefs.getBoolean("goto_setting", true)) {
-            Log.e("###onResume", "goto_setting, true");
+        if (!firstRunprefs.getBoolean("goto_setting", false)) {
             if (firstRunprefs.getBoolean("firstrun", true)) {
+                Log.e("###onResume", "first time run");
                 // Do first run stuff here then set 'firstrun' as false
                 // using the following line to edit/commit prefs
                 if (!locationIsEnable) {
-                    findViewById(R.id.set_location_textView).requestFocus();
+                    changeLocation.requestFocus();
                 } else {
+                    mShakeImageButton.requestFocus();
                     getLocation();
                 }
                 firstRunprefs.edit().putBoolean("firstrun", false).commit();
             } else {
                 // pick restaurant from the previous search 20 results
                 // if no user preferences change
-                if (locationIsEnable) {
-                    try {
-                        restaurant = mySearch.getFromPreviousSearch();
-                    } catch (RestaurantSearchException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    findViewById(R.id.set_location_textView).requestFocus();
+                mShakeImageButton.requestFocus();
+                try {
+                    restaurant = mySearch.getFromPreviousSearch();
+                } catch (RestaurantSearchException e) {
+                    Toast.makeText(getApplicationContext(),
+                            e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 }
-
             }
-        } else {
-            firstRunprefs.edit().putBoolean("firstrun", true).commit();
-            firstRunprefs.edit().putBoolean("goto_setting", true).commit();
         }
 
         avoid_doubleShake = true;
@@ -383,19 +392,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
 
-
                 /* category parameters */
                 mySearch.setCategory(getPreferenceCategory(categorySpinner.getSelectedItemPosition()));
 
                 /* distance parameters */
                 mySearch.setRange(getPreferenceDistance(distanceSpinner.getSelectedItemPosition()));
 
-                prefEditor.putInt("categorySpinner", categorySpinner.getSelectedItemPosition());
-                prefEditor.putInt("distanceSpinner", distanceSpinner.getSelectedItemPosition());
-                prefEditor.commit();
-
-
                 try {
+                    prefEditor.putInt("categorySpinner", categorySpinner.getSelectedItemPosition());
+                    prefEditor.putInt("distanceSpinner", distanceSpinner.getSelectedItemPosition());
+                    prefEditor.commit();
                     restaurant = mySearch.filteredSearch();
                     mPopupWindow.dismiss();
                     Toast.makeText(getApplicationContext(),
@@ -446,8 +452,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             try {
                 restaurant = mySearch.filteredSearch();
             } catch (RestaurantSearchException rse) {
+                AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
+                final int distanceValue = sharedPref.getInt("distanceSpinner", -1);
+                if (distanceValue == 0 && distanceValue > 2) {
+                    execption_id = 1;
+                    validateResult();
+                } else {
+                    execption_id = 2;
+                    validateResult();
+                }
                 rse.printStackTrace();
                 Log.e("restaurantFinder", rse.toString());
+                mAlert.create().show();
             }
         } else {
             Log.e("####Location Err", "No location provider is not available. Does the device have location services enabled?");
@@ -496,5 +512,68 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public int getPreferenceDistance(int index) {
         int[] distanceList = {2000, 161, 483, 1609, (5 * 1609), (10 * 1609)};
         return distanceList[index];
+    }
+
+    public boolean validateResult() {
+
+        String exceptionText = "";
+        String exceptionTitle = "";
+        AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
+
+        switch (execption_id) {
+            case 1:
+                exceptionTitle = "Invalid Location Provider";
+                exceptionText = "No location provider is not available." +
+                        " Does the device have location services enabled?";
+                mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                break;
+            case 2:
+                exceptionTitle = "Invalid Preference";
+                exceptionText = "There is no restaurant matches for selected preferences."
+                        + " Please change your preferences.";
+                mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onFilterClick(findViewById(R.id.filter_button).getRootView());
+                    }
+                });
+                break;
+            case 3:
+                exceptionTitle = "Invalid City";
+                exceptionText = "Please enter the city again";
+                mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        changeLocation.requestFocus();
+                    }
+                });
+                break;
+            default:
+                if (!locationIsEnable && mySearch.getLocation() == null) {
+                    exceptionTitle = "Invalid City";
+                    exceptionText = "Please enter the city again";
+                    mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            changeLocation.requestFocus();
+                        }
+                    });
+
+                } else {
+                    return true;
+                }
+                break;
+        }
+
+        mAlert.setTitle(exceptionTitle);
+        mAlert.setMessage(exceptionText);
+        mAlert.create().show();
+        execption_id = 0;
+        return false;
     }
 }
