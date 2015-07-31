@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="yum_red">#FF4719</color>
+    <color name="yum_red">#A3281F</color>
     <color name="white">#FFFFFF</color>
-    <color name="red">#EE0000</color>
+    <color name="grey">#535151</color>
+    <color name="red">#A3281F</color>
 </resources>

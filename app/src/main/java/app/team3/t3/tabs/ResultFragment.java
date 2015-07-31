@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 import app.team3.t3.ImageDownloader;
 import app.team3.t3.R;
 import app.team3.t3.ResDatabaseHelper;
-import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantAdapter;
 
 // import twitter library
 
@@ -30,9 +31,10 @@ import app.team3.t3.yelp.Restaurant;
 public class ResultFragment extends Fragment {
 
     private static final String TAG = "result_fragment";
-    private Restaurant restaurant;
+    private RestaurantAdapter restaurant;
     private int width;
     private int height;
+    private float distance;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class ResultFragment extends Fragment {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         restaurant = intent.getParcelable("restaurant_picked");
+        distance = intent.getFloat("distance", 0.0f);
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
     }
@@ -62,7 +65,6 @@ public class ResultFragment extends Fragment {
         final Button tryAgainBtn = (Button) view.findViewById(R.id.tryAgainIBtn);
         final Button goBtn = (Button) view.findViewById(R.id.goBtn);
 
-
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,15 +83,20 @@ public class ResultFragment extends Fragment {
         });
 
         if (restaurant != null) {
+
             try {
                 ImageDownloader businessID = new ImageDownloader(businessIV, width, height * 2 / 6);
-                businessID.execute(restaurant.getRestaurantImgURL());
+                businessID.execute(restaurant.getRestaurantImgUrl());
                 ImageDownloader ratingID = new ImageDownloader(ratingIV);
-                ratingID.execute(restaurant.getRatingImgURL());
-                nameTV.setText(restaurant.getName());
+                ratingID.execute(restaurant.getRatingImgUrl());
+                if (distance > 0) {
+                    nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName() + "</font></b><br>(" + String.valueOf(distance) + " miles)"));
+                } else {
+                    nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName() + "</font></b>"));
+                }
                 countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
-                moreInfoTV.setText("Phone: " + restaurant.getPhone() +
-                        "\n\nAddress: " + restaurant.getAddress());
+                moreInfoTV.setText(Html.fromHtml("<b>Phone:</b> " + restaurant.getPhoneNumber() +
+                        "<br><br><b>Address:</b> " + restaurant.getAddress()));
                 while (businessID.get() != true && ratingID.get() != true) ;
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -101,10 +108,9 @@ public class ResultFragment extends Fragment {
         }
 
         view.findViewById(R.id.restaurantInfo).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.buttonContainer).setVisibility(View.VISIBLE);
         resultProgressBar.setVisibility(View.GONE);
 
-        Log.v("res_name", restaurant.getName());
+        Log.v("res_name", restaurant.getRestaurantName());
 
         return view;
 

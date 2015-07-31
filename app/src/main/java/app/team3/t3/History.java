@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -68,17 +67,17 @@ public class History extends Activity {
                 /* split strings twice, to get the BusinessID */
                 String temp = String.valueOf(parent.getItemAtPosition(position));
 //                System.out.println(temp);
-                String[] separatedOne = temp.split("BusinessID");
+                String[] separatedOne = temp.split("RestaurantID");
 //                System.out.println(separatedOne[1]);
                 String[] separatedTwo = separatedOne[1].split(",");
 //                System.out.println(separatedTwo[0].replace("=",""));
 
-
-                Intent getRestaurantDetail = new Intent(History.this, ActionBarTabsPager.class);
-                finish();
-                getRestaurantDetail.putExtra("restaurant_picked", db.getRestaurant(separatedTwo[0].replace("=", "").trim()));
+                Intent getRestaurantDetail = new Intent(History.this, ActionBarTabsPagerActivity.class);
+                getRestaurantDetail.putExtra("restaurant_picked",
+                        db.getRestaurant(separatedTwo[0].replace("=", "").replace("}", "").replace("{", "").trim()));
                 getRestaurantDetail.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(getRestaurantDetail);
+                finish();
             }
         };
         restaurantListView.setOnItemClickListener(listener);

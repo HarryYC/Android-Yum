@@ -76,6 +76,7 @@ public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
     }
 
     protected void onPostExecute(Boolean result) {
+
         this.imageView.setImageBitmap(bitmap);
     }
 }

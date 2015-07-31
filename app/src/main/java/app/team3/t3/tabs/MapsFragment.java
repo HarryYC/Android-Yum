@@ -18,13 +18,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import app.team3.t3.MainActivity;
 import app.team3.t3.R;
 import app.team3.t3.ResDatabaseHelper;
-import app.team3.t3.yelp.Restaurant;
+import app.team3.t3.yelp.RestaurantAdapter;
 
 /**
- * Created by nanden on 7/5/15.
+ * Use Google Map API to display location of the picked restaurant
  */
 public class MapsFragment extends Fragment {
 
@@ -34,16 +33,16 @@ public class MapsFragment extends Fragment {
     private MapView mMapView;
     private GoogleMap mGoogleMap;
 
-    private Restaurant mRestaurant;
+    private RestaurantAdapter mRestaurant;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        final View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mGoButton = (Button) view.findViewById(R.id.map_go_bt);
-        mTryAgainButton = (Button)view.findViewById(R.id.map_try_again_bt);
+        mTryAgainButton = (Button) view.findViewById(R.id.map_try_again_bt);
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
@@ -70,14 +69,12 @@ public class MapsFragment extends Fragment {
         mTryAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), MainActivity.class);
-                startActivity(intent);
+                getActivity().finish();
             }
         });
 
         MarkerOptions markerOptions = new MarkerOptions().position(
-                new LatLng(mRestaurant.getLatitude(), mRestaurant.getLongitude())).title(mRestaurant.getName());
+                new LatLng(mRestaurant.getLatitude(), mRestaurant.getLongitude())).title(mRestaurant.getRestaurantName());
 
         markerOptions.icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));

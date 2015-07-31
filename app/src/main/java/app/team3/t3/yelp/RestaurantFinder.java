@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
 import app.team3.t3.R;
 
 /**
@@ -19,6 +21,9 @@ import app.team3.t3.R;
  * See <a href="http://www.yelp.com/developers/documentation">Yelp Documentation</a> for more info.
  */
 public class RestaurantFinder {
+    //Log
+    private static final String LOG_TAG = RestaurantFinder.class.getSimpleName();
+
     private static final int MAX_RESTAURANT = 20;
     private static final String DEFAULT_TERM = "restaurants";
     private static final String DEFAULT_LOCATION = null;
@@ -26,7 +31,7 @@ public class RestaurantFinder {
     private static final int DEFAULT_SORT = 1;
     private static final String DEFAULT_CATEGORY = "restaurants";
     private static final String DEFAULT_COORDINATE = null;
-    private static final String TAG = "yelp_interface";
+//    private static final String TAG = "yelp_interface";
     /**
      * big six params *
      */
@@ -34,7 +39,7 @@ public class RestaurantFinder {
     private static String searchResponseJSON;
     boolean addressFlag = false;
     private YelpAPI yelpApi = null;
-    private Restaurant[] restaurant;
+    private RestaurantAdapter[] restaurant;
     private String term;
     private String location;
     private String category;
@@ -79,99 +84,114 @@ public class RestaurantFinder {
                                  int range, String coordinate) {
         searchResponseJSON =
                 yelpApi.searchForBusiness(term, location, category, sort, range, coordinate);
-//        Log.v(TAG, searchResponseJSON);
-        Log.e("####Yelp", searchResponseJSON);
+        Log.e(LOG_TAG, "####Yelp "+ searchResponseJSON);
     }
 
     /**
      * Queries the Search API based on the search terms and store the result to be process
+     *
      * @param allRestaurantJSON <tt>String</tt> for json from Yelp API
      * @return restaurant <tt>Restaurant[]</tt> for deserialized restautrant java object
      */
-    public Restaurant[] toRestaurant(String allRestaurantJSON) {
+    public RestaurantAdapter toRestaurant(String allRestaurantJSON) throws RestaurantSearchException {
+        String restaurantId = "";
+        String restaurantName = "";
+        float restaurantRating = 0.0f;
+        int restaurantReviewCount = 0;
+        String restaurantPhone = "";
+        String restaurantCategory = "";
+        String restaurantAddress = "";
+        String restaurantYelpUrl = "";
+        String restaurantImgUrl = "";
+        String restaurantRatingImgUrl = "";
+        Double restaurantLatitude = 0.0;
+        Double restaurantLongitude = 0.0;
+        int currentRandom = 0;
+        Random random = new Random();
+
+
         try {
             JSONObject response = new JSONObject(allRestaurantJSON);
             int totalResults = Integer.parseInt(response.getString("total"));
-            if (totalResults < MAX_RESTAURANT) {
-                restaurant = new Restaurant[totalResults];
-            } else {
-                restaurant = new Restaurant[MAX_RESTAURANT];
+            if (totalResults < 1) {
+                throw new RestaurantSearchException("No restaurant found");
             }
-
+            if (totalResults > MAX_RESTAURANT) {
+                totalResults = MAX_RESTAURANT;
+            }
+            currentRandom = Math.abs(random.nextInt()) % totalResults;
 
             JSONArray businesses = response.getJSONArray("businesses");
-            for (int index = 0; index < restaurant.length; index++) {
-                restaurant[index] = new Restaurant();
+            JSONObject businessData = businesses.getJSONObject(currentRandom);
 
-                JSONObject businessData = businesses.getJSONObject(index);
-                restaurant[index].setRestaurantID(businessData.getString("id"));
-                restaurant[index].setName(businessData.getString("name"));
-                restaurant[index].setRating(Float.parseFloat(businessData.getString("rating")));
-                restaurant[index].setReviewCount(Integer.parseInt(businessData.getString("review_count")));
+            restaurantId = businessData.getString("id");
+            restaurantName = businessData.getString("name");
+            restaurantRating = Float.parseFloat(businessData.getString("rating"));
+            restaurantReviewCount = Integer.parseInt(businessData.getString("review_count"));
 
-                if(businessData.has("display_phone")) {
-                    restaurant[index].setPhone(businessData.getString("display_phone"));
-                } else {
-                    restaurant[index].setPhone("none");
-                }
+            if (businessData.has("display_phone")) {
+                restaurantPhone = businessData.getString("display_phone");
+            } else {
+                restaurantPhone = "none";
+            }
 
-                JSONArray category = businessData.getJSONArray("categories");
-                String categoryString = "";
-                for (int i = 0; i < category.length(); i++) {
-                    JSONArray categoryItems = category.getJSONArray(i);
-                    for (int j = 0; j < categoryItems.length(); j++) {
-                        categoryString += categoryItems.getString(j);
-                        if (i < categoryItems.length() - 1) {
-                            categoryString += ", ";
-                        }
-                    }
-                    if (i < category.length() - 1) {
+            JSONArray category = businessData.getJSONArray("categories");
+            String categoryString = "";
+            for (int i = 0; i < category.length(); i++) {
+                JSONArray categoryItems = category.getJSONArray(i);
+                for (int j = 0; j < categoryItems.length(); j++) {
+                    categoryString += categoryItems.getString(j);
+                    if (i < categoryItems.length() - 1) {
                         categoryString += ", ";
                     }
                 }
-                restaurant[index].setCategories(categoryString);
-
-                restaurant[index].setRestaurantPage(businessData.getString("mobile_url"));
-
-                restaurant[index].setRestaurantImgURL(businessData.getString("image_url")
-                        .replace("ms.jpg", "o.jpg"));
-
-                restaurant[index].setRatingImgURL(businessData.getString("rating_img_url_large"));
-
-                JSONObject location = businessData.getJSONObject("location");
-                JSONArray address = location.getJSONArray("display_address");
-                String businessAddress = "";
-                for (int i = 0; i < address.length(); i++) {
-                    businessAddress += address.get(i).toString();
-                    if (i < address.length() - 1) {
-                        businessAddress += ", ";
-                    }
+                if (i < category.length() - 1) {
+                    categoryString += ", ";
                 }
-                restaurant[index].setAddress(businessAddress);
-
-                JSONObject coordinate = location.getJSONObject("coordinate");
-
-                restaurant[index].setLatitude(Double.parseDouble(coordinate.getString("latitude")));
-                restaurant[index].setLongitude(Double.parseDouble(coordinate.getString("longitude")));
             }
+            restaurantCategory = categoryString;
+
+            restaurantYelpUrl = businessData.getString("mobile_url");
+
+            restaurantImgUrl = businessData.getString("image_url")
+                    .replace("ms.jpg", "o.jpg");
+
+            restaurantRatingImgUrl = businessData.getString("rating_img_url_large");
+
+            JSONObject location = businessData.getJSONObject("location");
+            JSONArray address = location.getJSONArray("display_address");
+            String businessAddress = "";
+            for (int i = 0; i < address.length(); i++) {
+                businessAddress += address.get(i).toString();
+                if (i < address.length() - 1) {
+                    businessAddress += ", ";
+                }
+            }
+            restaurantAddress = businessAddress;
+
+            JSONObject coordinate = location.getJSONObject("coordinate");
+
+            restaurantLatitude = Double.parseDouble(coordinate.getString("latitude"));
+            restaurantLongitude = Double.parseDouble(coordinate.getString("longitude"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return restaurant;
+        return new RestaurantAdapter(restaurantId, restaurantName, restaurantRating, restaurantReviewCount, restaurantPhone,
+                restaurantCategory, restaurantAddress, restaurantLatitude, restaurantLongitude, restaurantYelpUrl,
+                restaurantRatingImgUrl, restaurantImgUrl);
     }
 
     /**
-     *
-     * @param term <tt>String</tt> for search term input
-     * @param location <tt>String</tt> for addresss of center of search input
-     * @param category <tt>String</tt> for restaurant categories input
-     * @param range <tt>int</tt> for radius of search input
-     * @param sort <tt>int</tt> for sort mode input
-     * @param latitude <tt>float</tt> for latitude input
+     * @param term      <tt>String</tt> for search term input
+     * @param location  <tt>String</tt> for addresss of center of search input
+     * @param category  <tt>String</tt> for restaurant categories input
+     * @param range     <tt>int</tt> for radius of search input
+     * @param sort      <tt>int</tt> for sort mode input
+     * @param latitude  <tt>float</tt> for latitude input
      * @param longitude <tt>float</tt> for lontitude input
-     * @return <tt>Restaurant</tt> array of restaurant data
+     * @return <tt>Restaurant</tt> one random restaurant data
      */
-    public Restaurant[] filteredSearch(String term, String location, String category, int range, int sort, Double latitude, Double longitude) {
+    public RestaurantAdapter filteredSearch(String term, String location, String category, int range, int sort, Double latitude, Double longitude) throws RestaurantSearchException {
 
         String qterm = DEFAULT_TERM;
         String qlocation = DEFAULT_LOCATION;
@@ -192,8 +212,8 @@ public class RestaurantFinder {
         if (category != null) {
             qcategory = "restaurants," + category;
         }
-        if (range > 1 && range <= 25) {
-            qrange = range * 1609;
+        if (range > 1 && range <= 40000) {
+            qrange = range;
         }
         if (sort >= 0 && sort < 3) {
             qsort = sort;
@@ -204,35 +224,50 @@ public class RestaurantFinder {
             }
         }
         if (location == null && qcoordinate == null) {
-            Log.e(TAG, "Sorry, there is no location parameter for query");
-            return null;
+            throw new RestaurantSearchException("Unspecified location");
         } else {
             queryAPI(yelpApi, qterm, qlocation, qcategory, qsort, qrange, qcoordinate);
             return toRestaurant(searchResponseJSON);
         }
     }
 
-    public Restaurant[] filteredSearch() {
+    /**
+     *
+     * @return Restaurant
+     * @throws RestaurantSearchException
+     */
+    public RestaurantAdapter filteredSearch() throws RestaurantSearchException {
+        Log.d(LOG_TAG, "filteredSearch called.");
         String coordinate = null;
+        // for when you get current location = user did not type location
         if (latitude != 0.0 && longitude != 0.0) {
+            Log.d(LOG_TAG, "latitude: " + latitude + " longitude: " + longitude);
             if (!addressFlag) {
                 coordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
             }
         }
         if (location == null && coordinate == null) {
-            Log.e(TAG, "Sorry, there is no location parameter for query");
-            return null;
+            throw new RestaurantSearchException("Unspecified location");
         } else {
-            Log.e("####Term:", getTerm());
+            Log.e(LOG_TAG, "####Term: " + getTerm());   // restaurant -> default value
+            Log.e(LOG_TAG, "####Location: " + getLocation());
 //            if (addressFlag) {Log.e("####Location:",getLocation());}
-            Log.e("####Category:", getCategory());
-            Log.e("####Sort:", String.valueOf(SORT));
-            Log.e("####Range", String.valueOf(range));
-//            Log.e("####coor:", coordinate);
-//            queryAPI(yelpApi, "restaurants", "San Francisco,CA", "restaurants", 1, 2000, null);
+            Log.e(LOG_TAG, "####Category: " + getCategory());   //restaurant -> default value
+            Log.e(LOG_TAG, "####Sort: " + String.valueOf(SORT));    // 0 -> default value
+            Log.e(LOG_TAG, "####Range " + String.valueOf(range));   // 2000 -> default value
+            Log.e(LOG_TAG, "####coor:" + coordinate);
+            // queryAPI(yelpApi, "restaurants", "San Francisco,CA", "restaurants", 1, 2000, null);
+            // making api request to yelp
             queryAPI(yelpApi, term, location, category, SORT, range, coordinate);
+
             return toRestaurant(searchResponseJSON);
         }
+    }
+
+    public RestaurantAdapter getFromPreviousSearch() throws RestaurantSearchException {
+        RestaurantAdapter randomRestaurant = null;
+        randomRestaurant = toRestaurant(searchResponseJSON);
+        return randomRestaurant;
     }
 
     public void useAddress(boolean addressFlag) {

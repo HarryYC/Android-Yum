@@ -77,4 +77,4 @@ proguard/
 # Log Files
 *.log
 
-
+src/debug/res/values/google_maps_api.xml

@@ -19,6 +19,7 @@ public class Restaurant implements Parcelable {
             return new Restaurant[size];
         }
     };
+
     private String restaurantID;
     private String name;
     private float rating;
@@ -66,7 +67,9 @@ public class Restaurant implements Parcelable {
 
 
     // Parameterized Constructor
-    public Restaurant(String restaurantID, String name, float rating, int reviewCount, String phone, String categories, String Address, double latitude, double longitude, String restaurantPage, String ratingImgURL, String restaurantImgURL) {
+    public Restaurant(String restaurantID, String name, float rating, int reviewCount, String phone,
+                      String categories, String Address, double latitude, double longitude, String restaurantPage,
+                      String ratingImgURL, String restaurantImgURL) {
         this.restaurantID = restaurantID;
         this.name = name;
         this.rating = rating;

@@ -2,35 +2,44 @@ package app.team3.t3;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.os.AsyncTask;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.util.Log;
 
 /**
  * Created by jdoan on 6/30/2015.
  * Splash screen to appear on app start up
  */
 public class SplashScreen extends Activity {
+    // Log
+    private static final String TAG = SplashScreen.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
 
-        // Get Location Manager and check for GPS & Network location services
-        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
-                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            setContentView(R.layout.activity_splash);
-            showLocationPrompt();
-        }else{
-            new LoadViewTask().execute();
+        AppUtiles appUtiles = new AppUtiles();
+        // check internet connection
+        if(!appUtiles.isNetworkConnected(this)) {
+            Log.d(TAG, "No internet");
+            appUtiles.showAlertDialog(this, R.string.title_error, R.string.message_no_internet);
+        } else {
+            // Get Location Manager and check for GPS & Network location services
+            LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                    !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                setContentView(R.layout.activity_splash);
+                showLocationPrompt();
+            }else{
+                new LoadViewTask().execute();
+            }
         }
+
     }
 
     private void showLocationPrompt() {
@@ -49,6 +58,7 @@ public class SplashScreen extends Activity {
         builder.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent cont = new Intent("app.team3.t3.MAINACTIVITY");
+                cont.putExtra("location_service", false);
                 startActivity(cont);
             }
 

@@ -63,14 +63,14 @@ public class NavigationDrawerFragment extends Fragment {
                 switch (position) {
                     case 0: {
                         // Home
-                        intent.setClass(getActivity(), MainActivity.class);
-                        startActivity(intent);
+                        getActivity().finish();
                         break;
                     }
                     case 1: {
                         // History
                         intent.setClass(getActivity(), History.class);
                         startActivity(intent);
+                        mDrawerLayout.closeDrawers();
                         break;
                     }
                 }
