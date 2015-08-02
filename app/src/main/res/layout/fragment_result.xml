@@ -74,7 +74,7 @@
                     android:labelFor="@id/ratingIV"
                     android:padding="10dip"
                     android:text="Rating Count"
-                    android:textColor="#ffffff" />
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/moreInfoTV"
@@ -84,7 +84,8 @@
                     android:layout_centerHorizontal="true"
                     android:paddingEnd="30dip"
                     android:paddingStart="30dip"
-                    android:textColor="#ffffff" />
+                    android:textColor="@color/white"
+                    android:autoLink="phone|map"/>
 
                 <ProgressBar
                     android:id="@+id/resultProgressBar"
