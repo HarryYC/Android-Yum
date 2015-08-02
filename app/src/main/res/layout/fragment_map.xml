@@ -18,7 +18,7 @@
 
         <Button
             android:id="@+id/map_try_again_bt"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_margin="8dp"
@@ -35,7 +35,7 @@
 
         <Button
             android:id="@+id/map_go_bt"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_margin="8dp"

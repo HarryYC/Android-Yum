@@ -85,7 +85,8 @@
                     android:paddingEnd="30dip"
                     android:paddingStart="30dip"
                     android:textColor="@color/white"
-                    android:autoLink="phone|map"/>
+                    android:autoLink="phone|map"
+                    android:textColorLink="@color/grey" />
 
                 <ProgressBar
                     android:id="@+id/resultProgressBar"
@@ -111,7 +112,7 @@
 
         <Button
             android:id="@+id/tryAgainIBtn"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_margin="8dp"
@@ -129,7 +130,7 @@
 
         <Button
             android:id="@+id/goBtn"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_margin="8dp"
