@@ -8,6 +8,11 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
+    <include
+        android:id="@+id/tool_bar_main"
+        layout="@layout/tool_bar_main"
+        />
+
     <RelativeLayout
         android:id="@+id/a1"
         android:layout_weight="1"
@@ -32,32 +37,12 @@
             android:scaleType="center"
             android:src="@mipmap/egg" />
 
-        <Button
-            android:id="@+id/filter_button"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/white_border_button"
-            android:drawableLeft="@mipmap/ic_filter_list_white_36dp"
-            android:drawablePadding="15dp"
-            android:elegantTextHeight="false"
-            android:onClick="onFilterClick"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:singleLine="false"
-            android:text=" Filter    "
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-
             <app.team3.t3.myAutoCompleteTextView
                 android:id="@+id/set_location_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/textView2"
-                android:layout_alignEnd="@+id/filter_button"
+                android:layout_alignEnd="@+id/shake_ImageButton"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_toEndOf="@+id/addressLabel"
@@ -119,7 +104,6 @@
             android:textColor="#d2d5b4ae"
             android:layout_alignParentLeft="false"
             android:layout_alignParentRight="false" />
-
 
     </RelativeLayout>
 </LinearLayout>

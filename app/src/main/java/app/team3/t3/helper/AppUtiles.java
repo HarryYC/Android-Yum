@@ -1,18 +1,22 @@
-package app.team3.t3;
+package app.team3.t3.helper;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
+
+import app.team3.t3.R;
 
 /**
  * Helper class
  */
 public class AppUtiles {
 
-    public static boolean isNetworkConnected(Context contex) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) contex.getSystemService(Context.CONNECTIVITY_SERVICE);
+    // check internet
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if(networkInfo == null) {
             return false;
@@ -32,10 +36,16 @@ public class AppUtiles {
                                 System.runFinalization();
                                 System.exit(0);
                             }
+                            default:
+                                break;
                         }
                     }
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    public static void showToast(Context context, String message) {
+        Toast.makeText(context, message,Toast.LENGTH_LONG).show();
     }
 }
