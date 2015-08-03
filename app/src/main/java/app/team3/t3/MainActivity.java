@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SharedPreferences.Editor prefEditor;
     private SharedPreferences sharedPref;
     private int execption_id = 0;
-    private String exceptionString = "";
+    private Toolbar mToolbar;
 
     final SensorEventListener mSensorListener = new SensorEventListener() {
 
@@ -103,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mToolbar = (Toolbar)findViewById(R.id.tool_bar_main);
+        setSupportActionBar(mToolbar);
+
         locationIsEnable = getIntent().getBooleanExtra("location_service", true);
         final Button clearTextButton = (Button) findViewById(R.id.cleartext_button);
         clearTextButton.setVisibility(View.INVISIBLE);

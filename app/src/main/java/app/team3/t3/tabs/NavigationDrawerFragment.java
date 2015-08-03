@@ -17,11 +17,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import app.team3.t3.History;
-import app.team3.t3.MainActivity;
 import app.team3.t3.R;
 
 /**
- * Created by nanden on 7/5/15.
+ * Burger menu
  */
 public class NavigationDrawerFragment extends Fragment {
 
@@ -96,7 +95,6 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-
                 getActivity().invalidateOptionsMenu();
             }
 
