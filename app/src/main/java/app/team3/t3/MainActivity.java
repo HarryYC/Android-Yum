@@ -84,22 +84,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         @Override
         public void onSensorChanged(SensorEvent event) {
 
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
-            mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
-            float delta = mAccelCurrent - mAccelLast;
-            mAccel = mAccel * 0.9f + delta;
-            if (mAccel > 21 && avoid_doubleShake) {
-                avoid_doubleShake = false;
-                if (validateResult()) {
-                    getResultPage();
+            if (!firstRunprefs.getBoolean("transparencia",true)) {
+
+                float x = event.values[0];
+                float y = event.values[1];
+                float z = event.values[2];
+                mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
+                float delta = mAccelCurrent - mAccelLast;
+                mAccel = mAccel * 0.9f + delta;
+                if (mAccel > 21 && avoid_doubleShake) {
+                    avoid_doubleShake = false;
+                    if (validateResult()) {
+                        getResultPage();
+                    }
+                    if (soundIsEnabled) {
+                        mySound.play(boomId, 1, 1, 1, 0, 1);
+                    }
                 }
-                if (soundIsEnabled) {
-                    mySound.play(boomId, 1, 1, 1, 0, 1);
-                }
+                mAccelLast = mAccelCurrent;
             }
-            mAccelLast = mAccelCurrent;
         }
 
         @Override
