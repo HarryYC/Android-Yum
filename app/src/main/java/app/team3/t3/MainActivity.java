@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar)findViewById(R.id.tool_bar_main);
@@ -116,6 +118,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         firstRunprefs = getSharedPreferences("app.team3.t3", MODE_PRIVATE);
         firstRunprefs.edit().putBoolean("firstrun", true).commit();
+
+        if(firstRunprefs.getBoolean("transparencia" , true)) {
+            //if (firstRunprefs.getBoolean("first_time", true)) {
+            // Do first run stuff here then set 'firstrun' as false
+            // using the following line to edit/commit prefs
+            new Transparencia(this);
+            //}
+        }
 
         if (getIntent().getBooleanExtra("is_started", false)) {
             firstRunprefs.edit().putBoolean("goto_setting", true).commit();
@@ -376,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (categoryValue != -1)
             categorySpinner.setSelection(categoryValue);
         final int distanceValue = sharedPref.getInt("distanceSpinner", -1);
-        Log.e(TAG, "####DisValue: "+String.valueOf(distanceValue));
+        Log.e(TAG, "####DisValue: " + String.valueOf(distanceValue));
         if (distanceValue != -1)
             distanceSpinner.setSelection(distanceValue);
 
