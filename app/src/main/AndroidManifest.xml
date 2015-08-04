@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <user-permission android:name="app.team3.t3.permission.MAPS_RECEIVE" />
 
     <!--
@@ -62,6 +63,10 @@
             android:name="io.fabric.ApiKey"
             android:value="6a62d03fe6a35859deb90ff9210fc9e80d3f5102" />
 
+        <activity
+            android:name=".SettingActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_setting"></activity>
     </application>
 
 </manifest>

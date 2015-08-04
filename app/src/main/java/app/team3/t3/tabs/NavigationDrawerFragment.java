@@ -19,6 +19,7 @@ import android.widget.ListView;
 import app.team3.t3.History;
 import app.team3.t3.MainActivity;
 import app.team3.t3.R;
+import app.team3.t3.SettingActivity;
 
 /**
  * Burger menu
@@ -48,7 +49,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserLearnedDrawer = Boolean.valueOf(readFromPreferecences(getActivity(), KEY_USER_LEARNED_DRAWER, "false"));
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mFromSaveInstanceStates = true;
         }
 
@@ -57,7 +58,7 @@ public class NavigationDrawerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mDrawerListView = (ListView)inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        mDrawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -68,7 +69,7 @@ public class NavigationDrawerFragment extends Fragment {
 
                         // check if current class is MainActivity or not. If current class is MainActivity,
                         // simply close the burger menu else, go to MainActivity(Home screen)
-                        if(getActivity().getLocalClassName().equals(MainActivity.class.getSimpleName())) {
+                        if (getActivity().getLocalClassName().equals(MainActivity.class.getSimpleName())) {
                             mDrawerLayout.closeDrawers();
                         } else {
                             getActivity().finish();
@@ -82,6 +83,12 @@ public class NavigationDrawerFragment extends Fragment {
                         mDrawerLayout.closeDrawers();
                         break;
                     }
+                    default: {
+                        intent.setClass(getActivity(), SettingActivity.class);
+                        startActivity(intent);
+                        mDrawerLayout.closeDrawers();
+                        break;
+                    }
                 }
 
             }
@@ -91,7 +98,8 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 new String[]{
                         "Home",
-                        "History"
+                        "History",
+                        "Settings"
                 }));
         return mDrawerListView;
     }
@@ -100,7 +108,7 @@ public class NavigationDrawerFragment extends Fragment {
         mContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.Open,R.string.Close) {
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.Open, R.string.Close) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -111,9 +119,9 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if(!mUserLearnedDrawer) {
+                if (!mUserLearnedDrawer) {
                     mUserLearnedDrawer = true;
-                    saveToPreferecences(getActivity(), KEY_USER_LEARNED_DRAWER, mUserLearnedDrawer+"");
+                    saveToPreferecences(getActivity(), KEY_USER_LEARNED_DRAWER, mUserLearnedDrawer + "");
                 }
                 getActivity().invalidateOptionsMenu();
             }
@@ -128,14 +136,14 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public static void saveToPreferecences(Context context, String preferenceName, String preferencesValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(preferenceName, preferencesValue);
         editor.apply();
     }
 
     public static String readFromPreferecences(Context context, String preferenceName, String defaultValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(preferenceName, defaultValue);
     }
 }

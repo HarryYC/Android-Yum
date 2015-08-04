@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     SoundPool mySound;
     int touchId, boomId;
 
+    private boolean soundIsEnabled = true;
+    private boolean vibrateIsEnabled = true;
+
     private ImageButton mShakeImageButton;
     private myAutoCompleteTextView changeLocation;
     private SensorManager mSensorManager;
@@ -92,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (validateResult()) {
                     getResultPage();
                 }
-                mySound.play(boomId, 1, 1, 1, 0, 1);
+                if (soundIsEnabled) {
+                    mySound.play(boomId, 1, 1, 1, 0, 1);
+                }
             }
             mAccelLast = mAccelCurrent;
         }
@@ -165,8 +170,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mShakeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mySound.play(boomId, 1, 1, 1, 0, 1);
-                mySound.play(touchId, 1, 1, 1, 1, 1f);
+                if (soundIsEnabled) {
+                    mySound.play(touchId, 1, 1, 1, 1, 1f);
+                }
                 if (validateResult()) {
                     getResultPage();
                 }
@@ -322,6 +328,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         }
 
+
+        soundIsEnabled = sharedPref.getBoolean("sound_enabled", true);
+        vibrateIsEnabled = sharedPref.getBoolean("vibrate_enabled", true);
         avoid_doubleShake = true;
         mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -331,8 +340,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     /* pass a random restaurant object to result page */
 
     protected void getResultPage() {
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(500);
+        if (vibrateIsEnabled) {
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(500);
+        }
         float distance = 0.0f;
 
         // Calculate distance
