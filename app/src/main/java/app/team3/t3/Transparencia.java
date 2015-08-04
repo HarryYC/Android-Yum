@@ -1,13 +1,13 @@
 package app.team3.t3;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
@@ -29,7 +29,10 @@ public class Transparencia implements View.OnClickListener {
                 .setContentTitle("User Guided")
                 .setContentText("Help you use this app quickly")
                 .build();
-        showcaseView.setButtonText("Next");
+        showcaseView.setButtonText("");
+        RelativeLayout.LayoutParams showcaseLP = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        showcaseView.setButtonPosition(showcaseLP);
     }
 
     @Override
@@ -43,8 +46,8 @@ public class Transparencia implements View.OnClickListener {
             case 1:
                 showcaseView.setShowcase(t2, true);
                 showcaseView.setContentTitle("Shake Me");
-
                 showcaseView.setContentText("Shake or Touch me, I will help you");
+
                 // showcaseView.setButtonText("Touch me, if the internet does not work, type the city name");
                 break;
 
