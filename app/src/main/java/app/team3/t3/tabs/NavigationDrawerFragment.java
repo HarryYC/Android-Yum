@@ -17,12 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import app.team3.t3.History;
+import app.team3.t3.MainActivity;
 import app.team3.t3.R;
 
 /**
  * Burger menu
  */
 public class NavigationDrawerFragment extends Fragment {
+
+    private static final String TAG = NavigationDrawerFragment.class.getSimpleName();
 
     private static final String PREF_FILE_NAME = "testApp";
     private static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
@@ -62,7 +65,14 @@ public class NavigationDrawerFragment extends Fragment {
                 switch (position) {
                     case 0: {
                         // Home
-                        getActivity().finish();
+
+                        // check if current class is MainActivity or not. If current class is MainActivity,
+                        // simply close the burger menu else, go to MainActivity(Home screen)
+                        if(getActivity().getLocalClassName().equals(MainActivity.class.getSimpleName())) {
+                            mDrawerLayout.closeDrawers();
+                        } else {
+                            getActivity().finish();
+                        }
                         break;
                     }
                     case 1: {

@@ -17,6 +17,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -41,6 +42,7 @@ import java.text.DecimalFormat;
 
 import app.team3.t3.helper.AppConstant;
 import app.team3.t3.helper.AppUtiles;
+import app.team3.t3.tabs.NavigationDrawerFragment;
 import app.team3.t3.yelp.RestaurantAdapter;
 import app.team3.t3.yelp.RestaurantFinder;
 import app.team3.t3.yelp.RestaurantSearchException;
@@ -108,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar)findViewById(R.id.tool_bar_main);
         setSupportActionBar(mToolbar);
+        NavigationDrawerFragment navigationDrawerFragment =
+                (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer_fragment);
+        navigationDrawerFragment.setUp(R.id.fragment_navigation_drawer_fragment, (DrawerLayout) findViewById(R.id.drawer_layout_main), mToolbar);
 
         locationIsEnable = getIntent().getBooleanExtra("location_service", true);
         final Button clearTextButton = (Button) findViewById(R.id.cleartext_button);
