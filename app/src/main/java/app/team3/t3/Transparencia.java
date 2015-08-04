@@ -44,7 +44,7 @@ public class Transparencia implements View.OnClickListener {
                 showcaseView.setShowcase(t2, true);
                 showcaseView.setContentTitle("Shake Me");
 
-                showcaseView.setContentText("Shake,or Touch me, we will help you make choice quickly");
+                showcaseView.setContentText("Shake or Touch me, I will help you");
                 // showcaseView.setButtonText("Touch me, if the internet does not work, type the city name");
                 break;
 
