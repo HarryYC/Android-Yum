@@ -26,8 +26,8 @@ public class Transparencia implements View.OnClickListener {
         showcaseView = new ShowcaseView.Builder(activity)
                 .setTarget(Target.NONE)
                 .setOnClickListener(this)
-                .setContentTitle("User Guided")
-                .setContentText("Help you use this app quickly")
+                .setContentTitle("User Guide")
+                .setContentText("Let's take tour of the main screen.")
                 .build();
         showcaseView.setButtonText("");
         RelativeLayout.LayoutParams showcaseLP = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -40,21 +40,21 @@ public class Transparencia implements View.OnClickListener {
         switch (contador) {
             case 0:
                 showcaseView.setShowcase(t1, true);
-                showcaseView.setContentTitle("FILTER");
-                showcaseView.setContentText("Choose the distance and Category.Make smart choice.");
+                showcaseView.setContentTitle("Filter");
+                showcaseView.setContentText("Filter the type of restaurants you'd like us to recommend by distance and category.");
                 break;
             case 1:
                 showcaseView.setShowcase(t2, true);
-                showcaseView.setContentTitle("Shake Me");
-                showcaseView.setContentText("Shake or Touch me, I will help you");
+                showcaseView.setContentTitle("Recommend a Restaurant");
+                showcaseView.setContentText("Tap the button or shake the phone, and we will recommend you a restaurant.");
 
                 // showcaseView.setButtonText("Touch me, if the internet does not work, type the city name");
                 break;
 
             case 2:
                 showcaseView.setShowcase(t3, true);
-                showcaseView.setContentTitle("Searching Restaurant in the City");
-                showcaseView.setContentText("Leave blank to search restaurant near you.");
+                showcaseView.setContentTitle("Search For Restaurant In City");
+                showcaseView.setContentText("Input the city of which you'd like us to recommend a restaurant from.");
                 // showcaseView.setButtonText("thetesting2");
                 break;
 
