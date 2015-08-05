@@ -439,12 +439,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     } else {
                         restaurant = mySearch.filteredSearch();
                         mPopupWindow.dismiss();
+                        cancelFilterButton.setVisibility(View.VISIBLE);
+
                         AppUtiles.showToast(MainActivity.this, "Results Updated. Ready to Shake");
                     }
                 } catch (RestaurantSearchException rse) {
 
                     rse.printStackTrace();
                     Log.e(TAG, "restaurantFinder: " + restaurant.toString());
+                    cancelFilterButton.setVisibility(View.INVISIBLE);
                     AppUtiles.showAlertDialog(MainActivity.this, R.string.title_no_result, R.string.message_choose_again);
                 }
             }
