@@ -267,8 +267,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         rse.printStackTrace();
                         Log.e(TAG, "restaurantFinder: " + rse.toString());
                         AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
-                        mAlert.setTitle("Invalid City");
-                        mAlert.setMessage("Please enter city again.");
+                        mAlert.setTitle("Invalid City or Filter options");
+                        mAlert.setMessage("Please check the city and the filter options again.");
                         mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -571,8 +571,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 });
                 break;
             case 3:
-                exceptionTitle = "Invalid City";
-                exceptionText = "Please enter the city again";
+                exceptionTitle = "Invalid City or Filter options";
+                exceptionText = "Please check the city and the filter options again";
                 mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -582,8 +582,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
             default:
                 if (!locationIsEnable && mySearch.getLocation() == null) {
-                    exceptionTitle = "Invalid City";
-                    exceptionText = "Please enter the city again";
+                    exceptionTitle = "Invalid City or Filter options";
+                    exceptionText = "Please check the city and the filter options again";
                     mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
