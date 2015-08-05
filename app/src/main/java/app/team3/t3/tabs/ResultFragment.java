@@ -1,6 +1,7 @@
 package app.team3.t3.tabs;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -129,7 +130,10 @@ public class ResultFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("settings", 0);
+        if (sharedPreferences.getBoolean("app_setting", true)) {
+            sharedPreferences.edit().putBoolean("app_setting", false).commit();
+        }
     }
 
     @Override

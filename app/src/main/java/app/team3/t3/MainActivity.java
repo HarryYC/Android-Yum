@@ -325,18 +325,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             } else {
                 // pick restaurant from the previous search 20 results
                 // if no user preferences change
+                Log.e("###checkpoint", "one");
+                Log.e("###checkpoint", String.valueOf(sharedPref.getBoolean("app_setting", false)));
                 mShakeImageButton.requestFocus();
-                if (!firstRunprefs.getBoolean("app_setting", true)) {
+                if (!sharedPref.getBoolean("app_setting", false)) {
+
                     try {
                         restaurant = mySearch.getFromPreviousSearch();
                     } catch (RestaurantSearchException e) {
                         AppUtiles.showToast(MainActivity.this, e.getMessage());
                     }
                 }
-                firstRunprefs.edit().putBoolean("app_setting", false);
             }
         }
-
 
         soundIsEnabled = sharedPref.getBoolean("sound_enabled", true);
         vibrateIsEnabled = sharedPref.getBoolean("vibrate_enabled", true);
