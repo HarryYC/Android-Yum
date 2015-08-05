@@ -6,43 +6,42 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
 
-public class SettingActivity extends AppCompatActivity {
+public class Setting extends AppCompatActivity {
 
-    CheckBox soundCB;
-    CheckBox vibrateCB;
-    Button backBtn;
-    SharedPreferences settingPreferences = null;
+    private TextView toolbarTitle;
+    private Switch soundSwitch;
+    private Switch vibrateSwitch;
+    private SharedPreferences settingPreferences = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
-
+        setContentView(R.layout.setting);
         settingPreferences = getSharedPreferences("settings", 0);
 
-        soundCB = (CheckBox) findViewById(R.id.soundCB);
-        vibrateCB = (CheckBox) findViewById(R.id.vibrateCB);
-        backBtn = (Button) findViewById(R.id.backBtn);
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        soundSwitch = (Switch) findViewById(R.id.sound_switch);
+        vibrateSwitch = (Switch) findViewById(R.id.vibrate_switch);
 
-        soundCB.setChecked(settingPreferences.getBoolean("sound_enabled", true));
-        soundCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        soundSwitch.setChecked(settingPreferences.getBoolean("sound_enabled", true));
+        soundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingPreferences.edit().putBoolean("sound_enabled", isChecked).commit();
             }
         });
-        vibrateCB.setChecked(settingPreferences.getBoolean("vibrate_enabled", true));
-        vibrateCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        vibrateSwitch.setChecked(settingPreferences.getBoolean("vibrate_enabled", true));
+        vibrateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingPreferences.edit().putBoolean("vibrate_enabled", isChecked).commit();
             }
         });
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        toolbarTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -70,5 +69,11 @@ public class SettingActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        settingPreferences.edit().putBoolean("app_setting", true).commit();
     }
 }

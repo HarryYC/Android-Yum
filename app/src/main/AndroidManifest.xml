@@ -64,7 +64,7 @@
             android:value="6a62d03fe6a35859deb90ff9210fc9e80d3f5102" />
 
         <activity
-            android:name=".SettingActivity"
+            android:name=".Setting"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_setting"></activity>
     </application>

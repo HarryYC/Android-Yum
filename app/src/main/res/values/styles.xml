@@ -14,8 +14,8 @@
         <item name="android:minWidth">96dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#00000000</item>
-        <item name="android:background">#00000000</item>
+        <item name="android:textColor">#00ffffff</item>
+        <item name="android:background">#00ffffff</item>
     </style>
 
     <style name="ShowcaseView.Light">
@@ -23,7 +23,7 @@
         <item name="sv_detailTextAppearance">@style/TextAppearance.ShowcaseView.Detail.Light</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="sv_backgroundColor">#3333B5E5</item>
+        <item name="sv_backgroundColor">#aa000000</item>
         <item name="sv_buttonText">@android:string/ok</item>
     </style>
 
@@ -32,7 +32,7 @@
         <item name="sv_detailTextAppearance">@style/TextAppearance.ShowcaseView.Detail</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="sv_backgroundColor">#55000000</item>
+        <item name="sv_backgroundColor">#aa000000</item>
         <item name="sv_buttonText">@android:string/ok</item>
     </style>
 

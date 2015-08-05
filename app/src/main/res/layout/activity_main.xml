@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:labelFor="@id/set_location_textView"
-            android:text="Search for restaurant in city:"
+            android:text="Search Restaurant In City:"
             android:textColor="@color/white"
             android:textSize="9pt"
             android:textStyle="bold"

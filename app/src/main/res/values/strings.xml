@@ -180,6 +180,9 @@
     <string name="message_enter_location">Please enter location.</string>
     <string name="title_activity_setting">Settings</string>
 
-    <string name="hello_world">Hello world!</string>
 
+    <!--Setting switch text-->
+    <string name="setting_toolbar_text">  <b>Settings</b></string>
+    <string name="sound_switch_text"><b>Sound Effect</b></string>
+    <string name="vibrate_switch_text"><b>Vibration Feedback</b></string>
 </resources>

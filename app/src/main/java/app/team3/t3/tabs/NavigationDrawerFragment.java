@@ -19,7 +19,7 @@ import android.widget.ListView;
 import app.team3.t3.History;
 import app.team3.t3.MainActivity;
 import app.team3.t3.R;
-import app.team3.t3.SettingActivity;
+import app.team3.t3.Setting;
 
 /**
  * Burger menu
@@ -84,7 +84,7 @@ public class NavigationDrawerFragment extends Fragment {
                         break;
                     }
                     default: {
-                        intent.setClass(getActivity(), SettingActivity.class);
+                        intent.setClass(getActivity(), Setting.class);
                         startActivity(intent);
                         mDrawerLayout.closeDrawers();
                         break;

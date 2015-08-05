@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         @Override
         public void onSensorChanged(SensorEvent event) {
 
-            if (!firstRunprefs.getBoolean("transparencia",true)) {
+            if (!firstRunprefs.getBoolean("transparencia", true)) {
 
                 float x = event.values[0];
                 float y = event.values[1];
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar)findViewById(R.id.tool_bar_main);
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar_main);
         setSupportActionBar(mToolbar);
         NavigationDrawerFragment navigationDrawerFragment =
                 (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer_fragment);
@@ -134,12 +134,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         firstRunprefs = getSharedPreferences("app.team3.t3", MODE_PRIVATE);
         firstRunprefs.edit().putBoolean("firstrun", true).commit();
 
-        if(firstRunprefs.getBoolean("transparencia" , true)) {
-            //if (firstRunprefs.getBoolean("first_time", true)) {
+        if (firstRunprefs.getBoolean("transparencia", true)) {
             // Do first run stuff here then set 'firstrun' as false
             // using the following line to edit/commit prefs
             new Transparencia(this);
-            //}
         }
 
         if (getIntent().getBooleanExtra("is_started", false)) {
@@ -309,11 +307,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         if (!firstRunprefs.getBoolean("goto_setting", false)) {
             if (firstRunprefs.getBoolean("firstrun", true)) {
-                Log.e(TAG,"###onResume first time run");
+                Log.e(TAG, "###onResume first time run");
                 // Do first run stuff here then set 'firstrun' as false
                 // using the following line to edit/commit prefs
                 if (!locationIsEnable) {
-                    changeLocation.requestFocus();
+                    if (!firstRunprefs.getBoolean("transparencia", true)) {
+                        changeLocation.requestFocus();
+                    }
                 } else {
                     mShakeImageButton.requestFocus();
                     getLocation();
@@ -323,11 +323,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 // pick restaurant from the previous search 20 results
                 // if no user preferences change
                 mShakeImageButton.requestFocus();
-                try {
-                    restaurant = mySearch.getFromPreviousSearch();
-                } catch (RestaurantSearchException e) {
-                    AppUtiles.showToast(MainActivity.this, e.getMessage());
+                if (!firstRunprefs.getBoolean("app_setting", true)) {
+                    try {
+                        restaurant = mySearch.getFromPreviousSearch();
+                    } catch (RestaurantSearchException e) {
+                        AppUtiles.showToast(MainActivity.this, e.getMessage());
+                    }
                 }
+                firstRunprefs.edit().putBoolean("app_setting", false);
             }
         }
 
@@ -585,4 +588,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         execption_id = 0;
         return false;
     }
+
 }
