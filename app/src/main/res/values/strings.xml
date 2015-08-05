@@ -172,9 +172,17 @@
     </string-array>
 
     <!--for alart dialog-->
-    <string name="title_error">Error</string>
     <string name="title">Warning</string>
+    <string name="title_error">Error</string>
+    <string name="title_no_result">No Result</string>
     <string name="message_no_internet">No Internet. Please check your internet connection.</string>
+    <string name="message_choose_again">Please choose again!</string>
     <string name="message_enter_location">Please enter location.</string>
+    <string name="title_activity_setting">Settings</string>
 
+
+    <!--Setting switch text-->
+    <string name="setting_toolbar_text">  <b>Settings</b></string>
+    <string name="sound_switch_text"><b>Sound Effect</b></string>
+    <string name="vibrate_switch_text"><b>Vibration Feedback</b></string>
 </resources>

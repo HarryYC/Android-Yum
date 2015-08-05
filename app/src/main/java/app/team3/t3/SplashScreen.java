@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import app.team3.t3.helper.AppUtiles;
+
 /**
  * Created by jdoan on 6/30/2015.
  * Splash screen to appear on app start up
