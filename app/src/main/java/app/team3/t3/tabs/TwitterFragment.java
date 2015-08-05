@@ -39,7 +39,8 @@ public class TwitterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // code for tweet
-                TweetComposer.Builder builder = new TweetComposer.Builder(getActivity()).text(editText.getText() + "\n\n" + restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPage());
+                TweetComposer.Builder builder = new TweetComposer.Builder(getActivity()).text(editText.getText() 
+                + "\n\n" + restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPage());
                 builder.show();
             }
         });
