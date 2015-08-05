@@ -38,8 +38,6 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import android.widget.Toast;
-
 import java.text.DecimalFormat;
 
 import app.team3.t3.helper.AppConstant;
@@ -256,9 +254,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     }
 
                     try {
-                        restaurant = mySearch.filteredSearch();
-                        AppUtiles.showToast(MainActivity.this, "Results Updated. Read to Shake");
-                        mShakeImageButton.requestFocus();
+                        // internet connection check
+                        if(!AppUtiles.isNetworkConnected(MainActivity.this)){
+                            AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
+                        } else {
+                            restaurant = mySearch.filteredSearch();
+                            AppUtiles.showToast(MainActivity.this, "Results Updated. Read to Shake");
+                            mShakeImageButton.requestFocus();
+                        }
                         return true;
                     } catch (RestaurantSearchException rse) {
                         rse.printStackTrace();
@@ -429,9 +432,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     prefEditor.putInt("categorySpinner", categorySpinner.getSelectedItemPosition());
                     prefEditor.putInt("distanceSpinner", distanceSpinner.getSelectedItemPosition());
                     prefEditor.commit();
-                    restaurant = mySearch.filteredSearch();
-                    mPopupWindow.dismiss();
-                    AppUtiles.showToast(MainActivity.this, "Results Updated. Ready to Shake");
+                    // internet connection check
+                    if(!AppUtiles.isNetworkConnected(MainActivity.this)) {
+                        AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error,R.string.message_no_internet);
+                    } else {
+                        restaurant = mySearch.filteredSearch();
+                        mPopupWindow.dismiss();
+                        AppUtiles.showToast(MainActivity.this, "Results Updated. Ready to Shake");
+                    }
                 } catch (RestaurantSearchException rse) {
 
                     rse.printStackTrace();
@@ -466,7 +474,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Log.e(TAG, "####longi: " + String.valueOf(mySearch.getLongitude()));
             locationManager.removeUpdates(this);
             try {
-                restaurant = mySearch.filteredSearch();
+                // internet connection check
+                if(!AppUtiles.isNetworkConnected(MainActivity.this)) {
+                    AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
+                } else {
+                    restaurant = mySearch.filteredSearch();
+                }
             } catch (RestaurantSearchException rse) {
                 final int distanceValue = sharedPref.getInt("distanceSpinner", -1);
                 if (distanceValue == 0 && distanceValue > 2) {
