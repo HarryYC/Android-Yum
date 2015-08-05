@@ -468,6 +468,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
             locationManager.requestLocationUpdates(serviceAvailable, 3000, 161, this);
             Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
+            while (currentLocation == null){
+                Log.e("###wait","waittt");
+                currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
+            }
             latitude = currentLocation.getLatitude();
             mySearch.setLatitude(latitude);
             Log.e(TAG, "####lati: " + String.valueOf(mySearch.getLatitude()));
