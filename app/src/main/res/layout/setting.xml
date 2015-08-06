@@ -35,9 +35,6 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
         <Switch
             android:id="@+id/sound_switch"
             android:layout_width="match_parent"
@@ -45,45 +42,18 @@
             android:layout_gravity="right"
             android:background="@drawable/border_style"
             android:padding="32dp"
+            android:showText="true"
             android:text="@string/sound_switch_text" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="On"
-                android:id="@+id/sound_status"
-                android:layout_alignTop="@+id/sound_switch"
-                android:layout_alignEnd="@+id/sound_switch"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="16dp"
-                android:layout_gravity="center_horizontal" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
         <Switch
             android:id="@+id/vibrate_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:background="@drawable/border_style"
+            android:showText="true"
             android:padding="32dp"
             android:text="@string/vibrate_switch_text" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="On"
-                android:id="@+id/vibrate_status"
-                android:layout_alignEnd="@+id/vibrate_switch"
-                android:layout_alignTop="@+id/vibrate_switch"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="16dp"
-                android:layout_gravity="center_horizontal" />
-        </RelativeLayout>
 
     </LinearLayout>
 </LinearLayout>

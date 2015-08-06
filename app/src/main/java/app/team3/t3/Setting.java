@@ -13,8 +13,6 @@ import android.widget.TextView;
 public class Setting extends AppCompatActivity {
 
     private TextView toolbarTitle;
-    private TextView soundStatus;
-    private TextView vibrateStatus;
     private Switch soundSwitch;
     private Switch vibrateSwitch;
     private SharedPreferences settingPreferences = null;
@@ -26,43 +24,21 @@ public class Setting extends AppCompatActivity {
         settingPreferences = getSharedPreferences("settings", 0);
 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        soundStatus = (TextView) findViewById(R.id.sound_status);
-        vibrateStatus = (TextView) findViewById(R.id.vibrate_status);
         soundSwitch = (Switch) findViewById(R.id.sound_switch);
         vibrateSwitch = (Switch) findViewById(R.id.vibrate_switch);
 
         soundSwitch.setChecked(settingPreferences.getBoolean("sound_enabled", true));
-        if (settingPreferences.getBoolean("sound_enabled", true)) {
-            soundStatus.setText("On");
-        } else {
-            soundStatus.setText("Off");
-        }
         soundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingPreferences.edit().putBoolean("sound_enabled", isChecked).commit();
-                if (isChecked) {
-                    soundStatus.setText("On");
-                } else {
-                    soundStatus.setText("Off");
-                }
             }
         });
         vibrateSwitch.setChecked(settingPreferences.getBoolean("vibrate_enabled", true));
-        if (settingPreferences.getBoolean("vibrate_enabled", true)) {
-            vibrateStatus.setText("On");
-        } else {
-            vibrateStatus.setText("Off");
-        }
         vibrateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settingPreferences.edit().putBoolean("vibrate_enabled", isChecked).commit();
-                if (isChecked) {
-                    vibrateStatus.setText("On");
-                } else {
-                    vibrateStatus.setText("Off");
-                }
             }
         });
         toolbarTitle.setOnClickListener(new View.OnClickListener() {
