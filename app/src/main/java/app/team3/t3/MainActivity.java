@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SharedPreferences firstRunprefs = null;
     private SharedPreferences.Editor prefEditor;
     private SharedPreferences sharedPref;
-    private int execption_id = 0;
     private Toolbar mToolbar;
 
     final SensorEventListener mSensorListener = new SensorEventListener() {
@@ -92,9 +91,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mAccel = mAccel * 0.9f + delta;
                 if (mAccel > 21 && avoid_doubleShake) {
                     avoid_doubleShake = false;
-                    if (validateResult()) {
-                        getResultPage();
-                    }
+                    getResultPage();
                     if (soundIsEnabled) {
                         mySound.play(boomId, 1, 1, 1, 0, 1);
                     }
@@ -172,9 +169,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (soundIsEnabled) {
                     mySound.play(touchId, 1, 1, 1, 1, 1f);
                 }
-                if (validateResult()) {
-                    getResultPage();
-                }
+                getResultPage();
             }
         });
 
@@ -255,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                     try {
                         // internet connection check
-                        if(!AppUtiles.isNetworkConnected(MainActivity.this)){
+                        if (!AppUtiles.isNetworkConnected(MainActivity.this)) {
                             AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
                         } else {
                             restaurant = mySearch.filteredSearch();
@@ -308,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
+
         if (!firstRunprefs.getBoolean("goto_setting", false)) {
             if (firstRunprefs.getBoolean("firstrun", true)) {
                 Log.e(TAG, "###onResume first time run");
@@ -350,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     /* pass a random restaurant object to result page */
 
     protected void getResultPage() {
+
         if (vibrateIsEnabled) {
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(500);
@@ -375,6 +372,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
             distance = Float.parseFloat(new DecimalFormat(distanceFormat).format(distance));
+        } else {
+            if (restaurant == null) {
+                try {
+                    restaurant = mySearch.filteredSearch();
+                } catch (RestaurantSearchException e) {
+                    if (e.getMessage() == "NO_RESTAURANT_FOR_LOCATION") {
+                        validateResult(3);
+                    }
+                }
+            }
         }
 
         // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
@@ -382,7 +389,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         getResultIntent.putExtra("restaurant_picked", restaurant);
         getResultIntent.putExtra("distance", distance);
         startActivity(getResultIntent);
-
     }
 
     /* fillter button */
@@ -434,8 +440,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     prefEditor.putInt("distanceSpinner", distanceSpinner.getSelectedItemPosition());
                     prefEditor.commit();
                     // internet connection check
-                    if(!AppUtiles.isNetworkConnected(MainActivity.this)) {
-                        AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error,R.string.message_no_internet);
+                    if (!AppUtiles.isNetworkConnected(MainActivity.this)) {
+                        AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
                     } else {
                         restaurant = mySearch.filteredSearch();
                         mPopupWindow.dismiss();
@@ -468,8 +474,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
             locationManager.requestLocationUpdates(serviceAvailable, 3000, 161, this);
             Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
-            while (currentLocation == null){
-                Log.e("###wait","waittt");
+            while (currentLocation == null) {
+                Log.e("###wait", "waittt");
                 currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
             }
             latitude = currentLocation.getLatitude();
@@ -481,19 +487,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             locationManager.removeUpdates(this);
             try {
                 // internet connection check
-                if(!AppUtiles.isNetworkConnected(MainActivity.this)) {
+                if (!AppUtiles.isNetworkConnected(MainActivity.this)) {
                     AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
                 } else {
                     restaurant = mySearch.filteredSearch();
                 }
             } catch (RestaurantSearchException rse) {
                 final int distanceValue = sharedPref.getInt("distanceSpinner", -1);
-                if (distanceValue == 0 && distanceValue > 2) {
-                    execption_id = 1;
-                    validateResult();
+                if (distanceValue < 1 || distanceValue > 2) {
+                    validateResult(1);
                 } else {
-                    execption_id = 2;
-                    validateResult();
+                    validateResult(2);
                 }
                 rse.printStackTrace();
                 Log.e(TAG, "restaurantFinder: " + rse.toString());
@@ -545,7 +549,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return distanceList[index];
     }
 
-    public boolean validateResult() {
+    public boolean validateResult(int execption_id) {
 
         String exceptionText = "";
         String exceptionTitle = "";
@@ -575,8 +579,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 });
                 break;
             case 3:
-                exceptionTitle = "Invalid City or Filter options";
-                exceptionText = "Please check the city and the filter options again";
+                exceptionTitle = "No Restaurant found for the City";
+                exceptionText = "Please make sure you enter a valid city name";
                 mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
