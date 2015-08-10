@@ -46,7 +46,7 @@ public class Transparencia implements View.OnClickListener {
             case 1:
                 showcaseView.setShowcase(t2, true);
                 showcaseView.setContentTitle("Recommend a restaurant");
-                showcaseView.setContentText("Tap the button or shake the phone, and we will recommend you a restaurant.Touch to Continue");
+                showcaseView.setContentText("Tap 'yum' or shake the phone,we will recommend you a restaurant.Touch to Continue");
 
                 break;
 
