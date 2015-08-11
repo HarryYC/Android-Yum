@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     sharedPref.edit().putBoolean("edit_location", true).commit();
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 } else {
-                    if (cityName != null){
+                    if (cityName != null && !(locationIsEnable)){
                         changeLocation.setText(cityName);
                     }
                     if (sharedPref.getBoolean("edit_location", false)) {
@@ -272,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (!changeLocation.getText().toString().isEmpty()) {
                         mySearch.setLongitude(0.0);
                         mySearch.setLatitude(0.0);
+                        cityName=changeLocation.getText().toString();
                         mySearch.setLocation(changeLocation.getText().toString());
                     } else {
                         changeLocation.setText("");
