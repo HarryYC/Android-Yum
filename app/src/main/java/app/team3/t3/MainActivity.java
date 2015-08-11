@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     SoundPool mySound;
     int touchId, boomId;
+    String cityName = null;
 
     private boolean soundIsEnabled = true;
     private boolean vibrateIsEnabled = true;
@@ -204,12 +205,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     sharedPref.edit().putBoolean("edit_location", true).commit();
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 } else {
+                    if (cityName != null){
+                        changeLocation.setText(cityName);
+                    }
                     if (sharedPref.getBoolean("edit_location", false)) {
                         if (!changeLocation.getText().toString().isEmpty() || !changeLocation.getText().toString().equals("")) {
 
                             mySearch.setLatitude(0.0);
                             mySearch.setLongitude(0.0);
+                            mySearch.setRange(16090);
                             mySearch.setLocation(changeLocation.getText().toString());
+                            cityName=changeLocation.getText().toString();
 
                             try {
                                 restaurant = mySearch.filteredSearch();
@@ -287,8 +293,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         rse.printStackTrace();
                         Log.e(TAG, "restaurantFinder: " + rse.toString());
                         AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
-                        mAlert.setTitle("Invalid City or Filter options");
-                        mAlert.setMessage("Please check the city and the filter options again.");
+                        mAlert.setTitle("Invalid City");
+                        mAlert.setMessage("Please enter the city again.");
                         mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -622,8 +628,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
             default:
                 if (!locationIsEnable && mySearch.getLocation() == null) {
-                    exceptionTitle = "Invalid City or Filter options";
-                    exceptionText = "Please check the city and the filter options again";
+                    mAlert.setTitle("Invalid City");
+                    mAlert.setMessage("Please enter the city again.");
                     mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
