@@ -40,20 +40,20 @@ public class Transparencia implements View.OnClickListener {
         switch (contador) {
             case 0:
                 showcaseView.setShowcase(t1, true);
-                showcaseView.setContentTitle("Filter");
-                showcaseView.setContentText("Filter the type of restaurants you'd like us to recommend by distance and category. \nTouch to Continue");
+                showcaseView.setContentTitle("Touch to Continue");
+                showcaseView.setContentText("Filter the type of restaurants you'd like us to recommend by distance and category. ");
                 break;
             case 1:
                 showcaseView.setShowcase(t2, true);
-                showcaseView.setContentTitle("Recommend a restaurant");
-                showcaseView.setContentText("Tap 'yum' or shake the phone,we will recommend you a restaurant.Touch to Continue");
+                showcaseView.setContentTitle("Touch to Continue");
+                showcaseView.setContentText("Tap 'yum' or shake phone,we will recommend a restaurant. ");
 
                 break;
 
             case 2:
                 showcaseView.setShowcase(t3, true);
-                showcaseView.setContentTitle("Set city location of search.");
-                showcaseView.setContentText("Input the city of which you'd like us to recommend a restaurant from.\nTouch to Continue");
+                showcaseView.setContentTitle("Touch to Continue");
+                showcaseView.setContentText("Input the city of which you'd like us to recommend a restaurant from.");
 
                 break;
 
