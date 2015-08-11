@@ -50,7 +50,7 @@ public class History extends Activity {
         super.onCreate(savedInstanceState);
 
         ListView restaurantListView = new ListView(this);
-        final ResDatabaseHelper db = new ResDatabaseHelper(this);
+        final ResDatabaseHelper db = ResDatabaseHelper.getInstance(this);
 
         ArrayList<HashMap<String, String>> restaurantsList = db.getHistory();
 
