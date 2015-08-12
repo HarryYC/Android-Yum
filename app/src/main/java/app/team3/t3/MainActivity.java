@@ -205,111 +205,130 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     sharedPref.edit().putBoolean("edit_location", true).commit();
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 } else {
-                    if (cityName != null && !(locationIsEnable)){
-                        changeLocation.setText(cityName);
-                    }
-                    if (sharedPref.getBoolean("edit_location", false)) {
-                        if (!changeLocation.getText().toString().isEmpty() || !changeLocation.getText().toString().equals("")) {
-
-                            mySearch.setLatitude(0.0);
-                            mySearch.setLongitude(0.0);
-                            mySearch.setRange(16090);
-                            mySearch.setLocation(changeLocation.getText().toString());
-                            cityName=changeLocation.getText().toString();
-
-                            try {
-                                restaurant = mySearch.filteredSearch();
-                            } catch (RestaurantSearchException e) {
-                                validateResult(4);
-                            }
-
-                        } else {
-                            if (locationIsEnable) {
-                                mySearch.setLocation(null);
-                                getLocation();
-                            } else {
-                                mySearch.setLocation(null);
-                                restaurant = null;
-                            }
+                    if (cityName != null) {
+                        if (!(locationIsEnable)) {
+                            changeLocation.setText(cityName);
                         }
-                        sharedPref.edit().putBoolean("edit_location", false).commit();
+                    } else {
+                        if (!(locationIsEnable)) {
+                            AppUtiles.showToast(MainActivity.this, "Please enter a city name");
+                        }
+                        changeLocation.setText("");
                     }
-                    mShakeImageButton.requestFocus();
-                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    clearTextButton.setVisibility(View.INVISIBLE);
-                }
+
+
+//                    if (sharedPref.getBoolean("edit_location", false)) {
+//                        if (!changeLocation.getText().toString().isEmpty() || !changeLocation.getText().toString().equals("")) {
+//
+//                            mySearch.setLatitude(0.0);
+//                            mySearch.setLongitude(0.0);
+//                            mySearch.setRange(16090);
+//                            mySearch.setLocation(changeLocation.getText().toString());
+//                            cityName=changeLocation.getText().toString();
+//
+//                            try {
+//                                restaurant = mySearch.filteredSearch();
+//                            } catch (RestaurantSearchException e) {
+//                                validateResult(4);
+//                            }
+//
+//                        } else {
+//                            if (locationIsEnable) {
+//                                mySearch.setLocation(null);
+//                                getLocation();
+//                            } else {
+//                                mySearch.setLocation(null);
+//                                restaurant = null;
+//                            }
+//                        }
+//                        sharedPref.edit().putBoolean("edit_location", false).commit();
+//                    }
+                mShakeImageButton.requestFocus();
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                clearTextButton.setVisibility(View.INVISIBLE);
             }
-        });
+        }
+    }
 
-        changeLocation.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    );
 
+    changeLocation.addTextChangedListener(new
+
+    TextWatcher() {
+        @Override
+        public void beforeTextChanged (CharSequence s,int start, int count, int after){
+
+        }
+
+        @Override
+        public void onTextChanged (CharSequence s,int start, int before, int count){
+            if (!changeLocation.getText().toString().isEmpty()) {
+                clearTextButton.setVisibility(View.VISIBLE);
+            } else {
+                clearTextButton.setVisibility(View.INVISIBLE);
             }
+        }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!changeLocation.getText().toString().isEmpty()) {
-                    clearTextButton.setVisibility(View.VISIBLE);
-                } else {
-                    clearTextButton.setVisibility(View.INVISIBLE);
-                }
-            }
+        @Override
+        public void afterTextChanged (Editable s){
 
-            @Override
-            public void afterTextChanged(Editable s) {
+        }
+    }
 
-            }
-        });
+    );
 
 
         /* Listener for Location TextView */
 
-        changeLocation.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if (!changeLocation.getText().toString().isEmpty()) {
-                        mySearch.setLongitude(0.0);
-                        mySearch.setLatitude(0.0);
-                        cityName=changeLocation.getText().toString();
-                        mySearch.setLocation(changeLocation.getText().toString());
-                    } else {
-                        changeLocation.setText("");
-                        mySearch.setLocation(null);
-                        getLocation();
-                    }
+    changeLocation.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener()
 
-                    try {
-                        // internet connection check
-                        if (!AppUtiles.isNetworkConnected(MainActivity.this)) {
-                            AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
-                        } else {
-                            restaurant = mySearch.filteredSearch();
-                            AppUtiles.showToast(MainActivity.this, "Results Updated. Read to Shake");
-                            mShakeImageButton.requestFocus();
-                        }
-                        return true;
-                    } catch (RestaurantSearchException rse) {
-                        rse.printStackTrace();
-                        Log.e(TAG, "restaurantFinder: " + rse.toString());
-                        AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
-                        mAlert.setTitle("Invalid City");
-                        mAlert.setMessage("Please enter the city again.");
-                        mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                        mAlert.create().show();
-                    }
-                }
-
-                return false;
+    {
+        @Override
+        public boolean onEditorAction (TextView v,int actionId, KeyEvent event){
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (!changeLocation.getText().toString().isEmpty()) {
+                mySearch.setLongitude(0.0);
+                mySearch.setLatitude(0.0);
+                cityName = changeLocation.getText().toString();
+                mySearch.setLocation(changeLocation.getText().toString());
+            } else {
+                changeLocation.setText("");
+                mySearch.setLocation(null);
+                getLocation();
             }
-        });
-    } //end onCreate
+
+            try {
+                // internet connection check
+                if (!AppUtiles.isNetworkConnected(MainActivity.this)) {
+                    AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
+                } else {
+                    restaurant = mySearch.filteredSearch();
+                    AppUtiles.showToast(MainActivity.this, "Results Updated. Read to Shake");
+                    mShakeImageButton.requestFocus();
+                }
+                return true;
+            } catch (RestaurantSearchException rse) {
+                rse.printStackTrace();
+                Log.e(TAG, "restaurantFinder: " + rse.toString());
+                AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
+                mAlert.setTitle("Invalid City");
+                mAlert.setMessage("Please enter the city again.");
+                mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                mAlert.create().show();
+            }
+        }
+
+        return false;
+    }
+    }
+
+    );
+} //end onCreate
 
     /**
      * Dispatch onPause() to fragments.
