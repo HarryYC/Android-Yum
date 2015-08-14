@@ -42,8 +42,8 @@
             android:layout_gravity="right"
             android:background="@drawable/border_style"
             android:padding="32dp"
+            android:showText="true"
             android:text="@string/sound_switch_text" />
-
 
         <Switch
             android:id="@+id/vibrate_switch"
@@ -51,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:background="@drawable/border_style"
+            android:showText="true"
             android:padding="32dp"
             android:text="@string/vibrate_switch_text" />
 

@@ -32,8 +32,8 @@ public class ResultFragment extends Fragment {
 
     private static final String TAG = "result_fragment";
     private RestaurantAdapter restaurant;
-    private int width;
-    private int height;
+    private int screenWidth;
+    private int screenHeight;
     private float distance;
 
     @Override
@@ -44,8 +44,8 @@ public class ResultFragment extends Fragment {
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         restaurant = intent.getParcelable("restaurant_picked");
         distance = intent.getFloat("distance", 0.0f);
-        height = displaymetrics.heightPixels;
-        width = displaymetrics.widthPixels;
+        screenHeight = displaymetrics.heightPixels;
+        screenWidth = displaymetrics.widthPixels;
     }
 
     @Nullable
@@ -53,9 +53,8 @@ public class ResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_result, container, false);
 
-        final ImageView businessIV = (ImageView) view.findViewById(R.id.restaurantIV);
-        final ImageView ratingIV = (ImageView) view.findViewById(R.id.ratingIV);
-        final ImageView yelpDisplayIV = (ImageView) view.findViewById(R.id.yelp_display);
+        final ImageView businessImageView = (ImageView) view.findViewById(R.id.restaurantIV);
+        final ImageView ratingImageView = (ImageView) view.findViewById(R.id.ratingIV);
 
         final TextView nameTV = (TextView) view.findViewById(R.id.nameTV);
         final TextView countTV = (TextView) view.findViewById(R.id.countTV);
@@ -74,7 +73,7 @@ public class ResultFragment extends Fragment {
         goBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ResDatabaseHelper(getActivity().getApplicationContext()).saveRestaurant(restaurant);
+                ResDatabaseHelper.getInstance(getActivity().getApplicationContext()).saveRestaurant(restaurant);
                 Intent directionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + restaurant.getAddress()));
                 directionIntent.setPackage("com.google.android.apps.maps");
                 startActivity(directionIntent);
@@ -83,26 +82,34 @@ public class ResultFragment extends Fragment {
 
         if (restaurant != null) {
 
-            // Resize drawable for placeholder
+            // Resize drawable for placeholderDrawable
             Drawable drawable = getResources().getDrawable(R.drawable.placeholder);
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            // Scale it to width x (height * 2 / 6)
-            Drawable placeholder = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, width, height * 2 / 6, true));
-            // Set your new, scaled drawable "placeholder"
+            // Scale it to screenWidth x (screenHeight * 2 / 6)
+            Drawable placeholderDrawable = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight * 2 / 6, true));
+            // Set your new, scaled drawable "placeholderDrawable"
 
             /*
              * An image loading and caching library for Android focused on smooth scrolling
              * visit https://github.com/bumptech/glide
              * for more information
              */
-            Glide.with(getActivity()).load(restaurant.getRestaurantImgUrl()).placeholder(placeholder).dontAnimate().override(width, height * 2 / 6).into(businessIV);
-            Glide.with(getActivity()).load(restaurant.getRatingImgUrl()).override(width * 4 / 6, height / 30).into(ratingIV);
+            Glide.with(getActivity()).load(restaurant.getRestaurantImgUrl())
+                    .placeholder(placeholderDrawable)
+                    .dontAnimate()
+                    .override(screenWidth, screenHeight * 2 / 6)
+                    .into(businessImageView);
+            Glide.with(getActivity()).load(restaurant.getRatingImgUrl())
+                    .override(screenWidth * 4 / 6, screenHeight / 30)
+                    .into(ratingImageView);
 
 
             if (distance > 0) {
-                nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName() + "</font></b><br>(" + String.valueOf(distance) + " miles)"));
+                nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName()
+                        + "</font></b><br>(" + String.valueOf(distance) + " miles)"));
             } else {
-                nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName() + "</font></b>"));
+                nameTV.setText(Html.fromHtml("<b><font size=\"6\">" + restaurant.getRestaurantName()
+                        + "</font></b>"));
             }
             countTV.setText("(" + String.valueOf(restaurant.getReviewCount()) + ")");
             if (!restaurant.getPhoneNumber().equals("none")) {

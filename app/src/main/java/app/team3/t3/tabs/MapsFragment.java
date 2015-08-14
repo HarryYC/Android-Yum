@@ -59,7 +59,7 @@ public class MapsFragment extends Fragment {
         mGoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ResDatabaseHelper(getActivity().getApplicationContext()).saveRestaurant(mRestaurant);
+                ResDatabaseHelper.getInstance(getActivity().getApplicationContext()).saveRestaurant(mRestaurant);
                 Intent directionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + mRestaurant.getAddress()));
                 directionIntent.setPackage("com.google.android.apps.maps");
                 startActivity(directionIntent);

@@ -43,8 +43,16 @@ public class ResDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_RATING_IMG = "rating_img";
     private static final String COLUMN_COUNT = "count";
 
-    public ResDatabaseHelper(Context context) {
+    private static ResDatabaseHelper resDatabaseHelper;
+
+    private ResDatabaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
+    }
+    public static ResDatabaseHelper getInstance(Context context){
+        if (resDatabaseHelper == null){
+            resDatabaseHelper = new ResDatabaseHelper(context);
+        }
+        return resDatabaseHelper;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class Transparencia implements View.OnClickListener {
                 .setTarget(Target.NONE)
                 .setOnClickListener(this)
                 .setContentTitle("User Guide")
-                .setContentText("Let's take tour of the main screen.")
+                .setContentText("Let's take tour of the main screen. \nTouch to Continue.")
                 .build();
         showcaseView.setButtonText("");
         RelativeLayout.LayoutParams showcaseLP = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -40,22 +40,21 @@ public class Transparencia implements View.OnClickListener {
         switch (contador) {
             case 0:
                 showcaseView.setShowcase(t1, true);
-                showcaseView.setContentTitle("Filter");
-                showcaseView.setContentText("Filter the type of restaurants you'd like us to recommend by distance and category.");
+                showcaseView.setContentTitle("Touch to Continue");
+                showcaseView.setContentText("Filter the type of restaurants you'd like us to recommend by distance and category. ");
                 break;
             case 1:
                 showcaseView.setShowcase(t2, true);
-                showcaseView.setContentTitle("Recommend a restaurant");
-                showcaseView.setContentText("Tap the button or shake the phone, and we will recommend you a restaurant.");
+                showcaseView.setContentTitle("Touch to Continue");
+                showcaseView.setContentText("Tap 'yum' or shake phone,we will recommend a restaurant. ");
 
-                // showcaseView.setButtonText("Touch me, if the internet does not work, type the city name");
                 break;
 
             case 2:
                 showcaseView.setShowcase(t3, true);
-                showcaseView.setContentTitle("Set city location of search.");
+                showcaseView.setContentTitle("Touch to Continue");
                 showcaseView.setContentText("Input the city of which you'd like us to recommend a restaurant from.");
-                // showcaseView.setButtonText("thetesting2");
+
                 break;
 
             case 3:

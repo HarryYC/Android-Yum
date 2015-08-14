@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     SoundPool mySound;
     int touchId, boomId;
+    String cityName = null;
 
     private boolean soundIsEnabled = true;
     private boolean vibrateIsEnabled = true;
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SharedPreferences firstRunprefs = null;
     private SharedPreferences.Editor prefEditor;
     private SharedPreferences sharedPref;
-    private int execption_id = 0;
     private Toolbar mToolbar;
 
     final SensorEventListener mSensorListener = new SensorEventListener() {
@@ -92,9 +92,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mAccel = mAccel * 0.9f + delta;
                 if (mAccel > 21 && avoid_doubleShake) {
                     avoid_doubleShake = false;
-                    if (validateResult()) {
-                        getResultPage();
-                    }
+                    getResultPage();
                     if (soundIsEnabled) {
                         mySound.play(boomId, 1, 1, 1, 0, 1);
                     }
@@ -112,10 +110,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mToolbar = (Toolbar) findViewById(R.id.tool_bar_main);
         setSupportActionBar(mToolbar);
         NavigationDrawerFragment navigationDrawerFragment =
@@ -172,9 +169,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (soundIsEnabled) {
                     mySound.play(touchId, 1, 1, 1, 1, 1f);
                 }
-                if (validateResult()) {
-                    getResultPage();
-                }
+                getResultPage();
             }
         });
 
@@ -198,91 +193,142 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 changeLocation.setText("");
             }
         });
+
         changeLocation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    if (!changeLocation.getText().toString().isEmpty()) {
+                    if (!changeLocation.getText().toString().isEmpty() || !changeLocation.getText().toString().equals("")) {
                         changeLocation.selectAll();
                         clearTextButton.setVisibility(View.VISIBLE);
                     }
+                    sharedPref.edit().putBoolean("edit_location", true).commit();
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 } else {
-                    mShakeImageButton.requestFocus();
-                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    clearTextButton.setVisibility(View.INVISIBLE);
-                }
+                    if (cityName != null) {
+                        if (!(locationIsEnable)) {
+                            changeLocation.setText(cityName);
+                        }
+                    } else {
+                        if (!(locationIsEnable)) {
+                            AppUtiles.showToast(MainActivity.this, "Please enter a city name");
+                        }
+                        changeLocation.setText("");
+                    }
+
+
+//                    if (sharedPref.getBoolean("edit_location", false)) {
+//                        if (!changeLocation.getText().toString().isEmpty() || !changeLocation.getText().toString().equals("")) {
+//
+//                            mySearch.setLatitude(0.0);
+//                            mySearch.setLongitude(0.0);
+//                            mySearch.setRange(16090);
+//                            mySearch.setLocation(changeLocation.getText().toString());
+//                            cityName=changeLocation.getText().toString();
+//
+//                            try {
+//                                restaurant = mySearch.filteredSearch();
+//                            } catch (RestaurantSearchException e) {
+//                                validateResult(4);
+//                            }
+//
+//                        } else {
+//                            if (locationIsEnable) {
+//                                mySearch.setLocation(null);
+//                                getLocation();
+//                            } else {
+//                                mySearch.setLocation(null);
+//                                restaurant = null;
+//                            }
+//                        }
+//                        sharedPref.edit().putBoolean("edit_location", false).commit();
+//                    }
+                mShakeImageButton.requestFocus();
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                clearTextButton.setVisibility(View.INVISIBLE);
             }
-        });
+        }
+    }
 
-        changeLocation.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    );
 
+    changeLocation.addTextChangedListener(new
+
+    TextWatcher() {
+        @Override
+        public void beforeTextChanged (CharSequence s,int start, int count, int after){
+
+        }
+
+        @Override
+        public void onTextChanged (CharSequence s,int start, int before, int count){
+            if (!changeLocation.getText().toString().isEmpty()) {
+                clearTextButton.setVisibility(View.VISIBLE);
+            } else {
+                clearTextButton.setVisibility(View.INVISIBLE);
             }
+        }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!changeLocation.getText().toString().isEmpty()) {
-                    clearTextButton.setVisibility(View.VISIBLE);
-                } else {
-                    clearTextButton.setVisibility(View.INVISIBLE);
-                }
-            }
+        @Override
+        public void afterTextChanged (Editable s){
 
-            @Override
-            public void afterTextChanged(Editable s) {
+        }
+    }
 
-            }
-        });
+    );
 
 
         /* Listener for Location TextView */
 
-        changeLocation.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if (!changeLocation.getText().toString().isEmpty()) {
-                        mySearch.setLongitude(0.0);
-                        mySearch.setLatitude(0.0);
-                        mySearch.setLocation(changeLocation.getText().toString());
-                    } else {
-                        changeLocation.setText("");
-                        mySearch.setLocation(null);
-                        getLocation();
-                    }
+    changeLocation.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener()
 
-                    try {
-                        // internet connection check
-                        if(!AppUtiles.isNetworkConnected(MainActivity.this)){
-                            AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
-                        } else {
-                            restaurant = mySearch.filteredSearch();
-                            AppUtiles.showToast(MainActivity.this, "Results Updated. Read to Shake");
-                            mShakeImageButton.requestFocus();
-                        }
-                        return true;
-                    } catch (RestaurantSearchException rse) {
-                        rse.printStackTrace();
-                        Log.e(TAG, "restaurantFinder: " + rse.toString());
-                        AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
-                        mAlert.setTitle("Invalid City or Filter options");
-                        mAlert.setMessage("Please check the city and the filter options again.");
-                        mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                        mAlert.create().show();
-                    }
-                }
-
-                return false;
+    {
+        @Override
+        public boolean onEditorAction (TextView v,int actionId, KeyEvent event){
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (!changeLocation.getText().toString().isEmpty()) {
+                mySearch.setLongitude(0.0);
+                mySearch.setLatitude(0.0);
+                cityName = changeLocation.getText().toString();
+                mySearch.setLocation(changeLocation.getText().toString());
+            } else {
+                changeLocation.setText("");
+                mySearch.setLocation(null);
+                getLocation();
             }
-        });
-    } //end onCreate
+
+            try {
+                // internet connection check
+                if (!AppUtiles.isNetworkConnected(MainActivity.this)) {
+                    AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
+                } else {
+                    restaurant = mySearch.filteredSearch();
+                    AppUtiles.showToast(MainActivity.this, "Results Updated. Read to Shake");
+                    mShakeImageButton.requestFocus();
+                }
+                return true;
+            } catch (RestaurantSearchException rse) {
+                rse.printStackTrace();
+                Log.e(TAG, "restaurantFinder: " + rse.toString());
+                AlertDialog.Builder mAlert = new AlertDialog.Builder(MainActivity.this);
+                mAlert.setTitle("Invalid City");
+                mAlert.setMessage("Please enter the city again.");
+                mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                mAlert.create().show();
+            }
+        }
+
+        return false;
+    }
+    }
+
+    );
+} //end onCreate
 
     /**
      * Dispatch onPause() to fragments.
@@ -308,6 +354,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
+
         if (!firstRunprefs.getBoolean("goto_setting", false)) {
             if (firstRunprefs.getBoolean("firstrun", true)) {
                 Log.e(TAG, "###onResume first time run");
@@ -316,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (!locationIsEnable) {
                     if (!firstRunprefs.getBoolean("transparencia", true)) {
                         changeLocation.requestFocus();
+                        restaurant = null;
                     }
                 } else {
                     mShakeImageButton.requestFocus();
@@ -350,6 +398,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     /* pass a random restaurant object to result page */
 
     protected void getResultPage() {
+
         if (vibrateIsEnabled) {
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(500);
@@ -375,6 +424,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
             distance = Float.parseFloat(new DecimalFormat(distanceFormat).format(distance));
+        } else {
+            if (restaurant == null) {
+                try {
+                    restaurant = mySearch.filteredSearch();
+                } catch (RestaurantSearchException e) {
+                    if (e.getMessage() == "NO_RESTAURANT_FOR_LOCATION") {
+                        validateResult(4);
+                    }
+                }
+            }
         }
 
         // Intent getResultIntent = new Intent(MainActivity.this, ActionBarTabsPager.class);
@@ -430,18 +489,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mySearch.setRange(getPreferenceDistance(distanceSpinner.getSelectedItemPosition()));
 
                 try {
-                    prefEditor.putInt("categorySpinner", categorySpinner.getSelectedItemPosition());
-                    prefEditor.putInt("distanceSpinner", distanceSpinner.getSelectedItemPosition());
-                    prefEditor.commit();
                     // internet connection check
-                    if(!AppUtiles.isNetworkConnected(MainActivity.this)) {
-                        AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error,R.string.message_no_internet);
+                    if (!AppUtiles.isNetworkConnected(MainActivity.this)) {
+                        AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
                     } else {
                         restaurant = mySearch.filteredSearch();
                         mPopupWindow.dismiss();
 
                         AppUtiles.showToast(MainActivity.this, "Results Updated. Ready to Shake");
                     }
+                    prefEditor.putInt("categorySpinner", categorySpinner.getSelectedItemPosition());
+                    prefEditor.putInt("distanceSpinner", distanceSpinner.getSelectedItemPosition());
+                    prefEditor.commit();
                 } catch (RestaurantSearchException rse) {
 
                     rse.printStackTrace();
@@ -468,6 +527,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
             locationManager.requestLocationUpdates(serviceAvailable, 3000, 161, this);
             Location currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
+            long startTime = System.currentTimeMillis();
+            while (currentLocation == null) {
+                Log.e("###wait", "waittt");
+                currentLocation = locationManager.getLastKnownLocation(serviceAvailable);
+                if (startTime - System.currentTimeMillis() > 5000) {
+                    validateResult(1);
+                    break;
+                }
+            }
             latitude = currentLocation.getLatitude();
             mySearch.setLatitude(latitude);
             Log.e(TAG, "####lati: " + String.valueOf(mySearch.getLatitude()));
@@ -477,26 +545,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             locationManager.removeUpdates(this);
             try {
                 // internet connection check
-                if(!AppUtiles.isNetworkConnected(MainActivity.this)) {
+                if (!AppUtiles.isNetworkConnected(MainActivity.this)) {
                     AppUtiles.showAlertDialog(MainActivity.this, R.string.title_error, R.string.message_no_internet);
                 } else {
                     restaurant = mySearch.filteredSearch();
                 }
             } catch (RestaurantSearchException rse) {
                 final int distanceValue = sharedPref.getInt("distanceSpinner", -1);
-                if (distanceValue == 0 && distanceValue > 2) {
-                    execption_id = 1;
-                    validateResult();
+                if (distanceValue < 1 || distanceValue > 2) {
+                    validateResult(1);
                 } else {
-                    execption_id = 2;
-                    validateResult();
+                    validateResult(2);
                 }
                 rse.printStackTrace();
                 Log.e(TAG, "restaurantFinder: " + rse.toString());
             }
         } else {
+            validateResult(1);
             Log.e(TAG, "####Location Err: No location provider is not available. Does the device have location services enabled?");
-
         }
     }
 
@@ -541,7 +607,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return distanceList[index];
     }
 
-    public boolean validateResult() {
+    public boolean validateResult(int execption_id) {
 
         String exceptionText = "";
         String exceptionTitle = "";
@@ -549,7 +615,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         switch (execption_id) {
             case 1:
-                exceptionTitle = "Invalid Location Provider";
+                exceptionTitle = "Invalid location provider";
                 exceptionText = "No location provider is not available." +
                         " Does the device have location services enabled?";
                 mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -560,9 +626,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 });
                 break;
             case 2:
-                exceptionTitle = "Invalid Preference";
-                exceptionText = "There is no restaurant matches for selected preferences."
-                        + " Please change your preferences.";
+                exceptionTitle = "No restaurant found for selected preference";
+                exceptionText = "There is no restaurant matches for selected range or category."
+                        + " Please choose your preferences again.";
                 mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -571,8 +637,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 });
                 break;
             case 3:
-                exceptionTitle = "Invalid City or Filter options";
-                exceptionText = "Please check the city and the filter options again";
+                exceptionTitle = "No restaurant found for the city";
+                exceptionText = "Please make sure you enter a valid city name";
                 mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -582,8 +648,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
             default:
                 if (!locationIsEnable && mySearch.getLocation() == null) {
-                    exceptionTitle = "Invalid City or Filter options";
-                    exceptionText = "Please check the city and the filter options again";
+                    mAlert.setTitle("Invalid City");
+                    mAlert.setMessage("Please enter the city again.");
                     mAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -600,7 +666,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mAlert.setTitle(exceptionTitle);
         mAlert.setMessage(exceptionText);
         mAlert.create().show();
-        execption_id = 0;
         return false;
     }
 

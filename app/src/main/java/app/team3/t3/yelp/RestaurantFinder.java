@@ -109,7 +109,7 @@ public class RestaurantFinder {
                 int totalResults = Integer.parseInt(response.getString("total"));
                 if (totalResults < 1) {
                     Log.e("####Exceptions", "No Restaurant");
-                    throw new RestaurantSearchException("No restaurant found");
+                    throw new RestaurantSearchException("NO_RESTAURANT_FOR_LOCATION");
                 }
                 if (totalResults > MAX_RESTAURANT) {
                     totalResults = MAX_RESTAURANT;

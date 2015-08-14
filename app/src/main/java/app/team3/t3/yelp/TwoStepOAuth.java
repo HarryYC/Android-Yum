@@ -1,4 +1,4 @@
-package app.team3.t3;
+package app.team3.t3.yelp;
 
 import org.scribe.builder.api.DefaultApi10a;
 import org.scribe.model.Token;
